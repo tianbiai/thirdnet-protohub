@@ -1,0 +1,36 @@
+{
+  "title": "ProtoHub 用户配置",
+  "version": "1.0.0",
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "admin123",
+      "nickname": "管理员",
+      "role": "admin",
+      "description": "系统管理员，拥有完全权限，可管理菜单配置"
+    },
+    {
+      "id": 2,
+      "username": "guest",
+      "password": "guest123",
+      "nickname": "访客",
+      "role": "guest",
+      "description": "访客用户，只能查看项目列表，无管理权限"
+    }
+  ],
+  "permissions": {
+    "admin": {
+      "label": "管理员",
+      "features": ["dashboard", "menu-editor", "projects", "project-detail", "content", "settings"],
+      "canEditMenu": true,
+      "description": "完全权限，可访问所有功能"
+    },
+    "guest": {
+      "label": "访客",
+      "features": ["dashboard", "projects", "project-detail", "content"],
+      "canEditMenu": false,
+      "description": "只读权限，仅可查看项目列表"
+    }
+  }
+}

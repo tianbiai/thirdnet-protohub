@@ -1,0 +1,193 @@
+// CSS 变量定义 - 精致玻璃拟态设计风格
+// 设计理念：苹果设计语言 + 玻璃拟态 + 精致微交互
+
+:root {
+  // ==================== 字体系统 ====================
+  // 使用 Outfit 作为主字体 - 现代几何感，清晰易读
+  --font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+
+  // 字体大小 - 更精致的尺寸层次
+  --font-size-xs: 11px;
+  --font-size-sm: 13px;
+  --font-size-base: 14px;
+  --font-size-md: 15px;
+  --font-size-lg: 17px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+
+  // 字重
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  // ==================== 色彩系统 ====================
+  // 主色调 - 精致的苹果蓝
+  --primary-50: #E8F4FF;
+  --primary-100: #C2E0FF;
+  --primary-200: #99CCFF;
+  --primary-300: #70B8FF;
+  --primary-400: #47A3FF;
+  --primary-500: #007AFF;
+  --primary-600: #0066D6;
+  --primary-700: #0052AD;
+  --primary-800: #003D84;
+  --primary-900: #00295A;
+
+  --primary-color: var(--primary-500);
+  --primary-hover: var(--primary-600);
+  --primary-light: var(--primary-50);
+  --primary-glow: rgba(0, 122, 255, 0.25);
+
+  // 辅助色
+  --success-color: #30D158;
+  --success-light: rgba(48, 209, 88, 0.12);
+  --warning-color: #FF9F0A;
+  --warning-light: rgba(255, 159, 10, 0.12);
+  --danger-color: #FF453A;
+  --danger-light: rgba(255, 69, 58, 0.12);
+  --info-color: #64D2FF;
+  --info-light: rgba(100, 210, 255, 0.12);
+
+  // 中性色 - 更细腻的灰度层次
+  --gray-50: #FAFAFA;
+  --gray-100: #F5F5F7;
+  --gray-200: #E8E8ED;
+  --gray-300: #D2D2D7;
+  --gray-400: #AEAEB2;
+  --gray-500: #8E8E93;
+  --gray-600: #6E6E73;
+  --gray-700: #515154;
+  --gray-800: #3A3A3C;
+  --gray-900: #1D1D1F;
+
+  --text-primary: var(--gray-900);
+  --text-secondary: var(--gray-600);
+  --text-tertiary: var(--gray-500);
+  --text-quaternary: var(--gray-400);
+
+  // 背景色
+  --bg-primary: #FFFFFF;
+  --bg-secondary: var(--gray-100);
+  --bg-tertiary: var(--gray-200);
+  --bg-hover: rgba(0, 0, 0, 0.04);
+  --bg-active: rgba(0, 0, 0, 0.08);
+
+  // 边框色
+  --border-color: var(--gray-300);
+  --border-light: var(--gray-200);
+  --border-lighter: var(--gray-100);
+
+  // ==================== 玻璃拟态效果 ====================
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-bg-hover: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --glass-blur: 20px;
+
+  // 侧边栏玻璃效果
+  --sidebar-glass-bg: rgba(255, 255, 255, 0.85);
+  --sidebar-glass-border: rgba(0, 0, 0, 0.06);
+
+  // ==================== 阴影系统 ====================
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.12);
+
+  // 彩色阴影
+  --shadow-primary: 0 4px 20px rgba(0, 122, 255, 0.25);
+  --shadow-success: 0 4px 20px rgba(48, 209, 88, 0.25);
+  --shadow-warning: 0 4px 20px rgba(255, 159, 10, 0.25);
+  --shadow-danger: 0 4px 20px rgba(255, 69, 58, 0.25);
+
+  // 内阴影
+  --shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+
+  // ==================== 布局尺寸 ====================
+  --sidebar-width: 280px;
+  --sidebar-collapsed-width: 72px;
+  --topbar-height: 60px;
+
+  // ==================== 圆角系统 ====================
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  // ==================== 过渡动画 ====================
+  // 贝塞尔曲线
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+
+  // 时长
+  --duration-instant: 100ms;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+  --duration-slower: 500ms;
+
+  // 组合过渡
+  --transition-fast: all var(--duration-fast) var(--ease-out);
+  --transition-normal: all var(--duration-normal) var(--ease-out);
+  --transition-slow: all var(--duration-slow) var(--ease-out);
+  --transition-spring: all var(--duration-normal) var(--ease-spring);
+
+  // ==================== Z-index 层级 ====================
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+}
+
+// ==================== 暗色主题 ====================
+[data-theme="dark"] {
+  // 文字色
+  --text-primary: #F5F5F7;
+  --text-secondary: #A1A1A6;
+  --text-tertiary: #6E6E73;
+  --text-quaternary: #48484A;
+
+  // 背景色
+  --bg-primary: #1C1C1E;
+  --bg-secondary: #000000;
+  --bg-tertiary: #2C2C2E;
+  --bg-hover: rgba(255, 255, 255, 0.08);
+  --bg-active: rgba(255, 255, 255, 0.12);
+
+  // 边框色
+  --border-color: #3A3A3C;
+  --border-light: #2C2C2E;
+  --border-lighter: #1C1C1E;
+
+  // 玻璃拟态 - 暗色
+  --glass-bg: rgba(28, 28, 30, 0.8);
+  --glass-bg-hover: rgba(44, 44, 46, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  --sidebar-glass-bg: rgba(28, 28, 30, 0.9);
+  --sidebar-glass-border: rgba(255, 255, 255, 0.06);
+
+  // 主色调整 - 暗色模式下更亮
+  --primary-light: rgba(0, 122, 255, 0.2);
+  --primary-glow: rgba(0, 122, 255, 0.35);
+
+  // 阴影调整
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+}

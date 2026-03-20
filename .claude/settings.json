@@ -1,0 +1,6 @@
+{
+  "enabledPlugins": {
+    "thirdnet-backend@thirdnet-plugins": true,
+    "thirdnet-frontend@thirdnet-plugins": true
+  }
+}

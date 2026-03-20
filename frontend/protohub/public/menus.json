@@ -1,0 +1,34 @@
+{
+  "title": "项目管理聚合基座",
+  "version": "1.2.20",
+  "groups": [
+    {
+      "id": "group-gas",
+      "name": "燃气积分商城",
+      "icon": "🔥",
+      "expanded": true,
+      "children": [
+        {
+          "id": "item-gas-miniprogram",
+          "name": "小程序端",
+          "icon": "📱",
+          "type": "miniprogram",
+          "url": "http://61.164.57.60:9876/gasminiprogram/",
+          "description": "",
+          "viewport": {
+            "width": 375,
+            "height": 812
+          }
+        },
+        {
+          "id": "item-gas-admin",
+          "name": "管理后台",
+          "icon": "🖥️",
+          "type": "web",
+          "url": "http://61.164.57.60:9876/gasadmin/",
+          "description": "商城运营管理后台"
+        }
+      ]
+    }
+  ]
+}

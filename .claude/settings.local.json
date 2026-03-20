@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rmdir \"e:/VibeCoding/thirdnet/protohub/.claude/plugins/thirdnet-dev/.claude-plugin\")",
+      "Bash(rm -rf \"e:/VibeCoding/thirdnet/protohub/.claude/plugins/thirdnet-dev/.claude-plugin\")",
+      "Bash(find src:*)",
+      "Read(//c/Users/pig_l/.claude/plugins/marketplaces/claude-plugins-official/**)",
+      "Bash(find . -type d -name backend* -o -name Backend* -o -name api -o -name API)",
+      "Bash(find . -maxdepth 3 -name *.cs -o -name *.csproj -o -name *.sln -o -name *.slnx)",
+      "Bash(dotnet new:*)",
+      "Bash(dotnet sln:*)",
+      "Bash(dotnet add:*)",
+      "Bash(dotnet nuget:*)",
+      "Read(///c/Users/pig_l/.claude/plugins/**)",
+      "Read(//c/Users/pig_l/.claude/plugins/marketplaces/**)",
+      "Bash(mkdir -p Controllers/Manager Controllers/App)",
+      "Bash(rm -f Controllers/WeatherForecastController.cs)",
+      "Bash(mkdir -p Models Configurations)",
+      "Bash(rm -f Class1.cs)",
+      "Bash(mkdir -p Exceptions Extensions Helpers)",
+      "Bash(mkdir -p Interface)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet remove:*)",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "Bash(dotnet ef:*)",
+      "Bash(find e:/VibeCoding/thirdnet/protohub/backend -type f -name *.csproj)"
+    ]
+  }
+}
