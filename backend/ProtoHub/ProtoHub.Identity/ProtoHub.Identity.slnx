@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="../Tools/ProtoHub.Cache/ProtoHub.Cache.csproj" />
+  <Project Path="../Tools/ProtoHub.Common/ProtoHub.Common.csproj" />
+  <Project Path="ProtoHub.Identity.API/ProtoHub.Identity.API.csproj" />
+  <Project Path="ProtoHub.Identity.Database/ProtoHub.Identity.Database.csproj" />
+</Solution>

@@ -1,6 +1,8 @@
 {
   "enabledPlugins": {
     "thirdnet-backend@thirdnet-plugins": true,
-    "thirdnet-frontend@thirdnet-plugins": true
+    "thirdnet-frontend@thirdnet-plugins": true,
+    "superpowers@claude-plugins-official":true,
+    "ui-ux-pro-max@ui-ux-pro-max-skill":true
   }
 }

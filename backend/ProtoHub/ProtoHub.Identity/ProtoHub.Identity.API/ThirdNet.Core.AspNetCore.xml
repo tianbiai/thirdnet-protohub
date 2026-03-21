@@ -1,0 +1,2319 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ThirdNet.Core.AspNetCore</name>
+    </assembly>
+    <members>
+        <member name="T:ThirdNet.Core.AspNetCore.AESClientCryptography">
+            <summary>
+            客户端加密接口
+            通过AES对数据进行加密，生成相关密文
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.AESClientCryptography.CreateClientString(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            创建AES加密字符串
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.BasicAuthenticationHandler">
+            <summary>
+            Basic认证相关流程控制
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.BasicAuthenticationHandler.AuthScheme">
+            <summary>
+            Scheme
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.BasicAuthenticationHandler.Check">
+            <summary>
+            应用认证接口
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.BasicAuthenticationHandler.RolesProvider">
+            <summary>
+            角色提供接口
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.BasicAuthenticationHandler.#ctor(Microsoft.Extensions.Options.IOptionsMonitor{Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions},Microsoft.Extensions.Logging.ILoggerFactory,System.Text.Encodings.Web.UrlEncoder,ThirdNet.Core.AspNetCore.ICheckClient,ThirdNet.Core.AspNetCore.IRolesProvider)">
+            <summary>
+            Basic认证处理器
+            </summary>
+            <param name="options">配置</param>
+            <param name="logger">日志记录</param>
+            <param name="encoder">url编码</param>
+            <param name="check">用户验证接口</param>
+            <param name="roles">角色提供接口</param>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.BasicAuthenticationHandler.HandleAuthenticateAsync">
+            <summary>
+            重写HandleAuthenticateAsync()方法 ， 进行主流程的控制。
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.BasicAuthenticationHandler.HandleChallengeAsync(Microsoft.AspNetCore.Authentication.AuthenticationProperties)">
+            <summary>
+            提示用户验证
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.DefaultCheckClient">
+            <summary>
+            默认应用认证实现
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.DefaultCheckClient._appcache">
+            <summary>
+            应用配置缓存
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.DefaultCheckClient._whitecache">
+            <summary>
+            ip白名单缓存
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.DefaultCheckClient._logger">
+            <summary>
+            记录日志
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.DefaultCheckClient._cryptography">
+            <summary>
+            用户密码加密接口
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.DefaultCheckClient._option">
+            <summary>
+            配置
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.DefaultCheckClient.#ctor(Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.AspNetCore.DefaultCheckClient},ThirdNet.Core.Common.ISessionReader{System.String,ThirdNet.Core.AspNetCore.ApplicationInfoMap},ThirdNet.Core.Common.ISessionReader{ThirdNet.Core.AspNetCore.IpKey,ThirdNet.Core.AspNetCore.IpWhiteList},ThirdNet.Core.AspNetCore.IClientCryptography,Microsoft.Extensions.Options.IOptions{ThirdNet.Core.AspNetCore.DefaultOptions})">
+            <summary>
+            构造函数，依赖注入
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.DefaultCheckClient.Check(System.String,System.String,Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            1.查找应用信息
+            2.验证ip
+            3.验证应用和密码
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.DefaultRolesProvider">
+            <summary>
+            默认角色提供器
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.DefaultRolesProvider._cache">
+            <summary>
+            应用角色缓存
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.DefaultRolesProvider.#ctor(ThirdNet.Core.Common.ISessionReader{System.String,System.Collections.Generic.List{ThirdNet.Core.AspNetCore.ApplicationAuthority}})">
+            <summary>
+            构造函数，依赖注入
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.DefaultRolesProvider.GetRolesAsync(System.String)">
+            <summary>
+            判断当前应用具有的角色信息
+            </summary>
+            <param name="name">应用标识</param>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.DESClientCryptography">
+            <summary>
+            客户端加密接口
+            通过DES对数据进行加密，生成相关密文
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.DESClientCryptography.CreateClientString(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            创建DES加密字符串
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.HMacClientCryptography">
+            <summary>
+            HMAC512 加密
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.HMacClientCryptography.CreateClientString(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            创建HMAC512加密字符串
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ICheckClient">
+            <summary>
+            应用验证接口
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ICheckClient.Check(System.String,System.String,Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            验证用户名和密码
+            </summary>
+            <param name="name">用户名</param>
+            <param name="password">密码</param>
+            <param name="request">请求信息</param>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.IClientCryptography">
+            <summary>
+            客户端加密接口
+            通过相应加密方法对数据进行加密，生成相关密文
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.IClientCryptography.CreateClientString(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            创建加密字符串
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.IMethodInfoCreater.Create(Microsoft.AspNetCore.Routing.RouteEndpoint)">
+            <summary>
+            生成方法信息
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.IRolesProvider">
+            <summary>
+            权限提供接口
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.IRolesProvider.GetRolesAsync(System.String)">
+            <summary>
+            根据用户名获取角色信息
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.MethodInfo">
+            <summary>
+            访问的方法信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.MethodInfo.ServiceName">
+            <summary>
+            类名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.MethodInfo.MethodName">
+            <summary>
+            方法名
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ProviderAuthorizationHandler.#ctor">
+            <summary>
+            三网授权处理器
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ProviderAuthorizationHandler.HandleRequirementAsync(Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext,ThirdNet.Core.AspNetCore.ProviderRequirement)">
+            <summary>
+            授权处理。读取角色，并判断当前角色是否具有对应资源的权限。
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.RolesAuthorityComparer">
+            <summary>
+            角色拥有权限比较器，用于将用户权限合并时的比较。controller和action相同则认为相同
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.RolesAuthorityComparer.Equals(ThirdNet.Core.AspNetCore.RolesAuthority,ThirdNet.Core.AspNetCore.RolesAuthority)">
+            <summary>
+            值比较
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.RolesAuthorityComparer.GetHashCode(ThirdNet.Core.AspNetCore.RolesAuthority)">
+            <summary>
+            生成HashCode
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.controller.BackgroundLogController">
+            <summary>
+            后台任务执行情况查询
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.controller.BackgroundLogController.Get(System.String,System.Int32,System.Int32,System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            查询后台任务执行日志
+            </summary>
+            <param name="secret">管理密钥</param>
+            <param name="service">服务</param>
+            <param name="name">任务名</param>
+            <param name="start">开始时间</param>
+            <param name="end">结束时间</param>
+            <param name="index">当前页</param>
+            <param name="size">每页数量</param>
+            <returns></returns>
+            <exception cref="T:ThirdNet.Core.AspNetCore.WebApiException"></exception>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.controller.LogManagerController.Get(System.String,System.String,ThirdNet.Core.AspNetCore.LogDirectory)">
+            <summary>
+            下载日志
+            </summary>
+            <param name="secret">管理密钥</param>
+            <param name="date">日期。不传默认为当天。格式2021-10-20.</param>
+            <param name="level">日志级别，不传默认为Error:
+            0：Trace
+            1：Debug
+            2：Info
+            3：Warn
+            4: Error
+            5：Critical
+            6：Fatal</param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.controller.LogManagerController.GetFiles(System.String,ThirdNet.Core.AspNetCore.LogDirectory)">
+            <summary>
+            列出对应日志界别下包含得所有日志文件名
+            </summary>
+            <param name="secret">管理密钥</param>
+            <param name="level">日志级别，不传默认为Error:
+            0：Trace
+            1：Debug
+            2：Info
+            3：Warn
+            4: Error
+            5：Critical
+            6：Fatal</param>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.controller.LogManagerController.DeleteFiles(System.String,ThirdNet.Core.AspNetCore.LogDirectory)">
+            <summary>
+            删除对应日志目录下得所有日志
+            </summary>
+            <param name="secret">管理密钥</param>
+            <param name="level">日志级别，不传默认为Error:
+            0：Trace
+            1：Debug
+            2：Info
+            3：Warn
+            4: Error
+            5：Critical
+            6：Fatal</param>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.controller.LogManagerController.ChangeSize(System.Int64)">
+            <summary>
+            转换文件大小
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.CacheManagerController">
+            <summary>
+            默认缓存管理接口
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.CacheManagerController.#ctor(ThirdNet.Core.Common.ISessionReader{System.String,ThirdNet.Core.AspNetCore.ApplicationInfoMap},ThirdNet.Core.Common.ISessionReader{ThirdNet.Core.AspNetCore.IpKey,ThirdNet.Core.AspNetCore.IpWhiteList},ThirdNet.Core.Common.ISessionReader{System.String,ThirdNet.Core.AspNetCore.IpBlackList},ThirdNet.Core.Common.ISessionReader{System.String,System.Collections.Generic.List{ThirdNet.Core.AspNetCore.ApplicationAuthority}},ThirdNet.Core.Common.ISessionReader{System.String,System.Collections.Generic.List{ThirdNet.Core.AspNetCore.RolesAuthority}},Microsoft.Extensions.Options.IOptions{ThirdNet.Core.AspNetCore.DefaultOptions})">
+            <summary>
+            传入需要更新的缓存
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.CacheManagerController.Refresh(System.String)">
+            <summary>
+            更新全部缓存
+            </summary>
+            <param name="secret">管理密钥</param>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.CacheManagerController.RefreshCache(System.String,System.String)">
+            <summary>
+            更新某一个key的缓存
+            application:应用缓存
+            white:白名单缓存（添加ip一般更新该内容即可）
+            black:黑名单缓存
+            auth:角色权限缓存
+            role:角色缓存
+            </summary>
+            <param name="secret">管理密钥</param>
+            <param name="name">缓存名称</param>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ManagerControllerHelper.RunCommand(System.String,System.String)">
+            <summary>
+            执行命令
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.DefaultOptions">
+            <summary>
+            系统框架默认需要的配置信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.DefaultOptions.DefaultConnectionString">
+            <summary>
+            默认数据库连接字符串
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.DefaultOptions.VisitLogSleepTime">
+            <summary>
+            批量日志记录的时间间隔，默认30秒
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.DefaultOptions.CheckTimestamp">
+            <summary>
+            验证用户是否需要检测timestamp
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.DefaultOptions.ValidSeconds">
+            <summary>
+            验证时间戳与服务器时间相差多少秒认为有效，默认300
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.DefaultOptions.Scopes">
+            <summary>
+            认证包含的scope。
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.DefaultOptions.AdminSecret">
+            <summary>
+            管理密钥，用于调用管理接口
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ErrorInfo">
+            <summary>
+            错误信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ErrorInfo.error">
+            <summary>
+            错误相关业务代码:server_error
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ErrorInfo.error_description">
+            <summary>
+            错误描述字符串
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ErrorInfo.code">
+            <summary>
+            错误代码
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ExtensionHelper">
+            <summary>
+            扩展方法帮助类
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ExtensionHelper.UseThirdNetMvc(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            启用三网默认接口服务
+            1.配置日志记录
+            2.配置全局异常处理
+            4.配置token认证
+            5.配置basic认证
+            6.配置访问日志记录
+            7.配置黑名单
+            8.添加限流
+            9.启动后台任务
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ExtensionHelper.UseThirdNetMvcWithNoAuth(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            启用三网默认接口服务
+            1.配置日志记录
+            2.配置全局异常处理
+            3.配置访问日志记录
+            4.启动后台任务
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ExtensionHelper.UseThirdNetUseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            启用全局异常处理
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ExtensionHelper.UseThirdNetStaticFileServer(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.StaticFileOptions)">
+            <summary>
+            启用文件服务，提供文件下载
+            UseFileServer combines the functionality of UseStaticFiles, UseDefaultFiles, and UseDirectoryBrowser.
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ExtensionHelper.AddThirdNetMvcInMemoryAndNoAuth(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String,Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents)">
+            <summary>
+            配置基于内存的服务
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ExtensionHelper.AddThirdNetMvcWithOpenGuass(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String,Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents)">
+            <summary>
+            配置基本参数
+            1.设置当前目录
+            2.设置解决控制台乱码
+            3.配置mvc
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ExtensionHelper.AddThirdNetMvcWithPostgresql(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String,Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents)">
+            <summary>
+            配置基本参数
+            1.设置当前目录
+            2.设置解决控制台乱码
+            3.配置mvc
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ExtensionHelper.AddThirdNetMvcWithMysql(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String,Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents)">
+            <summary>
+            配置基本参数
+            1.设置当前目录
+            2.设置解决控制台乱码
+            3.配置mvc
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ExtensionHelper.AddThirdNetMvcWithSqlServer(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String,Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents)">
+            <summary>
+            配置基本参数
+            1.设置当前目录
+            2.设置解决控制台乱码
+            3.配置mvc
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ExtensionHelper.ToPageListAsync``1(System.Linq.IQueryable{``0},System.Int32,System.Int32,System.Nullable{System.Int32})">
+            <summary>
+            对query进行分页处理
+            </summary>
+            <typeparam name="T">query的数据类型</typeparam>
+            <param name="query">IQueryable查询</param>
+            <param name="page_index">当前页</param>
+            <param name="page_size">每页数据条数</param>
+            <param name="count">数据总数，根据是否为空判断是否需要进行求和操作。
+            若count为null则执行Count操作，否则不执行。</param>
+            <returns>分页数据信息</returns>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ExtensionHelper.ToPageListAsync``2(System.Linq.IQueryable{``0},AutoMapper.IMapper,System.Int32,System.Int32,System.Nullable{System.Int32})">
+            <summary>
+            对query进行分页处理,同时使用automapper进行类型转换
+            </summary>
+            <typeparam name="T">源数据类型</typeparam>
+            <typeparam name="D">需要转换的数据类型</typeparam>
+            <param name="query">IQueryable查询</param>
+            <param name="page_index">当前页</param>
+            <param name="page_size">每页数据条数</param>
+            <param name="count">数据总数，根据是否为空判断是否需要进行求和操作。
+            若count为null则执行Count操作，否则不执行。</param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ExtensionHelper.GetAllFunctions(System.IServiceProvider)">
+            <summary>
+            获取系统提供的所有服务.
+            无法获取帮助文档隐藏的服务。
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.AccountTokenCheckMiddleware">
+            <summary>
+            确认token发布后是否用户信息有修改。
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.AccountTokenCheckMiddleware._next">
+            <summary>
+            下一个中间件
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.AccountTokenCheckMiddleware._logger">
+            <summary>
+            日志记录
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.AccountTokenCheckMiddleware.#ctor(Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.AspNetCore.AccountTokenCheckMiddleware},ThirdNet.Core.AspNetCore.IGetAccountTokenKey,ThirdNet.Core.AspNetCore.IAccountTokenTimeCache,Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            构造函数，注入日志，缓存等信息
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.AccountTokenCheckMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            判断当前ip是否在黑名单中
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.BlackIpMiddleware">
+            <summary>
+            黑名单中间件，用于判断当前请求ip是否在黑名单中
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.BlackIpMiddleware._next">
+            <summary>
+            下一个中间件
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.BlackIpMiddleware._logger">
+            <summary>
+            日志记录
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.BlackIpMiddleware._cache">
+            <summary>
+            黑名单缓存列表，用于存放黑名单列表
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.BlackIpMiddleware.#ctor(Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.AspNetCore.BlackIpMiddleware},ThirdNet.Core.Common.ISessionReader{System.String,ThirdNet.Core.AspNetCore.IpBlackList},Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            构造函数，注入日志，缓存等信息
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.BlackIpMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            判断当前ip是否在黑名单中
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.CustomExceptionFilter">
+            <summary>
+            异常处理。通用异常应通过middleware实现
+            除非为了提供与通用异常不同的定制方案
+            Filters are a part of MVC, and have access to its context and constructs. 
+            For instance, middleware can't easily detect whether model validation on a request has generated errors, 
+            and respond accordingly, but a filter can easily do so.
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.CustomExceptionFilter.#ctor(Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.AspNetCore.CustomExceptionFilter})">
+            <summary>
+            自定义异常处理
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.CustomExceptionFilter.OnException(Microsoft.AspNetCore.Mvc.Filters.ExceptionContext)">
+            <summary>
+            对controller中抛出的异常进行处理
+            若为WebApiException，则表示已经处理，则直接获取code和message
+            若为其他异常，则表示未经处理，则返回500错误。
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.DatabaseVisitLogger">
+            <summary>
+            数据库中记录访问日志
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.DatabaseVisitLogger._bulk">
+            <summary>
+            批量数据库导入数据接口
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.DatabaseVisitLogger._connection">
+            <summary>
+            数据库连接字符串
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.DatabaseVisitLogger._list">
+            <summary>
+            日志临时列表
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.DatabaseVisitLogger.TableName">
+            <summary>
+            表名
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.DatabaseVisitLogger.#ctor(ThirdNet.Core.Common.IDbAsyncBulk,Microsoft.Extensions.Logging.ILogger,Microsoft.Extensions.Options.IOptions{ThirdNet.Core.AspNetCore.DefaultOptions})">
+            <summary>
+            构造函数，依赖注入，数据库接口，日志记录，配置信息
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.DatabaseVisitLogger.InitMapping">
+            <summary>
+            字段映射
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.DatabaseVisitLogger.Check">
+            <summary>
+            当前临时列表是否有数据
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.DatabaseVisitLogger.WorkAsync(System.Threading.CancellationToken)">
+            <summary>
+            实现任务Runner
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.DefaultResultHeaderFilter">
+            <summary>
+            默认相应消息头筛选器
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.DefaultResultHeaderFilter._dic">
+            默认添加的首部
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.DefaultVisitLogger">
+            <summary>
+            默认日志记录，仅使用系统的ILogger记录
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.DefaultVisitLogger.#ctor(Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.AspNetCore.DefaultVisitLogger})">
+            <summary>
+            默认日志记录
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.IAccountTokenTimeCache">
+            <summary>
+            账号对应token的更新时间缓存，用于判断token是否过期
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.IAccountTokenTimeCache.TryGet(System.String,System.DateTime@)">
+            <summary>
+            查找对应用户名key对应的时间。
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.Obsolete.IApiVersionReader">
+            <summary>
+            读取客户端当前使用的api版本信息接口
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.Obsolete.IApiVersionReader.ReadVersion(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            读取版本信息
+            </summary>
+            <param name="request">当前请求</param>
+            <returns>版本文本</returns>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.IVisitLogger">
+            <summary>
+            访问日志记录接口
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.IVisitLogger.Log(ThirdNet.Core.AspNetCore.VisitLog)">
+            <summary>
+            记录日志
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.MySqlVisitLogRunner.InitMapping">
+            <summary>
+            初始化映射
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.NpgsqlVisitLogRunner">
+            <summary>
+            基于postgresql的访问日志批处理
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.NpgsqlVisitLogRunner.#ctor(ThirdNet.Core.Common.IDbAsyncBulk,Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.AspNetCore.NpgsqlVisitLogRunner},Microsoft.Extensions.Options.IOptions{ThirdNet.Core.AspNetCore.DefaultOptions})">
+            <summary>
+            构造函数，依赖注入，数据库接口，日志记录，配置信息
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.NpgsqlVisitLogRunner.InitMapping">
+            <summary>
+            初始化映射
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.OpenGuassVisitLogRunner">
+            <summary>
+            基于postgresql的访问日志批处理
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.OpenGuassVisitLogRunner.#ctor(ThirdNet.Core.Common.IDbAsyncBulk,Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.AspNetCore.OpenGuassVisitLogRunner},Microsoft.Extensions.Options.IOptions{ThirdNet.Core.AspNetCore.DefaultOptions})">
+            <summary>
+            构造函数，依赖注入，数据库接口，日志记录，配置信息
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.OpenGuassVisitLogRunner.InitMapping">
+            <summary>
+            初始化映射
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.RequestLoggerMiddleware">
+            <summary>
+            日志记录中间件，用于记录访问日志
+            1.middleware处理前发生异常->直接进入全局错误处理
+            2.controller抛出异常->进入exceptionfileter处理。
+            3.middleware处理后发生异常，则会无法正常响应。
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.RequestLoggerMiddleware.#ctor(ThirdNet.Core.AspNetCore.IVisitLogger,Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            日志记录中间件，用于记录访问日志
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.RequestLoggerMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            记录访问日志
+            先执行方法，后对执行的结果以及请求信息通过IVisitLogger进行日志记录
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ResourceFilter">
+            <summary>
+            第二个执行的Filter。
+            可以实现相关缓存
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ResourceFilter.OnResourceExecuting(Microsoft.AspNetCore.Mvc.Filters.ResourceExecutingContext)">
+            <summary>
+            资源访问前
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ResourceFilter.OnResourceExecuted(Microsoft.AspNetCore.Mvc.Filters.ResourceExecutedContext)">
+            <summary>
+            资源访问后
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ResultHeaderAttribute">
+            <summary>
+            最后一个筛选器，位于其他筛选器之后
+            返回的http头信息
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ResultHeaderAttribute.#ctor(System.String,System.String)">
+            <summary>
+            传入需要添加的http头信息
+            </summary>
+            <param name="name">报头名</param>
+            <param name="value">报头值</param>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ResultHeaderAttribute.OnResultExecuting(Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext)">
+            <summary>
+            生成结果时，添加响应头
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.SqlServerVisitLogRunner">
+            <summary>
+            基于sql server的访问日志批量处理
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.SqlServerVisitLogRunner.#ctor(ThirdNet.Core.Common.IDbAsyncBulk,Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.AspNetCore.SqlServerVisitLogRunner},Microsoft.Extensions.Options.IOptions{ThirdNet.Core.AspNetCore.DefaultOptions})">
+            <summary>
+            构造函数，依赖注入，数据库接口，日志记录，配置信息
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.SqlServerVisitLogRunner.InitMapping">
+            <summary>
+            初始化sql server数据库映射
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ThirdNetAuthorizationHandler">
+            <summary>
+            三网授权处理器
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ThirdNetAuthorizationHandler.#ctor(Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.AspNetCore.ThirdNetAuthorizationHandler},ThirdNet.Core.Common.ISessionReader{System.String,System.Collections.Generic.List{ThirdNet.Core.AspNetCore.RolesAuthority}})">
+            <summary>
+            三网授权处理器
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ThirdNetAuthorizationHandler.HandleRequirementAsync(Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext,ThirdNet.Core.AspNetCore.ThirdNetAuthorizationRequirement)">
+            <summary>
+            授权处理。读取角色，并判断当前角色是否具有对应资源的权限。
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ThirdNetAuthorizationRequirement">
+            <summary>
+            授权条件
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ValidateModelAttribute">
+            <summary>
+            验证
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ValidateModelAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            方法执行前进行模型验证
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.XForwardedForFilterMiddleware">
+            <summary>
+            去除X-Forwarded-For头
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.XForwardedForFilterMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            日志记录中间件，用于记录访问日志
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.XForwardedForFilterMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            去除X-Forwarded-For头
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.HttpContextHelper.GetRemoteIp(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            获取请求客户端的ip
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.HttpContextHelper.GetCurrentClientId(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            获取当前应用名
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.HttpContextHelper.GetCurrentUserName(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            获取当前用户名
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.HttpContextHelper.GetCurrentIdentityProvider(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            获取认证提供器名称
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.HttpContextHelper.GetCurrentRoles(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            获取当前角色
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.HttpContextHelper.GetCurrentNameIdentifier(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            获取主题名称
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.HttpContextHelper.GetCurrentRoles(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            获取当前角色
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.TestApplicationConfigurationCache">
+            <summary>
+            测试应用程序信息缓存。仅用于测试，提供swkj_test用户
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.TestCheckClient">
+            <summary>
+            测试应用认证
+            用户名与密码相等则认证通过
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.TestCheckClient.Check(System.String,System.String,Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            用户名密码相等则通过
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.TestIpBlackListCache">
+            <summary>
+            测试黑名单，仅返回空集合
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.TestRolesAuthorityCache">
+            <summary>
+            测试权限缓存
+            默认返回admin权限
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.TestRolesProvider">
+            <summary>
+            测试用户权限
+            返回admin作为角色
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.TestRolesProvider.GetRolesAsync(System.String)">
+            <summary>
+            获取角色信息
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.IJtiCheck.CheckAndUse(System.String,System.DateTime)">
+            <summary>
+            使用refresh token获取新token时调用，验证该refresh token是否已经被使用。
+            </summary>
+            <param name="jti">refresh token标识</param>
+            <param name="exp">refresh_token的过期时间，过期后就不需要保存了</param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.InMemoryJtiCheck.CheckAndUse(System.String,System.DateTime)">
+            <summary>
+            使用refresh token获取新token时调用，验证该refresh token是否已经被使用。
+            </summary>
+            <param name="jti">refresh token标识</param>
+            <param name="exp">refresh_token的过期时间，过期后就不需要保存了</param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.JwtHelper.GetCurrentClientId(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
+            <summary>
+            获取当前应用名
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.JwtHelper.GetCurrentUserName(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
+            <summary>
+            获取当前用户名
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.JwtHelper.GetCurrentIdentityProvider(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
+            <summary>
+            获取认证提供器名称
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.JwtHelper.GetCurrentRoles(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
+            <summary>
+            获取当前角色
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.JwtHelper.GetCurrentNameIdentifier(System.Collections.Generic.IEnumerable{System.Security.Claims.Claim})">
+            <summary>
+            获取主题名称
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ThirdNetTokenHandler">
+            <summary>
+            验证token
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ThirdNetTokenHandler.#ctor(ThirdNet.Core.AspNetCore.ISigner)">
+            <summary>
+            验证token
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ActionList">
+            <summary>
+            系统提供的web api方法
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ActionList.Domain">
+            <summary>
+            服务域
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ActionList.Controller">
+            <summary>
+            控制器
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ActionList.Action">
+            <summary>
+            方法
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ActionList.Path">
+            <summary>
+            请求路径
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ActionList.Methord">
+            <summary>
+            http方法
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ActionList.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ApplicationAuthority">
+            <summary>
+            角色拥有的权限信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationAuthority.RoleName">
+            <summary>
+            角色编号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationAuthority.Application">
+            <summary>
+            应用编号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationAuthority.RolesInfo">
+            <summary>
+            关联角色
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationAuthority.ApplicationConfiguration">
+            <summary>
+            关联应用
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ApplicationInfo">
+            <summary>
+            应用配置信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfo.Application">
+            <summary>
+            应用标识
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfo.Key">
+            <summary>
+            加密密钥
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfo.Iv">
+            <summary>
+            加密iv
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfo.Url">
+            <summary>
+            应用下载地址
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfo.Version">
+            <summary>
+            版本号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfo.Prekey">
+            <summary>
+            前缀
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfo.MinVersion">
+            <summary>
+            强制更新版本号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfo.Duration">
+            <summary>
+            密钥更新周期（分钟）
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfo.Remark">
+            <summary>
+            备注信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfo.Time">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfo.WhiteList">
+            <summary>
+            白名单列表
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfo.RolesList">
+            <summary>
+            该应用拥有的角色列表列表
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ApplicationUpdateList">
+            <summary>
+            应用更新列表
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationUpdateList.Id">
+            <summary>
+            系统编号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationUpdateList.Application">
+            <summary>
+            应用标识
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationUpdateList.Version">
+            <summary>
+            版本号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationUpdateList.Message">
+            <summary>
+            更新内容
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationUpdateList.Number">
+            <summary>
+            更新序号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationUpdateList.Time">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ApplicationAuthorityCache">
+            <summary>
+            应用角色信息
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.ApplicationAuthorityCache._options">
+            <summary>
+            数据库配置
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ApplicationAuthorityCache.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{ThirdNet.Core.AspNetCore.ThirdNetDbContext},Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.AspNetCore.ApplicationAuthorityCache})">
+            <summary>
+            传入日志记录器和配置
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ApplicationAuthorityCache.WorkAsync(System.Threading.CancellationToken)">
+            <summary>
+            加载缓存
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ApplicationInfoCache">
+            <summary>
+            应用配置信息缓存
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.ApplicationInfoCache._options">
+            <summary>
+            数据库配置
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ApplicationInfoCache.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{ThirdNet.Core.AspNetCore.ThirdNetDbContext},Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.AspNetCore.ApplicationInfoCache})">
+            <summary>
+            传入日志记录器和配置
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ApplicationInfoCache.WorkAsync(System.Threading.CancellationToken)">
+            <summary>
+            加载缓存
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfoMap.Application">
+            <summary>
+            应用标识
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfoMap.Key">
+            <summary>
+            加密密钥
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfoMap.Iv">
+            <summary>
+            加密iv
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfoMap.Url">
+            <summary>
+            应用下载地址
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfoMap.Version">
+            <summary>
+            版本号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfoMap.Prekey">
+            <summary>
+            前缀
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfoMap.MinVersion">
+            <summary>
+            强制更新版本号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfoMap.Duration">
+            <summary>
+            密钥更新周期（分钟）
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ApplicationInfoMap.UpdateList">
+            <summary>
+            更新列表
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.IpBlackListCache">
+            <summary>
+            黑名单缓存
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.IpBlackListCache._options">
+            <summary>
+            数据库配置
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.IpBlackListCache.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{ThirdNet.Core.AspNetCore.ThirdNetDbContext},Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.AspNetCore.IpBlackListCache})">
+            <summary>
+            传入日志记录器和配置
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.IpBlackListCache.WorkAsync(System.Threading.CancellationToken)">
+            <summary>
+            加载缓存
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.IpKey">
+            <summary>
+            ip和application组成的key
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.IpKey.Application">
+            <summary>
+            访问的application标识
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.IpKey.Ip">
+            <summary>
+            ip地址
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.IpWhiteListCache">
+            <summary>
+            白名单缓存
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.IpWhiteListCache._options">
+            <summary>
+            数据库配置
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.IpWhiteListCache.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{ThirdNet.Core.AspNetCore.ThirdNetDbContext},Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.AspNetCore.IpWhiteListCache})">
+            <summary>
+            传入日志记录器和配置
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.IpWhiteListCache.WorkAsync(System.Threading.CancellationToken)">
+            <summary>
+            加载缓存
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.RolesAuthorityCache">
+            <summary>
+            角色具有的权限信息
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.RolesAuthorityCache._options">
+            <summary>
+            数据库配置
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.RolesAuthorityCache.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{ThirdNet.Core.AspNetCore.ThirdNetDbContext},Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.AspNetCore.RolesAuthorityCache})">
+            <summary>
+            传入日志记录器和配置
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.RolesAuthorityCache.WorkAsync(System.Threading.CancellationToken)">
+            <summary>
+            加载缓存
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.IpBlackList">
+            <summary>
+            黑名单
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.IpBlackList.Ip">
+            <summary>
+            ip
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.IpBlackList.Duration">
+            <summary>
+            黑名单封停时间，单位：小时
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.IpBlackList.Time">
+            <summary>
+            加入时间
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.IpWhiteList">
+            <summary>
+            白名单
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.IpWhiteList.Ip">
+            <summary>
+            ip
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.IpWhiteList.Application">
+            <summary>
+            访问标识
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.IpWhiteList.Remark">
+            <summary>
+            备注信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.IpWhiteList.Time">
+            <summary>
+            加入时间
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.IpWhiteList.App">
+            <summary>
+            应用信息
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.RolesAuthority">
+            <summary>
+            角色拥有的权限信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.RolesAuthority.RoleName">
+            <summary>
+            角色名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.RolesAuthority.Domain">
+            <summary>
+            应用程序域
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.RolesAuthority.Controller">
+            <summary>
+            角色对应的控制器
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.RolesAuthority.Action">
+            <summary>
+            角色对应的方法
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.RolesAuthority.Remark">
+            <summary>
+            备注信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.RolesAuthority.RolesInfo">
+            <summary>
+            角色信息
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.RolesInfo">
+            <summary>
+            角色信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.RolesInfo.RoleName">
+            <summary>
+            角色名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.RolesInfo.Remark">
+            <summary>
+            备注信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.RolesInfo.AuthList">
+            <summary>
+            角色权限列表
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.RolesInfo.ApplicationList">
+            <summary>
+            拥有该权限的应用信息
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ThirdNetDbContext">
+            <summary>
+            内部数据访问
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ThirdNetDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{ThirdNet.Core.AspNetCore.ThirdNetDbContext})">
+            <summary>
+            ThirdNetDbContext
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ThirdNetDbContext.IpBlackList">
+            <summary>
+            ip黑名单
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ThirdNetDbContext.IpWhiteList">
+            <summary>
+            ip白名单
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ThirdNetDbContext.RolesInfoList">
+            <summary>
+            角色信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ThirdNetDbContext.ApplicationInfoList">
+            <summary>
+            应用配置
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ThirdNetDbContext.RolesAuthorityList">
+            <summary>
+            角色权限
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ThirdNetDbContext.ApplicationAuthorityList">
+            <summary>
+            应用权限
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ThirdNetDbContext.VisitLogList">
+            <summary>
+            访问日志表
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ThirdNetDbContext.VisitLogHistoryList">
+            <summary>
+            访问日志表
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ThirdNetDbContext.ApplicationUpdateList">
+            <summary>
+            应用更新信息列表
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ThirdNetDbContext.ActionList">
+            <summary>
+            系统包括的接口列表
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ThirdNetDbContext.BackgroundInfo">
+            <summary>
+            后台任务日志
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ThirdNetDbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            创建模型
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.VisitLog">
+            <summary>
+            日志访问对象
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLog.Id">
+            <summary>
+            日志编号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLog.Url">
+            <summary>
+            请求url
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLog.Ip">
+            <summary>
+            请求方ip
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLog.Controller">
+            <summary>
+            控制器
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLog.Domain">
+            <summary>
+            域
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLog.Action">
+            <summary>
+            方法
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLog.Application">
+            <summary>
+            应用标识
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLog.UserName">
+            <summary>
+            登录的用户名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLog.Auth">
+            <summary>
+            授权头信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLog.UserAgent">
+            <summary>
+            UA信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLog.StatusCode">
+            <summary>
+            访问结果
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLog.Elapsed">
+            <summary>
+            耗时
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLog.Time">
+            <summary>
+            日志生成时间
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.VisitLogHistory">
+            <summary>
+            日志访问对象
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLogHistory.Id">
+            <summary>
+            日志编号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLogHistory.Url">
+            <summary>
+            请求url
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLogHistory.Ip">
+            <summary>
+            请求方ip
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLogHistory.Controller">
+            <summary>
+            控制器
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLogHistory.Domain">
+            <summary>
+            域
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLogHistory.Action">
+            <summary>
+            方法
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLogHistory.Application">
+            <summary>
+            应用标识
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLogHistory.UserName">
+            <summary>
+            登录的用户名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLogHistory.Auth">
+            <summary>
+            授权头信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLogHistory.UserAgent">
+            <summary>
+            UA信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLogHistory.StatusCode">
+            <summary>
+            访问结果
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLogHistory.Elapsed">
+            <summary>
+            耗时
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.VisitLogHistory.Time">
+            <summary>
+            日志生成时间
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.MultipartData">
+            <summary>
+            multipart上传数据，包括文件列表和字符数据列表
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.MultipartData.Files">
+            <summary>
+            收到的文件信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.MultipartData.DataList">
+            <summary>
+            收到的字符信息
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.MultipartFileInfo">
+            <summary>
+            multipart文件信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.MultipartFileInfo.Bytes">
+            <summary>
+            文件内容
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.MultipartFileInfo.Name">
+            <summary>
+            文件控件名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.MultipartFileInfo.FileName">
+            <summary>
+            文件名
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.MultipartInfo">
+            <summary>
+             multipart信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.MultipartInfo.HeaderValue">
+            <summary>
+            消息头
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.MultipartInfo.ContentType">
+            <summary>
+            文件媒体类型
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.MultipartRequestHelper">
+            <summary>
+            multipart帮助类，用于解析上传的数据
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.MultipartRequestHelper.ReadMultipartInfoAsync(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            读取文件信息
+            </summary>
+            <param name="request">http请求</param>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.MultipartRequestHelper.GetBoundary(Microsoft.Net.Http.Headers.MediaTypeHeaderValue,System.Int32)">
+            <summary>
+            获取边界
+            Content-Type: multipart/form-data; boundary="----WebKitFormBoundarymx2fSWqWSd0OxQqq"
+            默认长度70以内
+            </summary>
+            <param name="contentType"></param>
+            <param name="lengthLimit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.MultipartRequestHelper.IsMultipartContentType(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>
+            当前请求是否是Multipart请求。即ContentType是否以multipart/开头。
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.MultipartRequestHelper.HasFormDataContentDisposition(Microsoft.Net.Http.Headers.ContentDispositionHeaderValue)">
+            <summary>
+            判断是否是FormData，不包括FileName和FileNameStar字段
+             Content-Disposition: form-data; name="key";
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.MultipartRequestHelper.HasFileContentDisposition(Microsoft.Net.Http.Headers.ContentDispositionHeaderValue)">
+            <summary>
+            是否是文件类型。不为空，且包括FileName或FileNameStar字段，则认为是文件。
+            Content-Disposition: form-data; name="myfile1"; filename="Misc 002.jpg"
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.MultipartRequestHelper.GetEncoding(Microsoft.AspNetCore.WebUtilities.MultipartSection)">
+            <summary>
+            获取当前块的编码
+            </summary>
+            <param name="section">块信息</param>
+            <returns>编码，若没有设置，默认为utf8</returns>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.MultipartStringInfo">
+            <summary>
+            multipart字符数据
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.MultipartStringInfo.Data">
+            <summary>
+            数据内容
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.PageListInfo`1">
+            <summary>
+            分页信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.PageListInfo`1.List">
+            <summary>
+            数据内容
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.PageListInfo`1.Total">
+            <summary>
+            总数量
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.PageListInfo`1.Index">
+            <summary>
+            当前页码
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.PageListInfo`1.Pages">
+            <summary>
+            总页数
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.PageListInfo`1.Next">
+            <summary>
+            下一页链接
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.IRateLimiting">
+            <summary>
+            限流接口
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.IRateLimiting.UpdateAndCheck(ThirdNet.Core.AspNetCore.IRateLimitingInfo)">
+            <summary>
+            更新限流信息并返回是否需要限流
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.IRateLimitingCreator.Create(Microsoft.AspNetCore.Http.HttpContext,System.Int32)">
+            <summary>
+            创建限流对象
+            </summary>
+            <param name="context">请求信息</param>
+            <param name="max">最大次数</param>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.IRateLimitingInfo">
+            <summary>
+            限流信息接口
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.MinuteRateLimitingInfo">
+            <summary>
+            以分钟为单位的限流对象
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.MinuteRateLimitingInfo.GetCurrentValue">
+            <summary>
+            当前分钟
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.RateLimitingCache">
+            <summary>
+            实现限流接口。
+            用于缓存限流信息，并确认是否需要限流
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.RateLimitingHelper.AddThirdNetIpRateLimiting(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            配置默认限流
+            默认使用按每分钟ip访问次数进行限制
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.RateLimitingHelper.AddThirdNetIpAndApplicationRateLimiting(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            配置根据每分钟ip+application进行限流
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.RateLimitingHelper.AddThirdNetIpAndApplicationPathRateLimiting(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            配置根据每分钟ip+application+url基地址进行限流
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.RateLimitingInfo">
+            <summary>
+            进行限流。
+            当前时间值和上一时间值的访问量大于阀值则限流
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.RateLimitingInfo._current_times">
+            <summary>
+            当前请求次数
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.RateLimitingInfo._current_value">
+            <summary>
+            当前值
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.RateLimitingInfo._last_times">
+            <summary>
+            上次检测结果
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.RateLimitingInfo._lasttime">
+            <summary>
+            上一次请求时间
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.RateLimitingInfo._limit">
+            <summary>
+            访问量上限
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.RateLimitingInfo._key">
+            <summary>
+            当前key
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.RateLimitingInfo.Key">
+            <summary>
+            当前key
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.RateLimitingInfo.Check">
+            <summary>
+            判断是否需要限流
+            </summary>
+            <returns>true：限流，false：不限流</returns>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.RateLimitingInfo.Visit">
+            <summary>
+            当前访问次数+1
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.RateLimitingInfo.GetCurrentValue">
+            <summary>
+            获取当前时间范围值
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.RateLimitingMiddleware">
+            <summary>
+            限流中间件
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.RateLimitingMiddleware._next">
+            <summary>
+            请求管道
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.RateLimitingMiddleware._logger">
+            <summary>
+            日志记录
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.RateLimitingMiddleware._creator">
+            <summary>
+            创建key
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.RateLimitingMiddleware._ratelimiting">
+            <summary>
+            限流接口
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.AspNetCore.RateLimitingMiddleware._option">
+            <summary>
+            限流配置
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.RateLimitingMiddleware.#ctor(Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.AspNetCore.RateLimitingMiddleware},Microsoft.Extensions.Options.IOptions{ThirdNet.Core.AspNetCore.RateLimitingOption},ThirdNet.Core.AspNetCore.IRateLimitingCreator,ThirdNet.Core.AspNetCore.IRateLimiting,Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            日志记录中间件，用于记录访问日志
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.RateLimitingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            记录访问日志
+            先执行方法，后对执行的结果以及请求信息通过IVisitLogger进行日志记录
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.RateLimitingOption.Times">
+            <summary>
+            对应间隔最大的访问次数
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ConfigureSwaggerOptions">
+            <summary>
+            默认帮助文档配置
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.HelpController">
+            <summary>
+            接口文档导出成html文件
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:ThirdNet.Core.AspNetCore.HelpController.Get(System.String,System.String)" -->
+        <member name="T:ThirdNet.Core.AspNetCore.HelpPageOptions">
+            <summary>
+            帮助页面相关默认信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.HelpPageOptions.CompanyName">
+            <summary>
+            公司名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.HelpPageOptions.ConfigFiles">
+            <summary>
+            配置文件名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.HelpPageOptions.Description">
+            <summary>
+            描述信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.HelpPageOptions.Email">
+            <summary>
+            联系人邮箱
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.HelpPageOptions.Title">
+            <summary>
+            帮助页标题
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.HelpPageOptions.Url">
+            <summary>
+            公司网址
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.HelpPageOptions.ProxyRoutes">
+            <summary>
+            代理路径
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.HelpPageOptions.Versions">
+            <summary>
+            版本
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.SwaggerAuthResponseFilter">
+            <summary>
+            添加需要认证操作提示帮助。
+            添加后，会展现当认证不通过时的错误提示。
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.SwaggerAuthResponseFilter.Apply(Microsoft.OpenApi.Models.OpenApiOperation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
+            <summary>
+            权限提示
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.SwaggerDefaultValues">
+            <summary>
+            Represents the Swagger/Swashbuckle operation filter used to document the implicit API version parameter.
+            </summary>
+            <remarks>This <see cref="T:Swashbuckle.AspNetCore.SwaggerGen.IOperationFilter"/> is only required due to bugs in the <see cref="T:Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator"/>.
+            Once they are fixed and published, this class can be removed.</remarks>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.SwaggerHelper">
+            <summary>
+            帮助页面配置帮助类
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.SwaggerHelper.UseThirdNetVersioningHelpPage(Microsoft.AspNetCore.Builder.IApplicationBuilder,Asp.Versioning.ApiExplorer.IApiVersionDescriptionProvider,ThirdNet.Core.AspNetCore.HelpPageOptions)">
+            <summary>
+            加入版本化的帮助文件模块，并传入相关页面配置信息
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.SwaggerHelper.AddThirdNetVersioningHelpPage(Microsoft.Extensions.DependencyInjection.IServiceCollection,ThirdNet.Core.AspNetCore.HelpPageOptions)">
+            <summary>
+            配置版本化的帮助页面
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.SwaggerHelper.UseThirdNetHelpPage(Microsoft.AspNetCore.Builder.IApplicationBuilder,ThirdNet.Core.AspNetCore.HelpPageOptions)">
+            <summary>
+            加入帮助文件模块，并传入相关页面配置信息
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.SwaggerHelper.AddThirdNetHelpPage(Microsoft.Extensions.DependencyInjection.IServiceCollection,ThirdNet.Core.AspNetCore.HelpPageOptions,Microsoft.OpenApi.Models.OpenApiTag[])">
+            <summary>
+            配置帮助页面
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlModel.Path">
+            <summary>
+            接口路径
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlModel.Methord">
+            <summary>
+            接口方法
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlModel.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlModel.Request">
+            <summary>
+            请求信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlModel.Responses">
+            <summary>
+            响应信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlModel.Example">
+            <summary>
+            示例
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlParameters.Id">
+            <summary>
+            参数序号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlParameters.Path">
+            <summary>
+            参数序号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlParameters.Name">
+            <summary>
+            参数名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlParameters.Type">
+            <summary>
+            参数类型
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlParameters.Description">
+            <summary>
+            说明
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlRequest.Parameters">
+            <summary>
+            请求参数
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlRequest.Body">
+            <summary>
+            请求体
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.SwaggerHtmlRequestBody">
+            <summary>
+            请求体
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlRequestBody.Type">
+            <summary>
+            数据类型
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlRequestBody.ContentType">
+            <summary>
+            媒体类型
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlRequestBody.Description">
+            <summary>
+            描述信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlRequestBody.Parameters">
+            <summary>
+            该类型对应的参数信息
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.SwaggerHtmlRequestParameter">
+            <summary>
+            请求参数
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlRequestParameter.Required">
+            <summary>
+            是否必须
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlRequestParameter.Location">
+            <summary>
+            参数位置
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.SwaggerHtmlResponse">
+            <summary>
+            接口响应
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlResponse.StatusCode">
+            <summary>
+            状态码
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlResponse.Type">
+            <summary>
+            类型
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlResponse.Description">
+            <summary>
+            描述信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlResponse.Parameters">
+            <summary>
+            该类型对应的参数信息
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.SwaggerHtmlResult">
+            <summary>
+            帮助文档html实体
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlResult.List">
+            <summary>
+            帮助内容
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerHtmlResult.Info">
+            <summary>
+            接口基本信息
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.SwaggerIgnoreConvention">
+            <summary>
+            若Controller以ThirdNet开头，则不显示在帮助文档中。
+            定义相关规则忽略某些方法，设置其不在帮助页面展现。
+            个别指定可通过在方法标记[ApiExplorerSettings(IgnoreApi = true)]实现
+            通过services.AddMvc(c =>c.Conventions.Add(new ApiExplorerGetsOnlyConvention()));增加
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.SwaggerIgnoreConvention.Apply(Microsoft.AspNetCore.Mvc.ApplicationModels.ActionModel)">
+            <summary>
+            不显示在帮助文档中
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.SwaggerTagDescriptionsFilter">
+            <summary>
+            标签过滤器
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.SwaggerTagDescriptionsFilter.Tags">
+            <summary>
+            标签
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.SwaggerTagDescriptionsFilter.Apply(Microsoft.OpenApi.Models.OpenApiDocument,Swashbuckle.AspNetCore.SwaggerGen.DocumentFilterContext)">
+            <summary>
+            设置文档标签
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.SwaggerVersionConvention">
+            <summary>
+            配置帮助的版本.
+            [ApiExplorerSettings(GroupName = "v2")]
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.SwaggerVersionConvention.#ctor">
+            <summary>
+            帮助信息版本
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.SwaggerVersionConvention.Apply(Microsoft.AspNetCore.Mvc.ApplicationModels.ControllerModel)">
+            <summary>
+            设置版本信息,默认设置v1
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ThirdNetDatabaseHelper">
+            <summary>
+            三网数据库扩展方法
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ThirdNetDatabaseHelper.InitializeDatabase(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            1.生成数据库
+            2.判断若表中无数据，则添加相关数据
+            添加账号：swkj_test，添加相应ip，添加权限admin
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ThirdNetDatabaseHelper.InitializeFunctionTable(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            初始化数据表，初始化ActionList表.
+            若ActionList为空，则自动获取系统中所有的api方法，加入数据库
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ThirdNetDatabaseHelper.AddInitDbWithSqlServer(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,System.Boolean)">
+            <summary>
+            添加数据库dbcontext
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ThirdNetDatabaseHelper.AddInitDbWithPostgresql(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,System.Boolean)">
+            <summary>
+            添加数据库dbcontext
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ThirdNetDatabaseHelper.AddInitDbWithOpenGauss(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,System.Boolean)">
+            <summary>
+            添加数据库dbcontext
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ThirdNetDatabaseHelper.AddInitDbWithMySql(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,System.Boolean)">
+            <summary>
+            添加数据库dbcontext
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.FactVisitHourlyStatistics">
+            <summary>
+            接口调用小时统计
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.FactVisitHourlyStatistics.date">
+            <summary>
+            日期
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.FactVisitHourlyStatistics.hour">
+            <summary>
+            小时
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.FactVisitHourlyStatistics.count">
+            <summary>
+            调用次数
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.FactVisitHourlyStatistics.account">
+            <summary>
+            账号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.FactVisitHourlyStatistics.application">
+            <summary>
+            应用标识
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.FactVisitHourlyStatistics.time">
+            <summary>
+            统计时间
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.FactVisitHourlyStatistics.statuscode">
+            <summary>
+            状态码
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.FactVisitHourlyStatistics.domain">
+            <summary>
+            程序服务名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.FactVisitHourlyStatistics.controller">
+            <summary>
+            控制器名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.JobLog.id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.JobLog.name">
+            <summary>
+            任务名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.JobLog.time">
+            <summary>
+            执行时间
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.JobLog.result">
+            <summary>
+            结果
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.JobLog.info">
+            <summary>
+            信息
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.ThirdNetVisitDbContext">
+            <summary>
+            内部数据访问
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ThirdNetVisitDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{ThirdNet.Core.AspNetCore.ThirdNetVisitDbContext})">
+            <summary>
+            ThirdNetVisitDbContext
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ThirdNetVisitDbContext.JobLog">
+            <summary>
+            后台任务日志
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.ThirdNetVisitDbContext.FactVisitHourlyStatistics">
+            <summary>
+            后台任务日志
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.ThirdNetVisitDbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            创建模型
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.WebApiException">
+            <summary>
+            Web API相关异常
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.WebApiException.HttpStatusCode">
+            <summary>
+            错误状态码
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.AspNetCore.WebApiException.Error">
+            <summary>
+            业务状态码
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.WebApiException.#ctor(System.Net.HttpStatusCode)">
+            <summary>
+            默认初始化
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.WebApiException.#ctor(System.Net.HttpStatusCode,System.String,System.String)">
+            <summary>
+            使用指定的错误信息初始化
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.AspNetCore.WebApiException.#ctor(System.Net.HttpStatusCode,System.String,System.Exception)">
+            <summary>
+            使用指定错误信息和对作为此异常原因的内部异常的引用来初始化
+            </summary>
+        </member>
+    </members>
+</doc>

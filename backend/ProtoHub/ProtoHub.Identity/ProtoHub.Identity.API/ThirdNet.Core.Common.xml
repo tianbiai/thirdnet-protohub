@@ -1,0 +1,2709 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ThirdNet.Core.Common</name>
+    </assembly>
+    <members>
+        <member name="P:ThirdNet.Core.Common.BackgroundLog.id">
+            <summary>
+            编号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.BackgroundLog.addtime">
+            <summary>
+            执行时间
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.BackgroundLog.name">
+            <summary>
+            任务名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.BackgroundLog.state">
+            <summary>
+            执行状态：1：成功，9：失败。
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.BackgroundLog.service">
+            <summary>
+            执行服务名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.BackgroundLog.remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.BackgroundRunner">
+            <summary>
+            循环任务
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.BackgroundRunner.SleepTime">
+            <summary>
+            休眠时间
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.BackgroundRunner.Name">
+            <summary>
+            任务名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.BackgroundRunner.Check">
+            <summary>
+            验证是否运行
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.BackgroundRunner.Logger">
+            <summary>
+            日志记录
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.BackgroundRunner.BackgroundLogger">
+            <summary>
+            日志记录
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.BackgroundRunner.WorkAsync(System.Threading.CancellationToken)">
+            <summary>
+            执行方法
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.SessionRunner`2">
+            <summary>
+            字典缓存，实现缓存基类
+            </summary>
+            <typeparam name="Key">字典key</typeparam>
+            <typeparam name="Value">字典值</typeparam>
+        </member>
+        <member name="P:ThirdNet.Core.Common.SessionRunner`2.Cache">
+            <summary>
+            字典缓存
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SessionRunner`2.#ctor(Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="log">日志记录</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SessionRunner`2.RefreshAsync">
+            <summary>
+            重新加载缓存
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SessionRunner`2.TryGet(`0,`1@)">
+            <summary>
+            获取缓存数据
+            </summary>
+            <param name="key">key</param>
+            <param name="value">值</param>
+            <returns>是否成功</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SessionRunner`2.GetAll">
+            <summary>
+            获取所有数据
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.AESExtension">
+            <summary>
+            AES帮助类.
+            A通过AES对数据加密Data。通过B的RSA的公钥对AES的key加密生成密文X。通过HMAC对Data生成散列Y
+            A把散列Y+密文X+AES的IV+加密Data发送给B
+            B通过HMAC对Data得到YY,对比Y和YY看是否被修改
+            B通过自己的私钥对X解密，得到AES的Key
+            B使用key和iv对Data解密得到原文
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.AESExtension.EncryptAES(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            对data进行AES加密，使用默认设置，CBC  PKCS7
+            </summary>
+            <param name="data">数据</param>
+            <param name="key">key</param>
+            <param name="iv">向量</param>
+            <returns>加密后的字节数组</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.AESExtension.EncryptAESToBase64(System.String,System.String,System.String)">
+            <summary>
+            将原始字符串加密为base64的字符串
+            </summary>
+            <param name="data">原始字符串</param>
+            <param name="key">base64编码的key</param>
+            <param name="iv">base64编码的iv</param>
+            <returns>base64编码的密文</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.AESExtension.DecryptAES(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            将密文用AES解密为明文的字节数组
+            </summary>
+            <param name="data">密文字节数组</param>
+            <param name="key">key</param>
+            <param name="iv">向量</param>
+            <returns>明文字节数组</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.AESExtension.DecryptAESFromBase64(System.String,System.String,System.String)">
+            <summary>
+            将base64编码的字符串用AES解密出UTF8编码的明文字符串
+            </summary>
+            <param name="data">base64编码的字符串</param>
+            <param name="key">key</param>
+            <param name="iv">向量</param>
+            <returns>UTF8编码的明文字符串</returns>
+        </member>
+        <member name="T:ThirdNet.Core.Common.CRCHelper">
+            <summary>
+            CRC校验
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.CRCHelper.Format">
+            <summary>
+            CRC验证
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.CRCHelper.CRCValidate(System.Byte[])">
+            <summary>
+            CRC验证
+            </summary>
+            <param name="data">要验证的数据</param>
+            <returns>验证码</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.CRCHelper.CRCValidate(System.Byte[],System.Int32)">
+            <summary>
+            CRC验证
+            </summary>
+            <param name="data">要验证的数据</param>
+            <param name="format">CRC验证</param>
+            <returns>验证码</returns>
+        </member>
+        <member name="T:ThirdNet.Core.Common.DESExtension">
+            <summary>
+            DES加解密
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.DESExtension.EncryptDES(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            对data进行DES加密，使用默认设置，CBC  PKCS7
+            </summary>
+            <param name="data">数据</param>
+            <param name="key">key</param>
+            <param name="iv">向量</param>
+            <returns>加密后的字节数组</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.DESExtension.EncryptDESToBase64(System.String,System.String,System.String)">
+            <summary>
+            将原始字符串加密为DES  base64的字符串
+            </summary>
+            <param name="data">原始字符串</param>
+            <param name="key">base64编码的key</param>
+            <param name="iv">base64编码的iv</param>
+            <returns>base64编码的密文</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.DESExtension.DecryptDES(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            将密文用DES解密为明文的字节数组
+            </summary>
+            <param name="data">密文字节数组</param>
+            <param name="key">key</param>
+            <param name="iv">向量</param>
+            <returns>明文字节数组</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.DESExtension.DecryptDESFromBase64(System.String,System.String,System.String)">
+            <summary>
+            将base64编码的字符串用DES解密出UTF8编码的明文字符串
+            </summary>
+            <param name="data">base64编码的字符串</param>
+            <param name="key">key</param>
+            <param name="iv">向量</param>
+            <returns>UTF8编码的明文字符串</returns>
+        </member>
+        <member name="T:ThirdNet.Core.Common.HashExtension">
+            <summary>
+            对MD5，SHA1，SHA256，SHA512提供帮助类，生成相应内容
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashExtension.ToHexHashMD5(System.String)">
+            <summary>
+            转换16进制MD5
+            </summary>
+            <param name="data">带转换的字符串</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashExtension.ToHexHashSHA1(System.String)">
+            <summary>
+            转换16进制SHA1
+            </summary>
+            <param name="data">带转换的字符串</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashExtension.ToHexHashSHA256(System.String)">
+            <summary>
+            转换16进制SHA256
+            </summary>
+            <param name="data">带转换的字符串</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashExtension.ToHexHashSHA512(System.String)">
+            <summary>
+            转换16进制SHA512
+            </summary>
+            <param name="data">带转换的字符串</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashExtension.ToBase64HashMD5(System.String)">
+            <summary>
+            转换base64编码的MD5
+            </summary>
+            <param name="data">带转换的字符串</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashExtension.ToBase64HashSHA1(System.String)">
+            <summary>
+            转换base64编码的SHA1
+            </summary>
+            <param name="data">带转换的字符串</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashExtension.ToBase64HashSHA256(System.String)">
+            <summary>
+            转换base64编码的SHA256
+            </summary>
+            <param name="data">带转换的字符串</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashExtension.ToBase64HashSHA512(System.String)">
+            <summary>
+            转换base64编码的SHA512
+            </summary>
+            <param name="data">带转换的字符串</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashExtension.ComputeHashMD5(System.Byte[])">
+            <summary>
+            将字节数组加密为MD5的字节数组
+            </summary>
+            <param name="bytes">待转换的字节数组</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashExtension.ComputeHashSHA1(System.Byte[])">
+            <summary>
+            将字节数组加密为SHA1的字节数组
+            </summary>
+            <param name="bytes">待转换的字节数组</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashExtension.ComputeHashSHA256(System.Byte[])">
+            <summary>
+            将字节数组加密为SHA256的字节数组
+            </summary>
+            <param name="bytes">待转换的字节数组</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashExtension.ComputeHashSHA512(System.Byte[])">
+            <summary>
+            将字节数组加密为SHA512的字节数组
+            </summary>
+            <param name="bytes">待转换的字节数组</param>
+        </member>
+        <member name="T:ThirdNet.Core.Common.HashSaltExtension">
+            <summary>
+            加盐哈希
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashSaltExtension.ComputeHashWithSaltMD5(System.Byte[],System.Byte[])">
+            <summary>
+            将待加密数据进行MD5加盐
+            </summary>
+            <param name="toBeHashed">待加密数据</param>
+            <param name="salt">盐</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashSaltExtension.ComputeHashWithSaltSHA1(System.Byte[],System.Byte[])">
+            <summary>
+            将待加密数据进行SHA1加盐
+            </summary>
+            <param name="toBeHashed">待加密数据</param>
+            <param name="salt">盐</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashSaltExtension.ComputeHashWithSaltSHA256(System.Byte[],System.Byte[])">
+            <summary>
+            将待加密数据进行SHA256加盐
+            </summary>
+            <param name="toBeHashed">待加密数据</param>
+            <param name="salt">盐</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashSaltExtension.ComputeHashWithSaltSHA512(System.Byte[],System.Byte[])">
+            <summary>
+            将待加密数据进行SHA512加盐
+            </summary>
+            <param name="toBeHashed">待加密数据</param>
+            <param name="salt">盐</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashSaltExtension.ToBase64HashWithSaltMD5(System.String,System.String)">
+            <summary>
+            将待加密数据进行SHA512加盐
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="salt">盐</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashSaltExtension.ToBase64HashWithSaltSHA1(System.String,System.String)">
+            <summary>
+            将待加密数据进行SHA512加盐
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="salt">盐</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashSaltExtension.ToBase64HashWithSaltSHA256(System.String,System.String)">
+            <summary>
+            将待加密数据进行SHA512加盐
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="salt">盐</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashSaltExtension.ToBase64HashWithSaltSHA512(System.String,System.String)">
+            <summary>
+            将待加密数据进行SHA512加盐
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="salt">盐</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashSaltExtension.ToHexHashWithSaltMD5(System.String,System.String)">
+            <summary>
+            将待加密数据进行SHA512加盐
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="salt">盐</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashSaltExtension.ToHexHashWithSaltSHA1(System.String,System.String)">
+            <summary>
+            将待加密数据进行SHA512加盐
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="salt">盐</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashSaltExtension.ToHexHashWithSaltSHA256(System.String,System.String)">
+            <summary>
+            将待加密数据进行SHA512加盐
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="salt">盐</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashSaltExtension.ToHexHashWithSaltSHA512(System.String,System.String)">
+            <summary>
+            将待加密数据进行SHA512加盐
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="salt">盐</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HashSaltExtension.Combine(System.Byte[],System.Byte[])">
+            <summary>
+            字节数组拼接
+            </summary>
+            <param name="first">前</param>
+            <param name="second">后</param>
+        </member>
+        <member name="T:ThirdNet.Core.Common.HMACExtension">
+            <summary>
+            对HMACMD5，HMACSHA1，HMACSHA256，HMACSHA512提供帮助类，生成相应内容
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HMACExtension.ToHexHMACMD5(System.String,System.Byte[])">
+            <summary>
+            将数据加密为HMAC MD5
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="key">key</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HMACExtension.ToHexHMACSHA1(System.String,System.Byte[])">
+            <summary>
+            将数据加密为HMAC SHA1
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="key">key</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HMACExtension.ToHexHMACSHA256(System.String,System.Byte[])">
+            <summary>
+            将数据加密为HMAC SHA256
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="key">key</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HMACExtension.ToHexHMACSHA512(System.String,System.Byte[])">
+            <summary>
+            将数据加密为HMAC SHA512
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="key">key</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HMACExtension.ToBase64HMACMD5(System.String,System.Byte[])">
+            <summary>
+            将数据加密为HMAC MD5
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="key">key</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HMACExtension.ToBase64HMACSHA1(System.String,System.Byte[])">
+            <summary>
+            将数据加密为HMAC SHA1
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="key">key</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HMACExtension.ToBase64HMACSHA256(System.String,System.Byte[])">
+            <summary>
+            将数据加密为HMAC SHA256
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="key">key</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HMACExtension.ToBase64HMACSHA512(System.String,System.Byte[])">
+            <summary>
+            将数据加密为HMAC SHA512
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="key">key</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HMACExtension.ComputeHMACMD5(System.Byte[],System.Byte[])">
+            <summary>
+            将数据加密为HMAC MD5
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="key">key</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HMACExtension.ComputeHMACSHA1(System.Byte[],System.Byte[])">
+            <summary>
+            将数据加密为HMAC SHA1
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="key">key</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HMACExtension.ComputeHMACSHA256(System.Byte[],System.Byte[])">
+            <summary>
+            将数据加密为HMAC SHA256
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="key">key</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HMACExtension.ComputeHMACSHA512(System.Byte[],System.Byte[])">
+            <summary>
+            将数据加密为HMAC SHA512
+            </summary>
+            <param name="data">待加密数据</param>
+            <param name="key">key</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HMACExtension.CompareHash(System.Byte[],System.Byte[])">
+            <summary>
+            两个mac进行比较，验证完整性
+            全验证，避免时间攻击
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HMACExtension.CompareHash(System.String,System.String)">
+            <summary>
+            两个base64的mac进行比较，验证完整性
+            全验证，避免时间攻击
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.Pbkdf2Extension">
+            <summary>
+            Pbkdf2帮助类。
+            Rfc2898DeriveBytes，默认使用HMACSHA1
+            Convert.ToBase64String(new Rfc2898DeriveBytes(Encoding.UTF8.GetBytes(password), salt, 50000).GetBytes(32));
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.Pbkdf2Extension.ToBase64Pbkdf2Password(System.String,System.String,System.Int32,Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivationPrf,System.Int32)">
+            <summary>
+            Pbkdf2加密为base64字符串
+            </summary>
+            <param name="data">待加密字符串</param>
+            <param name="salt">盐</param>
+            <param name="number">迭代次数</param>
+            <param name="prf">算法</param>
+            <param name="bytes_num">key长度</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.Pbkdf2Extension.ToHexPbkdf2Password(System.String,System.String,System.Int32,Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivationPrf,System.Int32)">
+            <summary>
+            Pbkdf2加密为16进制字符串
+            </summary>
+            <param name="data">待加密字符串</param>
+            <param name="salt">盐</param>
+            <param name="number">迭代次数</param>
+            <param name="prf">算法</param>
+            <param name="bytes_num">key长度</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.Pbkdf2Extension.ToBase64Pbkdf2Password(System.String,System.Byte[],System.Int32,Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivationPrf,System.Int32)">
+            <summary>
+            Pbkdf2加密为base64字符串
+            </summary>
+            <param name="data">待加密字符串</param>
+            <param name="salt">盐</param>
+            <param name="number">迭代次数</param>
+            <param name="prf">算法</param>
+            <param name="bytes_num">key长度</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.Pbkdf2Extension.ToHexPbkdf2Password(System.String,System.Byte[],System.Int32,Microsoft.AspNetCore.Cryptography.KeyDerivation.KeyDerivationPrf,System.Int32)">
+            <summary>
+            Pbkdf2加密为16进制字符串
+            </summary>
+            <param name="data">待加密字符串</param>
+            <param name="salt">盐</param>
+            <param name="number">迭代次数</param>
+            <param name="prf">算法</param>
+            <param name="bytes_num">key长度</param>
+        </member>
+        <member name="T:ThirdNet.Core.Common.RandomHelper">
+            <summary>
+            随机数帮助
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RandomHelper.Create(System.Int32)">
+            <summary>
+            创建随机字节数组
+            </summary>
+            <param name="length">字节数组长度</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RandomHelper.CreateBase64(System.Int32)">
+            <summary>
+            创建base64的随机数
+            </summary>
+            <param name="length">字节数组长度</param>
+        </member>
+        <member name="T:ThirdNet.Core.Common.RsaExtension">
+            <summary>
+            RSA帮助方法
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RsaExtension.EncryptRsa(System.Byte[],System.Byte[],System.Boolean)">
+            <summary>
+            对数据进行RSA加密
+            </summary>
+            <param name="data">原始数据</param>
+            <param name="publickey">公钥</param>
+            <param name="oeap">是否填充，默认false</param>
+            <returns>加密后的内容</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RsaExtension.DecryptRsa(System.Byte[],System.Byte[],System.Boolean)">
+            <summary>
+            RSA解密数据
+            </summary>
+            <param name="data">密文</param>
+            <param name="privatekey">私钥</param>
+            <param name="oeap">是否填充</param>
+            <returns>原始数据</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RsaExtension.Sign(System.Byte[],System.Byte[])">
+            <summary>
+            对数据进行签名
+            </summary>
+            <param name="data">数据内容</param>
+            <param name="privatekey">私钥</param>
+            <returns>签名内容</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RsaExtension.Verify(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            对数据的签名进行验证
+            </summary>
+            <param name="data">原始数据</param>
+            <param name="publickey">公钥</param>
+            <param name="sig">待验证的签名内容</param>
+            <returns>是否通过验证</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RsaExtension.EncryptRsaWithOpenSSLKey(System.Byte[],System.Byte[],System.Boolean)">
+            <summary>
+            对数据进行RSA加密
+            </summary>
+            <param name="data">原始数据</param>
+            <param name="publickey">公钥</param>
+            <param name="oeap">是否填充，默认false</param>
+            <returns>加密后的内容</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RsaExtension.DecryptRsaWithOpenSSLKey(System.Byte[],System.Byte[],System.Boolean)">
+            <summary>
+            RSA解密数据
+            </summary>
+            <param name="data">密文</param>
+            <param name="privatekey">私钥</param>
+            <param name="oeap">是否填充</param>
+            <returns>原始数据</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RsaExtension.SignWithOpenSSLKey(System.Byte[],System.Byte[])">
+            <summary>
+            对数据进行签名
+            </summary>
+            <param name="data">数据内容</param>
+            <param name="privatekey">私钥</param>
+            <returns>签名内容</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RsaExtension.VerifyWithOpenSSLKey(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            对数据的签名进行验证
+            </summary>
+            <param name="data">原始数据</param>
+            <param name="publickey">公钥</param>
+            <param name="sig">待验证的签名内容</param>
+            <returns>是否通过验证</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RsaExtension.CreateRsaProviderFromOpenSSLPKCS1PrivateKey(System.Byte[])">
+            <summary>
+            私钥生成
+            </summary>
+            <param name="privateKeyBits">私钥字节数组</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RsaExtension.GetIntegerSize(System.IO.BinaryReader)">
+            <summary>
+            取长度
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RsaExtension.CreateRsaProviderFromOpenSSLPKCS1PublicKey(System.Byte[])">
+            <summary>
+            创建公钥早期openssl1.0之前版本，一般提供是pkcs#1格式，有很多软件只支持pkcs#1格式（js rsa模块)
+            </summary>
+            <param name="x509key">key</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RsaExtension.CompareByteArrays(System.Byte[],System.Byte[])">
+            <summary>
+            比较字节数组
+            </summary>
+            <param name="a">数组a</param>
+            <param name="b">数组b</param>
+        </member>
+        <member name="T:ThirdNet.Core.Common.TripleDESExtension">
+            <summary>
+            3DES帮助
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.TripleDESExtension.EncryptTripleDES(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            对data进行DES加密，使用默认设置，CBC  PKCS7
+            </summary>
+            <param name="data">数据</param>
+            <param name="key">key</param>
+            <param name="iv">向量</param>
+            <returns>加密后的字节数组</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.TripleDESExtension.EncryptTripleDESToBase64(System.String,System.String,System.String)">
+            <summary>
+            将原始字符串加密为DES  base64的字符串
+            </summary>
+            <param name="data">原始字符串</param>
+            <param name="key">base64编码的key</param>
+            <param name="iv">base64编码的iv</param>
+            <returns>base64编码的密文</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.TripleDESExtension.DecryptTripleDES(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            将密文用DES解密为明文的字节数组
+            </summary>
+            <param name="data">密文字节数组</param>
+            <param name="key">key</param>
+            <param name="iv">向量</param>
+            <returns>明文字节数组</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.TripleDESExtension.DecryptTripleDESFromBase64(System.String,System.String,System.String)">
+            <summary>
+            将base64编码的字符串用DES解密出UTF8编码的明文字符串
+            </summary>
+            <param name="data">base64编码的字符串</param>
+            <param name="key">key</param>
+            <param name="iv">向量</param>
+            <returns>UTF8编码的明文字符串</returns>
+        </member>
+        <member name="T:ThirdNet.Core.Common.BulkCopyException">
+            <summary>
+            批量导入异常
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.BulkCopyException.#ctor">
+            <summary>
+            默认初始化
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.BulkCopyException.#ctor(System.String)">
+            <summary>
+            使用指定的错误信息初始化
+            </summary>
+            <param name="message">错误消息</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.BulkCopyException.#ctor(System.String,System.Exception)">
+            <summary>
+            使用指定错误信息和对作为此异常原因的内部异常的引用来初始化
+            </summary>
+            <param name="message">错误信息</param>
+            <param name="exception">导致当前异常的异常</param>
+        </member>
+        <member name="T:ThirdNet.Core.Common.DbBulkAttribute">
+            <summary>
+            数据库批量操作标记，用于标记对象属性。
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.DbBulkAttribute.Ignore">
+            <summary>
+            是否忽略。忽略则其余属性不需要设置，不忽略则必须设置Type。
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.DbBulkAttribute.ColumnName">
+            <summary>
+            列名，不设置则默认为实体字段名小写
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.DbBulkAttribute.Type">
+            <summary>
+            数据类型,默认为text.
+            SQL SERVER不需要设置
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.DbBulkAttribute.UnknownType">
+            <summary>
+            未知类型，设置则使用该类型对应的值
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.DbBulkExtension.ToNpgsqlType(System.Type)">
+            <summary>
+            根据类型转换为数据库类型。无配置的类型默认转为字符串。
+            转换关系：
+            { typeof(int),  NpgsqlDbType.Integer},
+            { typeof(string),  NpgsqlDbType.Text},
+            { typeof(DateTime),  NpgsqlDbType.Timestamp},
+            { typeof(double),  NpgsqlDbType.Double},
+            { typeof(long),  NpgsqlDbType.Bigint},
+            { typeof(int?),  NpgsqlDbType.Integer},
+            { typeof(string),  NpgsqlDbType.Text},
+            { typeof(DateTime?),  NpgsqlDbType.Timestamp},
+            { typeof(double?),  NpgsqlDbType.Double},
+            { typeof(long?),  NpgsqlDbType.Bigint},
+            </summary>
+            <param name="type">.net类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.DbBulkExtension.ToCsvFile``1(System.Collections.Generic.List{``0},System.Action{CsvHelper.CsvContext},System.String)">
+            <summary>
+            将list数据写入csv文件
+            </summary>
+            <typeparam name="T">实体类型</typeparam>
+            <param name="list">集合</param>
+            <returns>文件路径</returns>
+        </member>
+        <member name="T:ThirdNet.Core.Common.ExpressionExtensions">
+            <summary>
+            表达式扩展类
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.ExpressionExtensions.Compose``1(System.Linq.Expressions.Expression{``0},System.Linq.Expressions.Expression{``0},System.Func{System.Linq.Expressions.Expression,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression})">
+            <summary>
+                以特定的条件运行组合两个Expression表达式
+            </summary>
+            <typeparam name="T">表达式的主实体类型</typeparam>
+            <param name="first">第一个Expression表达式</param>
+            <param name="second">要组合的Expression表达式</param>
+            <param name="merge">组合条件运算方式</param>
+            <returns>组合后的表达式</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.ExpressionExtensions.And``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+                以 Expression.AndAlso 组合两个Expression表达式
+            </summary>
+            <typeparam name="T">表达式的主实体类型</typeparam>
+            <param name="first">第一个Expression表达式</param>
+            <param name="second">要组合的Expression表达式</param>
+            <returns>组合后的表达式</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.ExpressionExtensions.Or``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+                以 Expression.OrElse 组合两个Expression表达式
+            </summary>
+            <typeparam name="T">表达式的主实体类型</typeparam>
+            <param name="first">第一个Expression表达式</param>
+            <param name="second">要组合的Expression表达式</param>
+            <returns>组合后的表达式</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.IDbAsyncBulk.InitDefaultMappings``1">
+            <summary>
+            默认初始化。
+            使用反射自动初始化所有类型，使用字段名，数据库字段使用字段名小写。数据类型使用默认的基本类型。
+            会忽略使用DbBulk，Ignore属性标记的字段。
+            若有特殊处理，需要自定义 进行初始化操作。
+            </summary>
+            <typeparam name="T">对应类型</typeparam>
+        </member>
+        <member name="M:ThirdNet.Core.Common.IDbAsyncBulk.CopyToServer``1(System.String,System.String,System.Collections.Generic.List{``0})">
+            <summary>
+            批量添加
+            </summary>
+            <typeparam name="T">待添加的对象实体类型</typeparam>
+            <param name="connection_string">数据库连接字符串</param>
+            <param name="targetTable">目标表名</param>
+            <param name="list">待添加的数据列表</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.IDbAsyncBulk.CopyToServer``1(System.Data.Common.DbConnection,System.String,System.Collections.Generic.List{``0})">
+            <summary>
+            批量添加
+            </summary>
+            <typeparam name="T">待添加的对象实体类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="targetTable">目标表名</param>
+            <param name="list">待添加的数据列表</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.IDbAsyncBulk.CopyToServerWithoutUniqueKey``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            批量添加，不存在的添加，存在的则不执行操作。无唯一约束。
+            1.将数据加入临时表
+            2.将临时表数据插入目标表，通过判断相关字段判断数据是否存在，不存在则插入。存在则不执行操作。
+            </summary>
+            <typeparam name="T">待添加的对象实体类型</typeparam>
+            <param name="connection">数据库连接</param>
+            <param name="where_keys">判断字段</param>
+            <param name="targetTable">目标表名</param>
+            <param name="list">待添加的数据列表</param>
+            <param name="tempTable">临时表名</param>
+            <param name="insertmapping">插入的字段</param>
+            <param name="where_extend_sql">自定义where语句</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.IDbAsyncBulk.CopyToServerWithoutUniqueKey``1(System.String,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            批量添加，不存在的添加，存在的则不执行操作。无唯一约束。
+            1.将数据加入临时表
+            2.将临时表数据插入目标表，通过判断相关字段判断数据是否存在，不存在则插入。存在则不执行操作。
+            </summary>
+            <typeparam name="T">待添加的对象实体类型</typeparam>
+            <param name="connection_string">数据库连接</param>
+            <param name="where_keys">判断字段</param>
+            <param name="targetTable">目标表名</param>
+            <param name="list">待添加的数据列表</param>
+            <param name="tempTable">临时表名</param>
+            <param name="insertmapping">插入的字段</param>
+            <param name="where_extend_sql">自定义where语句</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.IDbAsyncBulk.MergeToServer``1(System.String,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection_string">连接字符串</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+            <param name="update_extend_sql">自定义更新字段，如count=count+EXCLUDED.count</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.IDbAsyncBulk.MergeToServer``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+            <param name="update_extend_sql">自定义更新字段，如count=count+EXCLUDED.count</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.IDbAsyncBulk.UpdateToServer``1(System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.String,System.String)">
+            <summary>
+            批量更新操作。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据更新到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection_string">连接字符串</param>
+            <param name="where_name">匹配where比较的字段</param>
+            <param name="update_name">需要更新的字段名</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="update_extend_sql">扩展set语句</param>
+            <param name="where_extend_sql">扩展where语句</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.IDbAsyncBulk.UpdateToServer``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Boolean,System.String,System.String)">
+            <summary>
+            批量更新操作。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据更新到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="where_name">匹配where比较的字段</param>
+            <param name="update_name">需要更新的字段名</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="createtemp">是否创建临时表</param>
+            <param name="update_extend_sql">扩展set语句</param>
+            <param name="where_extend_sql">扩展where语句</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.IDbAsyncBulk.MergeAndDeleteToServer``1(System.String,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表，源表不存在而目标表存在则删除。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据merge到目标表
+            4.将临时表不存在，但目标表存在的数据删除
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection_string">连接字符串</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+            <param name="update_extend_sql">自定义更新字段，如count=count+EXCLUDED.count</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.IDbAsyncBulk.MergeAndDeleteToServer``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表，源表不存在而目标表存在则删除。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据merge到目标表
+            4.将临时表不存在，但目标表存在的数据删除
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+            <param name="update_extend_sql">自定义更新字段，如count=count+EXCLUDED.count</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.IDbAsyncBulk.CreateTempTable(System.String,System.String,System.Data.Common.DbConnection)">
+            <summary>
+            创建临时表
+            </summary>
+            <param name="tempTable">临时表名</param>
+            <param name="targetTable">目标表名</param>
+            <param name="connection">数据库连接</param>
+        </member>
+        <member name="P:ThirdNet.Core.Common.MySqlAsyncBulk.Mappings">
+            <summary>
+            数据库字段
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.MySqlAsyncBulk.DeleteFile">
+            <summary>
+            是否删除临时文件
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.MySqlAsyncBulk.#ctor(Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.Common.MySqlAsyncBulk})">
+            <summary>
+            构造函数
+            </summary>
+            <param name="log">日志记录</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.MySqlAsyncBulk.InitDefaultMappings``1">
+            <summary>
+            默认初始化。
+            使用反射自动初始化所有类型，使用字段名，数据库字段使用字段名小写。数据类型使用默认的基本类型。
+            会忽略使用DbBulkIgnore标记的字段。
+            若有特殊处理，需要自定义 进行初始化操作。
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.MySqlAsyncBulk.CopyToServer``1(System.String,System.String,System.Collections.Generic.List{``0})">
+            <summary>
+            批量添加
+            </summary>
+            <typeparam name="T">待添加的对象实体类型</typeparam>
+            <param name="connection_string">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="targetTable">目标表名</param>
+            <param name="list">待添加的数据列表</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.MySqlAsyncBulk.CopyToServer``1(System.Data.Common.DbConnection,System.String,System.Collections.Generic.List{``0})">
+            <summary>
+            批量添加。
+            若添加数量与传入数据数量不一致则抛出异常.
+            列的顺序也需要和配置的列顺序一致。
+            </summary>
+            <typeparam name="T">待添加的对象实体类型</typeparam>
+            <param name="connection">数据库连接</param>
+            <param name="targetTable">目标表名</param>
+            <param name="list">待添加的数据列表</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.MySqlAsyncBulk.CreateTempTable(System.String,System.String,System.Data.Common.DbConnection)">
+            <summary>
+            创建临时表
+            </summary>
+            <param name="tempTable">临时表</param>
+            <param name="targetTable">目标表</param>
+            <param name="connection">数据库连接</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.MySqlAsyncBulk.MergeAndDeleteToServer``1(System.String,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表，源表不存在而目标表存在则删除。默认不带事务，需要手动设置事务。
+            1.新建临时表
+            2.数据导入临时表
+            3.将临时表不存在，但目标表存在的数据删除
+            4.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection_string">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.MySqlAsyncBulk.MergeAndDeleteToServer``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表，源表不存在而目标表存在则删除。默认不带事务，需要手动设置事务。
+            1.新建临时表
+            2.数据导入临时表
+            3.将临时表不存在，但目标表存在的数据删除
+            4.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.MySqlAsyncBulk.MergeToServer``1(System.String,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection_string">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="keys">mysql自动判断主键或唯一约束。该字段不需要</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.MySqlAsyncBulk.MergeToServer``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="keys">mysql自动判断主键或唯一约束。该字段不需要</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.MySqlAsyncBulk.UpdateToServer``1(System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.String,System.String)">
+            <summary>
+            批量更新操作。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据更新到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection_string">连接字符串</param>
+            <param name="where_name">匹配where比较的字段</param>
+            <param name="update_name">需要更新的字段名</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.MySqlAsyncBulk.UpdateToServer``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Boolean,System.String,System.String)">
+            <summary>
+            批量更新操作。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据更新到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection">连接字符串</param>
+            <param name="where_name">匹配where比较的字段</param>
+            <param name="update_name">需要更新的字段名</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+        </member>
+        <member name="T:ThirdNet.Core.Common.NpgMappingInfo">
+            <summary>
+            映射信息
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.NpgMappingInfo.DbKey">
+            <summary>
+            映射的字段名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.NpgMappingInfo.ObjectKey">
+            <summary>
+            对象名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.NpgMappingInfo.Type">
+            <summary>
+            映射的字段类型，默认为NpgsqlTypes.NpgsqlDbType.Text
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.NpgMappingInfo.UnknownType">
+            <summary>
+            未知类型，设置则使用该类型对应的值
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.NpgSqlParameterCreater">
+            <summary>
+            postgresql参数创建
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.NpgSqlParameterCreater.CreateDbParameter(System.String,System.Object)">
+            <summary>
+            创建postgresql参数
+            </summary>
+            <param name="name">参数名</param>
+            <param name="value">参数值</param>
+        </member>
+        <member name="P:ThirdNet.Core.Common.database.OpenGuassAsyncBulk.Mappings">
+            <summary>
+            数据库字段
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.database.OpenGuassAsyncBulk.#ctor(Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.Common.database.OpenGuassAsyncBulk})">
+            <summary>
+            构造函数
+            </summary>
+            <param name="log">日志记录</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.database.OpenGuassAsyncBulk.InitDefaultMappings``1">
+            <summary>
+            默认初始化。
+            使用反射自动初始化所有类型，使用字段名，数据库字段使用字段名小写。数据类型使用默认的基本类型。
+            会忽略使用DbBulkIgnore标记的字段。
+            若有特殊处理，需要自定义 进行初始化操作。
+            </summary>
+            <param name="type"></param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.database.OpenGuassAsyncBulk.CopyToServer``1(System.String,System.String,System.Collections.Generic.List{``0})">
+            <summary>
+            批量添加
+            </summary>
+            <typeparam name="T">待添加的对象实体类型</typeparam>
+            <param name="connection_string">数据库连接字符串</param>
+            <param name="targetTable">目标表名</param>
+            <param name="list">待添加的数据列表</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.database.OpenGuassAsyncBulk.CopyToServer``1(System.Data.Common.DbConnection,System.String,System.Collections.Generic.List{``0})">
+            <summary>
+            批量添加
+            </summary>
+            <typeparam name="T">待添加的对象实体类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="targetTable">目标表名</param>
+            <param name="list">待添加的数据列表</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.database.OpenGuassAsyncBulk.CopyToServerWithoutUniqueKey``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            批量添加，不存在的添加，存在的则不执行操作。无唯一约束。
+            1.将数据加入临时表
+            2.将临时表数据插入目标表，通过判断相关字段判断数据是否存在，不存在则插入。存在则不执行操作。
+            </summary>
+            <typeparam name="T">待添加的对象实体类型</typeparam>
+            <param name="connection">数据库连接</param>
+            <param name="where_keys">判断字段</param>
+            <param name="targetTable">目标表名</param>
+            <param name="list">待添加的数据列表</param>
+            <param name="tempTable">临时表名</param>
+            <param name="insertmapping">插入的字段</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.database.OpenGuassAsyncBulk.CopyToServerWithoutUniqueKey``1(System.String,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            批量添加，不存在的添加，存在的则不执行操作。无唯一约束。
+            1.将数据加入临时表
+            2.将临时表数据插入目标表，通过判断相关字段判断数据是否存在，不存在则插入。存在则不执行操作。
+            </summary>
+            <typeparam name="T">待添加的对象实体类型</typeparam>
+            <param name="connection_string">数据库连接</param>
+            <param name="where_keys">判断字段</param>
+            <param name="targetTable">目标表名</param>
+            <param name="list">待添加的数据列表</param>
+            <param name="tempTable">临时表名</param>
+            <param name="insertmapping">插入的字段</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.database.OpenGuassAsyncBulk.MergeToServer``1(System.String,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection_string">连接字符串</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+            <param name="update_extend_sql">自定义更新字段，如count=count+EXCLUDED.count</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.database.OpenGuassAsyncBulk.MergeToServer``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+            <param name="update_extend_sql">自定义更新字段，如count=count+EXCLUDED.count</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.database.OpenGuassAsyncBulk.UpdateToServer``1(System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.String,System.String)">
+            <summary>
+            批量更新操作。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据更新到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection_string">连接字符串</param>
+            <param name="where_name">匹配where比较的字段</param>
+            <param name="update_name">需要更新的字段名</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.database.OpenGuassAsyncBulk.UpdateToServer``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Boolean,System.String,System.String)">
+            <summary>
+            批量更新操作。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据更新到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="where_name">匹配where比较的字段</param>
+            <param name="update_name">需要更新的字段名</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="createtemp">是否创建临时表</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.database.OpenGuassAsyncBulk.MergeAndDeleteToServer``1(System.String,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表，源表不存在而目标表存在则删除。默认带事务。
+            1.新建临时表
+            2.数据导入临时表
+            3.将临时表不存在，但目标表存在的数据删除
+            4.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection_string">连接字符串</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+            <param name="update_extend_sql">自定义更新字段，如count=count+EXCLUDED.count</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.database.OpenGuassAsyncBulk.MergeAndDeleteToServer``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表，源表不存在而目标表存在则删除。默认不带事务，需要手动设置事务。
+            1.新建临时表
+            2.数据导入临时表
+            3.将临时表不存在，但目标表存在的数据删除
+            4.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+            <param name="update_extend_sql">自定义更新字段，如count=count+EXCLUDED.count</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.database.OpenGuassAsyncBulk.CreateTempTable(System.String,System.String,System.Data.Common.DbConnection)">
+            <summary>
+            创建临时表
+            </summary>
+            <param name="tempTable">临时表名</param>
+            <param name="targetTable">目标表名</param>
+            <param name="connection">数据库连接</param>
+        </member>
+        <member name="T:ThirdNet.Core.Common.PostgresqlAsyncBulk">
+            <summary>
+            PostgreSql批量添加
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.PostgresqlAsyncBulk.Mappings">
+            <summary>
+            数据库字段
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.PostgresqlAsyncBulk.#ctor(Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.Common.PostgresqlAsyncBulk})">
+            <summary>
+            构造函数
+            </summary>
+            <param name="log">日志记录</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.PostgresqlAsyncBulk.InitDefaultMappings``1">
+            <summary>
+            默认初始化。
+            使用反射自动初始化所有类型，使用字段名，数据库字段使用字段名小写。数据类型使用默认的基本类型。
+            会忽略使用DbBulkIgnore标记的字段。
+            若有特殊处理，需要自定义 进行初始化操作。
+            </summary>
+            <param name="type"></param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.PostgresqlAsyncBulk.CopyToServer``1(System.String,System.String,System.Collections.Generic.List{``0})">
+            <summary>
+            批量添加
+            </summary>
+            <typeparam name="T">待添加的对象实体类型</typeparam>
+            <param name="connection_string">数据库连接字符串</param>
+            <param name="targetTable">目标表名</param>
+            <param name="list">待添加的数据列表</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.PostgresqlAsyncBulk.CopyToServer``1(System.Data.Common.DbConnection,System.String,System.Collections.Generic.List{``0})">
+            <summary>
+            批量添加
+            </summary>
+            <typeparam name="T">待添加的对象实体类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="targetTable">目标表名</param>
+            <param name="list">待添加的数据列表</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.PostgresqlAsyncBulk.CopyToServerWithoutUniqueKey``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            批量添加，不存在的添加，存在的则不执行操作。无唯一约束。
+            1.将数据加入临时表
+            2.将临时表数据插入目标表，通过判断相关字段判断数据是否存在，不存在则插入。存在则不执行操作。
+            </summary>
+            <typeparam name="T">待添加的对象实体类型</typeparam>
+            <param name="connection_string">数据库连接</param>
+            <param name="where_keys">判断字段</param>
+            <param name="targetTable">目标表名</param>
+            <param name="list">待添加的数据列表</param>
+            <param name="tempTable">临时表名</param>
+            <param name="insertmapping">插入的字段</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.PostgresqlAsyncBulk.CopyToServerWithoutUniqueKey``1(System.String,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            批量添加，不存在的添加，存在的则不执行操作。无唯一约束。
+            1.将数据加入临时表
+            2.将临时表数据插入目标表，通过判断相关字段判断数据是否存在，不存在则插入。存在则不执行操作。
+            </summary>
+            <typeparam name="T">待添加的对象实体类型</typeparam>
+            <param name="connection_string">数据库连接</param>
+            <param name="where_keys">判断字段</param>
+            <param name="targetTable">目标表名</param>
+            <param name="list">待添加的数据列表</param>
+            <param name="tempTable">临时表名</param>
+            <param name="insertmapping">插入的字段</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.PostgresqlAsyncBulk.MergeToServer``1(System.String,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection_string">连接字符串</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+            <param name="update_extend_sql">自定义更新字段，如count=count+EXCLUDED.count</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.PostgresqlAsyncBulk.MergeToServer``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+            <param name="update_extend_sql">自定义更新字段，如count=count+EXCLUDED.count</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.PostgresqlAsyncBulk.UpdateToServer``1(System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.String,System.String)">
+            <summary>
+            批量更新操作。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据更新到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection_string">连接字符串</param>
+            <param name="where_name">匹配where比较的字段</param>
+            <param name="update_name">需要更新的字段名</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="update_extend_sql">扩展set语句</param>
+            <param name="where_extend_sql">扩展where语句</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.PostgresqlAsyncBulk.UpdateToServer``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Boolean,System.String,System.String)">
+            <summary>
+            批量更新操作。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据更新到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="where_name">匹配where比较的字段</param>
+            <param name="update_name">需要更新的字段名</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="createtemp">是否创建临时表</param>
+            <param name="update_extend_sql">扩展set语句</param>
+            <param name="where_extend_sql">扩展where语句</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.PostgresqlAsyncBulk.MergeAndDeleteToServer``1(System.String,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表，源表不存在而目标表存在则删除。默认带事务。
+            1.新建临时表
+            2.数据导入临时表
+            3.将临时表不存在，但目标表存在的数据删除
+            4.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection_string">连接字符串</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+            <param name="update_extend_sql">自定义更新字段，如count=count+EXCLUDED.count</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.PostgresqlAsyncBulk.MergeAndDeleteToServer``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表，源表不存在而目标表存在则删除。默认不带事务，需要手动设置事务。
+            1.新建临时表
+            2.数据导入临时表
+            3.将临时表不存在，但目标表存在的数据删除
+            4.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+            <param name="update_extend_sql">自定义更新字段，如count=count+EXCLUDED.count</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.PostgresqlAsyncBulk.CreateTempTable(System.String,System.String,System.Data.Common.DbConnection)">
+            <summary>
+            创建临时表
+            </summary>
+            <param name="tempTable">临时表名</param>
+            <param name="targetTable">目标表名</param>
+            <param name="connection">数据库连接</param>
+        </member>
+        <member name="T:ThirdNet.Core.Common.SqlServerAsyncBulk">
+            <summary>
+            sql server批量处理
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.SqlServerAsyncBulk._log">
+            <summary>
+            日志记录
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.SqlServerAsyncBulk.BatchSize">
+            <summary>
+            插入批次大小（每次提交一批次数据）。默认10000。
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.SqlServerAsyncBulk.BulkCopyTimeout">
+            <summary>
+            超时时间,默认300
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.SqlServerAsyncBulk.ColumnMappings">
+            <summary>
+            列映射
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlServerAsyncBulk.#ctor(Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.Common.SqlServerAsyncBulk})">
+            <summary>
+            构造函数
+            </summary>
+            <param name="log"></param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlServerAsyncBulk.InitDefaultMappings``1">
+            <summary>
+            默认初始化。
+            使用反射自动初始化所有类型，使用字段名，数据库字段使用字段名小写。数据类型使用默认的基本类型。
+            会忽略使用DbBulkIgnore标记的字段。
+            若有特殊处理，需要自定义 进行初始化操作。
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlServerAsyncBulk.CopyToServer``1(System.String,System.String,System.Collections.Generic.List{``0})">
+            <summary>
+            批量添加
+            </summary>
+            <typeparam name="T">待添加的对象实体类型</typeparam>
+            <param name="connection_string">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="targetTable">目标表名</param>
+            <param name="list">待添加的数据列表</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlServerAsyncBulk.CopyToServer``1(System.Data.Common.DbConnection,System.String,System.Collections.Generic.List{``0})">
+            <summary>
+            批量添加
+            </summary>
+            <typeparam name="T">待添加的对象实体类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="targetTable">目标表名</param>
+            <param name="list">待添加的数据列表</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlServerAsyncBulk.MergeToServer``1(System.String,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection_string">连接字符串</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlServerAsyncBulk.MergeToServer``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlServerAsyncBulk.MergeAndDeleteToServer``1(System.String,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表，源表不存在而目标表存在则删除。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection_string">连接字符串</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlServerAsyncBulk.MergeAndDeleteToServer``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            存在则更新，不存在则插入表，源表不存在而目标表存在则删除。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据merge到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="keys">源表与目标表进行匹配的字段名，需要主键或唯一。否则可能会导致错误。</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="insertmapping">需要插入的列，为空则直接使用Mapping的字段，为了避免插入自增列</param>
+            <param name="updatemapping">需要更新的列，为空则直接使用Mapping的字段</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlServerAsyncBulk.UpdateToServer``1(System.String,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.String,System.String)">
+            <summary>
+            批量更新操作。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据更新到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection_string">连接字符串</param>
+            <param name="where_name">匹配where比较的字段</param>
+            <param name="update_name">需要更新的字段名</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlServerAsyncBulk.UpdateToServer``1(System.Data.Common.DbConnection,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{``0},System.String,System.Boolean,System.String,System.String)">
+            <summary>
+            批量更新操作。
+            1.新建临时表
+            2.数据导入临时表
+            3.数据更新到目标表
+            </summary>
+            <typeparam name="T">数据类型</typeparam>
+            <param name="connection">数据库连接，需要确保数据库连接已经打开。若无后续操作，不应复用该连接。</param>
+            <param name="where_name">匹配where比较的字段</param>
+            <param name="update_name">需要更新的字段名</param>
+            <param name="targetTable">目标表</param>
+            <param name="list">待导入的数据列表</param>
+            <param name="tempTable">导入到临时表表名, 默认为目标表名+#或+_temp</param>
+            <param name="createtemp">是否创建临时表</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlServerAsyncBulk.CreateTempTable(System.String,System.String,System.Data.Common.DbConnection)">
+            <summary>
+            创建临时表
+            </summary>
+            <param name="tempTable">临时表名</param>
+            <param name="targetTable">目标表名</param>
+            <param name="connection">数据库连接</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.GeneratorHelper.CreateIdCards(System.String,System.Int32,System.Int32,System.Int32,System.Collections.Generic.List{System.String})">
+            <summary>
+            生成身份证号
+            （1）前1、2位数字表示：所在省份的代码；
+            （2）第3、4位数字表示：所在城市的代码；
+            （3）第5、6位数字表示：所在区县的代码；
+            （4）第7 ~14位数字表示：出生年、月、日；
+            （5）第15 ~17位数字是顺序码：表示在同一地址码所标识的区域范围内,对同年、同月、同日出生的人编定的顺序号,
+                  顺序码的奇数分配给男性,偶数分配给女性（即第17位是奇数代表男性，是偶数代表女性）。
+            （6）第18位数字是校检码：用来检验身份证的正确性。校检码可以是0 ~9的数字，有时也用x表示。
+            </summary>
+            <param name="pre_code">身份证前6位。省市区。</param>
+            <param name="count"></param>
+            <param name="min_age">最小年龄</param>
+            <param name="max_age">最大年龄</param>
+            <param name="exsist">需要排除的身份证号列表</param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.GeneratorHelper.CteatePhoneNumber(System.Int32,System.Collections.Generic.List{System.String})">
+            <summary>
+            生成手机号
+             "135", "136","137","138","139","147","150","151","152","157","158","159","178","182","183","184","187","188","198",
+            "133","153","180","181","189", "130","131","132","145","155","156","176","185","186"
+            </summary>
+            <param name="count">生成数量</param>
+            <returns></returns>
+        </member>
+        <member name="T:ThirdNet.Core.Common.GpsHelper">
+            <summary>
+            gps帮助类
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.GpsHelper.GetDistance(System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Double})">
+            <summary>
+            计算两点间距离
+            </summary>
+            <param name="longitude1">经度1</param>
+            <param name="latitude1">纬度1</param>
+            <param name="longitude2">经度2</param>
+            <param name="latitude2">纬度2</param>
+            <returns>亮点距离</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.GpsHelper.GetAngle(System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Double})">
+            <summary>
+            获取方位角
+            </summary>
+            <param name="from_longitude">开始经度</param>
+            <param name="from_latitude">开始纬度</param>
+            <param name="to_longitude">结束经度</param>
+            <param name="to_latitude">结束纬度</param>
+            <returns>方位角</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.GpsHelper.GpsToBaidu(ThirdNet.Core.Common.GPSNode)">
+            <summary>
+            gps转百度坐标
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.GpsHelper.GpsToGoogle(ThirdNet.Core.Common.GPSNode)">
+            <summary>
+            gps转谷歌坐标
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.GpsHelper.BaiduToGoogle(ThirdNet.Core.Common.GPSNode)">
+            <summary>
+            百度坐标转谷歌坐标
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.GpsHelper.GoogleToBaidu(ThirdNet.Core.Common.GPSNode)">
+            <summary>
+            谷歌坐标转百度坐标
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.GpsHelper.BaiduToGps(ThirdNet.Core.Common.GPSNode)">
+            <summary>
+            百度转GPS坐标
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.GpsHelper.GoogleToGps(ThirdNet.Core.Common.GPSNode)">
+            <summary>
+            谷歌转GPS坐标
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.ConsistentHash">
+            <summary>
+            一致性哈希实现
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.ConsistentHash._nodes">
+            <summary>
+            虚拟节点
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.ConsistentHash._totalcount">
+            <summary>
+            环上总结点数
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.ConsistentHash._virtualcount">
+            <summary>
+            每个物理节点包含的虚拟节点数量
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.ConsistentHash._hashvalue">
+            <summary>
+            哈希算法
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.ConsistentHash.InitNodes(ThirdNet.Core.Common.PhysicalNodeInfo[])">
+            <summary>
+            初始化环，根据key，将物理节点分解成多个虚拟节点，并分配到环上对应的位置。
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.ConsistentHash.GetNode(System.String)">
+            <summary>
+            获取key对应的物理节点
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.ConsistentHash.FindNodeFromIndex(System.Int64)">
+            <summary>
+            从环的某个位置查找对应node
+            </summary>
+            <param name="index">哈希值</param>
+            <param name="nodes">环</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.ConsistentHash.FindEmptyIndex(System.Int64,ThirdNet.Core.Common.VirtualNodeInfo[])">
+            <summary>
+            查找环上对应哈希值的下一个空节点
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.ConsistentHash.GetIndex(System.Int64,System.Int32)">
+            <summary>
+            获取当前值
+            </summary>
+            <param name="index">当前哈希值</param>
+            <param name="length">环总长度</param>
+        </member>
+        <member name="F:ThirdNet.Core.Common.CRC16HashValue._format">
+            <summary>
+            CRC验证
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.HttpClientExtension">
+            <summary>
+            HttpClient扩展方法
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HttpClientExtension.CreateDefaultClient(System.Collections.Generic.List{ThirdNet.Core.Common.ResponseAction})">
+            <summary>
+            创建默认的HttpClient。默认包括压缩操作。
+            </summary>
+            <param name="list">响应处理操作列表</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HttpClientExtension.CreateDefaultHttpJsonClient(System.Collections.Generic.List{ThirdNet.Core.Common.ResponseAction})">
+            <summary>
+            创建默认HttpClient，包括压缩操作及json的Accept头。
+            </summary>
+            <param name="list">响应处理操作列表</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HttpClientExtension.CreateDefaultThirdNetClient(System.String,System.String,System.Collections.Generic.List{ThirdNet.Core.Common.ResponseAction})">
+            <summary>
+            创建默认HttpClient，包括压缩操作，json的Accept头以及用户Basic认证信息。
+            </summary>
+            <param name="list">响应处理操作列表</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HttpClientExtension.GetDefaultStringAsync(System.Net.Http.HttpClient,System.String)">
+            <summary>
+            GET请求字符串结果
+            </summary>
+            <param name="client">Http对象</param>
+            <param name="url">访问地址</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HttpClientExtension.GetDefaultJsonAsync``1(System.Net.Http.HttpClient,System.String)">
+            <summary>
+            GET请求并将结果转换为json对象
+            </summary>
+            <param name="client">Http对象</param>
+            <param name="url">访问地址</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HttpClientExtension.PostDefaultJsonAsync(System.Net.Http.HttpClient,System.String,System.Object)">
+            <summary>
+            Post Json数据
+            </summary>
+            <param name="client">Http对象</param>
+            <param name="url">访问地址</param>
+            <param name="data">数据对象</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.HttpClientExtension.PutDefaultJsonAsync(System.Net.Http.HttpClient,System.String,System.Object)">
+            <summary>
+            Put Json数据
+            </summary>
+            <param name="client">Http对象</param>
+            <param name="url">访问地址</param>
+            <param name="data">数据对象</param>
+        </member>
+        <member name="P:ThirdNet.Core.Common.MailNotifyOption.Server">
+            <summary>
+            服务器地址
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.MailNotifyOption.From">
+            <summary>
+            发送人
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.MailNotifyOption.Account">
+            <summary>
+            邮件发送账号
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.MailNotifyOption.Password">
+            <summary>
+            邮件发送密码
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.MailNotifyOption.Title">
+            <summary>
+            邮件标题
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.MailSender._option">
+            <summary>
+            配置
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.MailSender._log">
+            <summary>
+            日志
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.MailSender.#ctor(Microsoft.Extensions.Options.IOptions{ThirdNet.Core.Common.MailNotifyOption},Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.Common.MailSender})">
+            <summary>
+            构造函数
+            </summary>
+            <param name="option">配置</param>
+            <param name="log">日志</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.MailSender.NotifyAsync(System.String,System.String,System.String[],System.Net.Mail.Attachment[])">
+            <summary>
+            通知
+            </summary>
+            <param name="title">标题</param>
+            <param name="body">正文</param>
+            <param name="clients">通知对象列表，邮箱</param>
+            <param name="list">附件列表</param>
+        </member>
+        <member name="T:ThirdNet.Core.Common.PinYinConverter">
+            <summary>
+            汉字拼音转换类
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.PinYinConverter.otherChinese">
+            <summary>
+            二级汉字数组
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.PinYinConverter.otherPinYin">
+            <summary>
+            二级汉字对应拼音数组
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.PinYinConverter.GetFirst(System.Char)">
+            <summary>
+            取拼音第一个字段
+            </summary>        
+            <param name="ch"></param>        
+            <returns></returns>        
+        </member>
+        <member name="M:ThirdNet.Core.Common.PinYinConverter.GetFirst(System.String)">
+            <summary>
+            取拼音第一个字段
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.PinYinConverter.Get(System.Char)">
+            <summary>
+            获取单字拼音
+            </summary>
+            <param name="ch"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.PinYinConverter.Get(System.String)">
+            <summary>
+            把汉字转换成拼音(全拼)
+            </summary>
+            <param name="str">汉字字符串</param>
+            <returns>转换后的拼音(全拼)字符串</returns>
+        </member>
+        <member name="T:ThirdNet.Core.Common.BetweenQueryHandler">
+            <summary>
+            创建BETWEEN语句
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.DefaultQueryHandlerFactory">
+            <summary>
+            默认创建器
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.DefaultQueryHandlerFactory.CreateHandler(ThirdNet.Core.Common.WhereQueryType)">
+            <summary>
+            根据查询类型生成查询处理器
+            </summary>
+            <param name="type">类型</param>
+            <returns>对应生成器</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.DefaultSqlGroupHandler.#ctor(ThirdNet.Core.Common.ISqlGroupDictionary,ThirdNet.Core.Common.IDbParameterCreater,ThirdNet.Core.Common.IQueryHandlerFactory,Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.Common.SqlGroupHandler})">
+            <summary>
+            数据库分组处理器
+            </summary>
+            <param name="dic">分组条件接口</param>
+            <param name="factory">处理器工厂接口</param>
+            <param name="creater">参数创建接口</param>
+            <param name="log">日志记录</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.DefaultSqlGroupHandler.Create(System.Int32,System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{System.Collections.Generic.List{ThirdNet.Core.Common.GroupQueryData}},System.Collections.Generic.Dictionary{System.Int32,System.String})">
+            <summary>
+            根据条件创建sql分组对象
+            </summary>
+            <param name="fact_type">具体数据类型</param>
+            <param name="group_types">分组条件列表</param>
+            <param name="query">参数列表</param>
+            <param name="orderby_types">排序语句</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.DefaultSqlGroupHandler.GetOrderByKey(System.Int32,System.Collections.Generic.Dictionary{System.Int32,System.String})">
+            <summary>
+            根据排序条件生成排序字段
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.DefaultSqlGroupHandler.GetWhere(System.Int32,System.Collections.Generic.List{System.Collections.Generic.List{ThirdNet.Core.Common.GroupQueryData}},System.Collections.Generic.List{System.Data.Common.DbParameter})">
+            <summary>
+            根据查询条件获取where语句和参数列表
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.DefaultSqlGroupHandler.GetGroupSelect(System.Int32,System.Collections.Generic.List{System.Int32})">
+            <summary>
+            根据分组条件生成分组的查询字段
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.DefaultSqlGroupHandler.GetGroupKey(System.Int32,System.Collections.Generic.List{System.Int32})">
+            <summary>
+            根据分组条件信息生成分组条件的key，用于group by语句
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.DefaultSqlGroupHandler.GetJoinSql(System.Int32,System.Collections.Generic.List{System.Int32})">
+            <summary>
+            根据join的key生成join语句
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.GroupQueryData">
+            <summary>
+            分组查询条件
+            默认查询条件（可自定义）：
+            1.Between
+            2.Greater
+            3.GreaterEquals
+            4.In
+            5.NotIn
+            6.Less
+            7.LessEquals
+            其他：相等
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.GroupQueryData.GroupType">
+            <summary>
+            分组类型
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.GroupQueryData.QueryType">
+            <summary>
+            查询类型
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.GroupQueryData.Values">
+            <summary>
+            查询值
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.GroupQueryException">
+            <summary>
+            分组异常
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.GroupQueryException.#ctor">
+            <summary>
+            默认初始化
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.GroupQueryException.#ctor(System.String)">
+            <summary>
+            使用指定的错误信息初始化
+            </summary>
+            <param name="message">错误消息</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.GroupQueryException.#ctor(System.String,System.Exception)">
+            <summary>
+            使用指定错误信息和对作为此异常原因的内部异常的引用来初始化
+            </summary>
+            <param name="message">错误信息</param>
+            <param name="exception">导致当前异常的异常</param>
+        </member>
+        <member name="T:ThirdNet.Core.Common.IDbParameterCreater">
+            <summary>
+            参数创建
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.IDbParameterCreater.CreateDbParameter(System.String,System.Object)">
+            <summary>
+            创建数据库参数
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.InOrNotQueryHandler">
+            <summary>
+            创建IN和NOT IN语句
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.IQueryHandler">
+            <summary>
+            /分组查询处理器
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.IQueryHandler.CreateQueryString(System.String,System.Collections.Generic.List{System.Data.Common.DbParameter})">
+            <summary>
+            生成查询语句
+            </summary>
+            <param name="name">字段名</param>
+            <param name="parameters">参数</param>
+        </member>
+        <member name="T:ThirdNet.Core.Common.IQueryHandlerFactory">
+            <summary>
+            查询创建工厂接口
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.IQueryHandlerFactory.CreateHandler(ThirdNet.Core.Common.WhereQueryType)">
+            <summary>
+            创建查询处理器
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.ISqlGroupDictionary">
+            <summary>
+            数据库分组字典接口，用于获取相应的参数、字段和语句
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.ISqlGroupDictionary.GetGroupWhereCondition(System.Int32,System.Int32)">
+            <summary>
+            获取分组类型获取分组条件
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.ISqlGroupDictionary.GetGroupKey(System.Int32,System.Int32)">
+            <summary>
+            获取分组字段名
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.ISqlGroupDictionary.GetSelectGroupKey(System.Int32,System.Int32)">
+            <summary>
+            获取分组字段名
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.ISqlGroupDictionary.GetJoinKey(System.Int32,System.Int32)">
+            <summary>
+            获取查询条件join字段
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.ISqlGroupDictionary.GetJoinSql(System.Int32,System.Int32)">
+            <summary>
+            获取查询条件join sql语句
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.ISqlGroupDictionary.GetGroupName(System.Int32,System.Int32)">
+            <summary>
+            根据分组类型查询分组名称
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.ISqlGroupHandler">
+            <summary>
+            生成分组查询
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.ISqlGroupHandler.Create(System.Int32,System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{System.Collections.Generic.List{ThirdNet.Core.Common.GroupQueryData}},System.Collections.Generic.Dictionary{System.Int32,System.String})">
+            <summary>
+            生成分组查询的字段和条件参数
+            </summary>
+            <param name="fact_type">大类，默认1</param>
+            <param name="group_types">分组类型</param>
+            <param name="query">查询条件</param>
+            <param name="orderby_types">排序条件</param>
+        </member>
+        <member name="T:ThirdNet.Core.Common.NpgsqlGroupHandler">
+            <summary>
+            基于postgresql的统计。
+            key可以作为数组
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.SingleSymbolQueryHandler">
+            <summary>
+            生成小于等于查询
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.SqlGroup">
+            <summary>
+            数据库分组相关
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.SqlGroup.GroupKey">
+            <summary>
+            分组字段名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.SqlGroup.SelectGroupKey">
+            <summary>
+            查询语句中的分组字段名
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.SqlGroup.Where">
+            <summary>
+            Where筛选条件
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.SqlGroup.Join">
+            <summary>
+            Join连接语句
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.SqlGroup.List">
+            <summary>
+            where语句中的参数列表
+            使用参数避免sql 注入，如果直接拼接语句，可能会有sql注入风险。
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.SqlGroup.OrderBy">
+            <summary>
+            排序字段
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.SqlGroupHandler">
+            <summary>
+            数据库分组处理器
+            1.分组key
+            2.查询where条件  以及 where条件所需要join的表
+            3.分组需要筛选的where 条件，以及所需要join的表
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlGroupHandler.#ctor(ThirdNet.Core.Common.ISqlGroupDictionary,ThirdNet.Core.Common.IDbParameterCreater,ThirdNet.Core.Common.IQueryHandlerFactory,Microsoft.Extensions.Logging.ILogger{ThirdNet.Core.Common.SqlGroupHandler})">
+            <summary>
+            数据库分组处理器
+            </summary>
+            <param name="dic">分组条件接口</param>
+            <param name="factory">处理器工厂接口</param>
+            <param name="creater">参数创建接口</param>
+            <param name="log">日志记录</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlGroupHandler.Create(System.Int32,System.Collections.Generic.List{System.Int32},System.Collections.Generic.List{System.Collections.Generic.List{ThirdNet.Core.Common.GroupQueryData}})">
+            <summary>
+            根据条件创建sql分组对象
+            </summary>
+            <param name="fact_type">具体数据类型</param>
+            <param name="group_types">分组条件列表</param>
+            <param name="query">参数列表</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlGroupHandler.GetWhere(System.Int32,System.Collections.Generic.List{System.Collections.Generic.List{ThirdNet.Core.Common.GroupQueryData}},System.Collections.Generic.List{System.Data.Common.DbParameter})">
+            <summary>
+            根据查询条件获取where语句和参数列表
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlGroupHandler.GetGroupSelect(System.Int32,System.Collections.Generic.List{System.Int32})">
+            <summary>
+            根据分组条件生成分组的查询字段
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlGroupHandler.GetGroupKey(System.Int32,System.Collections.Generic.List{System.Int32})">
+            <summary>
+            根据分组条件信息生成分组条件的key，用于group by语句
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlGroupHandler.GetJoinSql(System.Int32,System.Collections.Generic.List{System.Int32})">
+            <summary>
+            根据join的key生成join语句
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.SqlParameterCreater">
+            <summary>
+            sql server参数
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SqlParameterCreater.CreateDbParameter(System.String,System.Object)">
+            <summary>
+            创建sql server参数
+            </summary>
+            <param name="name">参数名</param>
+            <param name="value">参数值</param>
+        </member>
+        <member name="T:ThirdNet.Core.Common.SqlServerGroupHandler">
+            <summary>
+            基于sql server
+            key合并为,分隔的字符串
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.WhereQueryType">
+            <summary>
+            查询类型
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.RedisCacheManager">
+            <summary>
+            Redis操作基础类
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.RedisCacheManager._redis">
+            <summary>
+            redis默认数据库操作对象
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.RedisCacheManager._log">
+            <summary>
+            日志记录
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.RedisCacheManager._policy">
+            <summary>
+            规则
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.RedisCacheManager.ExceptionAllowed">
+            <summary>
+            redis报错次数。默认3次。超过次数则会熔断，不执行方法。直接返回默认值。
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.RedisCacheManager.Duration">
+            <summary>
+            熔断后持续时间。默认5分钟。即5分钟后继续执行方法尝试连接redis
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RedisCacheManager.GetSingle``1(System.String,System.Func{System.Threading.Tasks.Task{``0}},System.Nullable{System.TimeSpan},System.Boolean,``0)">
+            <summary>
+            获取单个key对应的缓存数据。
+            缓存存在，但为null则返回default_value字段。
+            </summary>
+            <typeparam name="TResult">数据类型</typeparam>
+            <param name="key">缓存key</param>
+            <param name="func">若缓存不存在，执行方法查询缓存。若方法为空则直接返回默认值。</param>
+            <param name="timespan">缓存过期时间</param>
+            <param name="default_value">若不存在返回的默认值</param>
+            <param name="refresh">读取缓存后是否刷新缓存过期时间，默认true</param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RedisCacheManager.GetMultiple``1(System.String[],System.Func{System.String[],System.Threading.Tasks.Task{System.Collections.Generic.IDictionary{System.String,``0}}},System.Nullable{System.DateTimeOffset},``0)">
+            <summary>
+            批量获取key对应的缓存数据。
+            若部分或全部key不存在，则执行func方法查询。
+            若缓存存在key，但值为null则该key返回default_value
+            </summary>
+            <typeparam name="TResult">数据类型</typeparam>
+            <param name="keys">缓存key数组</param>
+            <param name="func">若缓存不存在某个缓存key，执行查询方法。</param>
+            <param name="offset">缓存过期时间</param>
+            <param name="default_value">若不存在返回的默认值</param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RedisCacheManager.RemoveSingle(System.String)">
+            <summary>
+            删除单个缓存key
+            </summary>
+            <param name="key">缓存key</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RedisCacheManager.RemoveMultiple(System.String[])">
+            <summary>
+            批量删除key
+            </summary>
+            <param name="keys">要删除的键列表</param>
+            <returns>全部删除返回true，失败或部分失败返回false。</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RedisCacheManager.AddOrUpdate``1(System.String,``0,System.Nullable{System.TimeSpan})">
+            <summary>
+            添加或更新缓存数据
+            </summary>
+            <param name="key">缓存key</param>
+            <param name="model">数据对象</param>
+            <param name="timespan">缓存超时时间</param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RedisCacheManager.AddOrUpdateMultiple``1(System.Tuple{System.String,``0}[],System.Nullable{System.DateTimeOffset})">
+            <summary>
+            添加或更新缓存数据
+            </summary>
+            <param name="list">要缓存的对象列表key和value</param>
+            <param name="offset">缓存超时时间</param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RedisExtension.AddRedisExtensionService(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.Int32,System.Int32)">
+            <summary>
+            配置redis扩展方法
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.RedisLock._database">
+            <summary>
+            redis数据库连接
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.RedisLock._key">
+            <summary>
+            当前获取的锁
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.RedisLock._lock_id">
+            <summary>
+            当前锁的表示
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.RedisLock._unlock_script">
+            <summary>
+            lua脚本，用于原子性删除redis缓存
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RedisLock.Lock(System.String,System.Nullable{System.TimeSpan})">
+            <summary>
+            获取redis锁
+            </summary>
+            <param name="key">对应key</param>
+            <param name="timespan">锁的超时时间，超时后会自动释放。默认永久。</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.RedisLock.UnLock">
+            <summary>
+            释放锁
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.RedisOptions.Connection">
+            <summary>
+            redis连接字符串
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.RedisOptions.KeyPrefix">
+            <summary>
+            实例名称
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.RedisOptions.DefaultDatabase">
+            <summary>
+            默认数据库序号
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.ResponseHandler">
+            <summary>
+            Http响应处理
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.ResponseHandler._actions">
+            <summary>
+            响应处理器
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.ResponseHandler.AddResponseAction(ThirdNet.Core.Common.ResponseAction)">
+            <summary>
+            添加处理方法
+            </summary>
+            <param name="action">处理方法</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.SocketExtension.RecieveToFillArray(System.Net.Sockets.Socket,System.Byte[],System.Int32)">
+            <summary>
+            读取完整的数据，直到数据填满data数组
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.Common.StringConverter">
+            <summary>
+            字符串相关转换
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.BytesToHexString(System.Byte[])">
+            <summary>
+            字节数组转换成16进制字符串
+            </summary>
+            <param name="bytes">字节数组</param>
+            <returns>16进制字符串</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.HexStringToBytes(System.String)">
+            <summary>
+            16进制字符串转换成二进制
+            </summary>
+            <param name="hexString">16进制字符串</param>
+            <returns>二进制数组</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.BytesToString(System.Byte[])">
+            <summary>
+            字节数组转换成字节对应字符串
+            </summary>
+            <param name="bytes">字节数组</param>
+            <returns>字符串</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.StringToBytes(System.String)">
+            <summary>
+            字符串转换成对应字节数组
+            </summary>
+            <param name="message">字符串</param>
+            <returns>字节数组</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.ConvertBytesToInt(System.Byte[],System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            字节数组转换成数字
+            </summary>
+            <param name="buffer">字节数组</param>
+            <param name="offset">起始位置</param>
+            <param name="len">长度</param>
+            <param name="unsigned">是否为无符号数</param>
+            <returns>数字</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.ConvertBytesToInt(System.Byte[],System.Boolean)">
+            <summary>
+            将字节数组转换为对应长度的数字
+            </summary>
+            <param name="content">字节数组</param>
+            <param name="unsigned">是否无符号</param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.ConvertBytesToUint(System.Byte[])">
+            <summary>
+            将字节数组转换为long无符号整数
+            </summary>
+            <param name="content">字节数组</param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.ConvertIntToBytes(System.Int32,System.Int32)">
+            <summary>
+            数字转换成字节数组
+            </summary>
+            <param name="value">数字</param>
+            <param name="len">长度</param>
+            <returns>字节数组</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.ConvertUintToBytes(System.UInt32)">
+            <summary>
+            将无符号整数转换为字节数组
+            </summary>
+            <param name="data">无符号数</param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.ConvertStringToInt(System.String,System.Int32,System.Int32)">
+            <summary>
+            字符串转换不同进制数的字符串表示
+            </summary>
+            <param name="value">字符串</param>
+            <param name="fromBase">原数字基数</param>
+            <param name="toBase">转换后数字基数</param>
+            <returns>字符串</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.ConvertStringToIntString(System.String,System.Int32,System.Int32)">
+            <summary>
+            将某种进制数字字符串转为其他进制字符串
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.ConvertStringToUInt(System.String,System.Int32,System.Int32)">
+            <summary>
+            字符串转换不同进制数的字符串表示
+            </summary>
+            <param name="value">字符串</param>
+            <param name="fromBase">原数字基数</param>
+            <param name="toBase">转换后数字基数</param>
+            <returns>字符串</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.ConvertStringToUIntString(System.String,System.Int32,System.Int32)">
+            <summary>
+            将某种进制数字字符串转为其他进制字符串
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.StringToDouble(System.String,System.Double)">
+            <summary>
+            字符串转换为double
+            </summary>
+            <param name="data">字符串</param>
+            <param name="default_value">失败时的，默认值</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.StringToInt(System.String,System.Int32)">
+            <summary>
+            字符串转换为整形
+            </summary>
+            <param name="data">字符串</param>
+            <param name="default_value">失败时的，默认值</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.GetBCDLen(System.Int32)">
+            <summary>
+            获取BCD码对应长度
+            </summary>
+            <param name="len">长度</param>
+            <returns>BCD码对应长度</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.SecondsToString(System.Nullable{System.Int32})">
+            <summary>
+            将经过的秒数转换为字符串秒数的时间
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.StringConverter.SecondsToString(System.Int32)">
+            <summary>
+            将经过的秒数转换为字符串秒数的时间
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.TimestampHelper._start">
+            <summary>
+            时间戳计时开始时间
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.TimestampHelper.CreateTimeStampMilliseconds(System.DateTime)">
+            <summary>
+            计算对应时间的时间戳
+            </summary>
+            <param name="time">时间</param>
+            <returns>时间戳</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.TimestampHelper.CreateTimeStampSeconds(System.DateTime)">
+            <summary>
+            计算对应时间的时间戳
+            </summary>
+            <param name="time">时间</param>
+            <returns>时间戳</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.TimestampHelper.CreateTimeFromSeconds(System.Int64)">
+            <summary>
+            根据时间戳转换为本地时间
+            </summary>
+            <param name="timestamp">时间戳</param>
+            <returns>时间戳</returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.TimestampHelper.CreateTimeFromMilliseconds(System.Int64)">
+            <summary>
+            根据时间戳转换为本地时间
+            </summary>
+            <param name="timestamp">时间戳</param>
+            <returns>时间戳</returns>
+        </member>
+        <member name="F:ThirdNet.Core.Common.TransGPS.pi">
+            
+              Transform WGS-84 to GCJ-02 (Chinese encrypted coordination system)
+            
+        </member>
+        <member name="M:ThirdNet.Core.Common.TransGPS.transformFromWGSToGCJ(ThirdNet.Core.Common.GPSNode)">
+            <summary>
+            WGS转GCJ GPS转谷歌
+            </summary>
+            <param name="wgLoc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.TransGPS.transformFromGCJToWGS(ThirdNet.Core.Common.GPSNode)">
+            
+              Transform GCJ-02 to WGS-84
+              Reverse of transformFromWGSToGC() by iteration. 谷歌坐标转gps
+            
+              Created by Fengzee (fengzee@fengzee.com) on 13-11-9.
+            
+        </member>
+        <member name="M:ThirdNet.Core.Common.TransGPS.bd_encrypt(ThirdNet.Core.Common.GPSNode)">
+            <summary> 
+            Transform GCJ-02 to BD-09   谷歌转百度
+            </summary>
+            <param name="gcLoc"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ThirdNet.Core.Common.TransGPS.bd_decrypt(ThirdNet.Core.Common.GPSNode)">
+            <summary>
+            Transform BD-09 to GCJ-02  百度转谷歌
+            </summary>
+            <param name="bdLoc"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ThirdNet.Core.Common.UdpRecieveSocket">
+            <summary>
+            UDP接收类
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.UdpRecieveSocket.Socket">
+            <summary>
+            接收用Socket;
+            </summary>
+        </member>
+        <member name="P:ThirdNet.Core.Common.UdpRecieveSocket.SocketAsyncEventArgs">
+            <summary>
+            异步操作参数
+            </summary>
+        </member>
+        <member name="F:ThirdNet.Core.Common.UdpRecieveSocket.IsStart">
+            <summary>
+            是否启动
+            </summary>
+        </member>
+        <member name="E:ThirdNet.Core.Common.UdpRecieveSocket.OnDataReceived">
+            <summary>
+            接收到数据包时触发
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.UdpRecieveSocket.Dispose">
+            <summary>
+            关闭
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.UdpRecieveSocket.#ctor(System.Int32,System.Int32)">
+            <summary>
+            初始化Socket 和 地址。
+            </summary>
+            <param name="port">端口</param>
+             <param name="bufferSize">接收缓冲区大小，默认65536</param>
+        </member>
+        <member name="M:ThirdNet.Core.Common.UdpRecieveSocket.StartReceive">
+            <summary>
+            开始接收数据
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.UdpRecieveSocket.Start">
+            <summary>
+            开始接收数据
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.UdpRecieveSocket.Stop">
+            <summary>
+            停止接收
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.UdpRecieveSocket.ReceiveSocketArgs_Completed(System.Object,System.Net.Sockets.SocketAsyncEventArgs)">
+            <summary>
+            接收完成
+            </summary>
+        </member>
+        <member name="M:ThirdNet.Core.Common.UdpRecieveSocket.ProcessReceived(System.Net.Sockets.SocketAsyncEventArgs)">
+            <summary>
+            接收完成时处理请求。
+            </summary>
+        </member>
+        <member name="T:ThirdNet.Core.AspNetCore.RedisException">
+            <summary>
+            Redis相关异常
+            </summary>
+        </member>
+    </members>
+</doc>

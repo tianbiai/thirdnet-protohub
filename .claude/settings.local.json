@@ -23,7 +23,23 @@
       "Bash(dotnet remove:*)",
       "mcp__plugin_context7_context7__resolve-library-id",
       "Bash(dotnet ef:*)",
-      "Bash(find e:/VibeCoding/thirdnet/protohub/backend -type f -name *.csproj)"
+      "Bash(find e:/VibeCoding/thirdnet/protohub/backend -type f -name *.csproj)",
+      "Bash(mkdir -p ProtoHub.Api/Controllers/App)",
+      "Bash(mkdir -p ProtoHub.Api/Controllers/Manager)",
+      "Bash(mkdir -p ProtoHub.Database/Models)",
+      "Bash(mkdir -p ProtoHub.Database/Configurations)",
+      "Bash(ls -la *.sln)",
+      "Bash(grep -E \"\\\\.\\(cs|csproj|slnx|sln|json|md\\)$\")",
+      "Bash(grep -E \"\\\\.\\(json|xml|config|yml|yaml|toml|ini|conf\\)$\")",
+      "Bash(mkdir -p ProtoHub/Tools)",
+      "Bash(mkdir -p ProtoHub/ProtoHub.Identity)",
+      "Bash(find e:/VibeCoding/thirdnet/thirdnet-protohub/backend/ProtoHub/ProtoHub.Identity/ProtoHub.Identity.API -type f -name *.cs -o -name *.csproj -o -name *.json)",
+      "Bash(npm run:*)",
+      "Bash(powershell.exe -Command \"cd ''e:\\\\VibeCoding\\\\thirdnet\\\\thirdnet-protohub\\\\frontend\\\\protohub''; npm run dev\")",
+      "Bash(powershell.exe -Command \"cd ''e:\\\\VibeCoding\\\\thirdnet\\\\thirdnet-protohub\\\\frontend\\\\protohub''; npm install\")",
+      "Bash(powershell.exe -Command \"cd ''e:\\\\VibeCoding\\\\thirdnet\\\\thirdnet-protohub\\\\frontend\\\\protohub''; Start-Process npm -ArgumentList ''run'',''dev'' -WindowStyle Hidden\")",
+      "Bash(powershell.exe -Command \"Start-Sleep -Seconds 3; Invoke-WebRequest -Uri ''http://localhost:3000'' -UseBasicParsing -TimeoutSec 5 | Select-Object -ExpandProperty StatusCode\")",
+      "Bash(powershell.exe -Command \"Start-Sleep -Seconds 5; netstat -ano | Select-String '':3000''\")"
     ]
   }
 }
