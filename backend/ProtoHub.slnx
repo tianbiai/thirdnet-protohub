@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/ProtoHub.Api/">
+    <Project Path="ProtoHub.Api/ProtoHub.Api/ProtoHub.Api.csproj" />
+    <Project Path="ProtoHub.Api/ProtoHub.Database/ProtoHub.Database.csproj" />
+  </Folder>
+</Solution>

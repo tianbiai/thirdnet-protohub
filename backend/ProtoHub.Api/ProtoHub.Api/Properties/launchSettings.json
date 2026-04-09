@@ -1,0 +1,19 @@
+{
+  "profiles": {
+    "ProtoHub.Api": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "launchUrl": "api/values",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:12262/"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": false,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/values",
+      "publishAllPorts": true
+    }
+  }
+}

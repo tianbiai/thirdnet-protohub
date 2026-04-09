@@ -1,9 +1,23 @@
 # Build outputs
 bin/
 obj/
+dist/
 
-# IDE history
+# IDE
+.vs/
+.idea/
 .history/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
 
 # Documentation
 docs/
@@ -11,3 +25,7 @@ docs/
 # Dependencies
 node_modules/
 .claude/settings.local.json
+coverage/
+
+# Secrets - use appsettings.Template.json as reference
+appsettings.json

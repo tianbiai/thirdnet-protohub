@@ -64,8 +64,8 @@ npm run preview      # 预览生产构建
 
 #### 认证系统
 
-- 基于 localStorage 的简单 token 认证
-- 用户凭据定义在 `public/users.json`
+- 基于 JWT (RSA) 的认证，通过后端 `/connect/token` 获取令牌
+- 前端 HMAC 签名密钥从环境变量 `VITE_APP_AUTH_KEY` 读取
 - 两种角色：`admin` (完全权限) / `guest` (只读)
 
 #### 路由守卫
@@ -81,7 +81,7 @@ npm run preview      # 预览生产构建
 |-----|------|
 | `web` | Web 应用 (iframe 显示) |
 | `miniprogram` | 小程序/移动端 (自定义视口) |
-| `swagger` | API 文档 (可选 Basic 认证) |
+| `link` | 超链接 (外部链接) |
 | `doc` | Markdown 文档 |
 | `internal` | 内部路由 |
 
@@ -206,7 +206,7 @@ dotnet publish -c Release
 | Id | long | 主键 |
 | GroupId | long | 分组 ID |
 | Name | string | 菜单名称 |
-| Type | string | 类型（web/miniprogram/swagger/doc/internal） |
+| Type | string | 类型（web/miniprogram/link/doc/internal） |
 | Path | string | 路径 |
 | Permission | string | 所需权限 |
 | Config | object | 配置（JSON） |
@@ -245,20 +245,34 @@ backend/ProtoHub/
 
 ### 配置说明
 
+敏感配置（数据库连接字符串、RSA 密钥）通过环境变量提供。参考 `appsettings.Template.json` 获取配置模板。
+
+```bash
+# 必需的环境变量
+PROTOHUB_DEFAULT_CONNECTION  # 配置库连接字符串
+PROTOHUB_CONNECTION          # 主数据库连接字符串
+PROTOHUB_JWT_PRIVATE_KEY     # RSA 私钥
+PROTOHUB_JWT_PUBLIC_KEY      # RSA 公钥
+```
+
 ```json
-// appsettings.json
+// appsettings.Template.json（配置模板）
 {
   "DefaultConnectionString": "PostgreSQL 连接字符串",
+  "ConnectionString": "PostgreSQL 连接字符串",
   "jwt": {
+    "private_key": "RSA 私钥",
     "public_key": "RSA 公钥",
     "type": "RSA"
-  },
-  "RedisExtension": {
-    "Connection": "Redis 连接字符串",
-    "KeyPrefix": "protohub"
   }
 }
 ```
+
+### 密码安全
+
+- 用户密码使用 BCrypt 哈希存储（work factor = 12）
+- 种子管理员账户默认密码: `admin123`（BCrypt 哈希）
+- 密码工具类: `ProtoHub.Api/Helpers/PasswordHelper.cs`
 
 ### Thirdnet Backend 技能
 
@@ -278,12 +292,10 @@ backend/ProtoHub/
 
 | 文件 | 说明 |
 |-----|------|
-| `frontend/protohub/public/menus.json` | 前端菜单结构 |
-| `frontend/protohub/public/users.json` | 前端用户账号 |
 | `frontend/protohub/src/styles/variables.scss` | CSS 设计令牌 |
 | `frontend/protohub/vite.config.js` | Vite 构建配置 |
-| `backend/ProtoHub/ProtoHub.Api/ProtoHub.Api/appsettings.json` | 后端应用配置 |
-| `backend/ProtoHub/ProtoHub.Api/spec.md` | API 规格说明书 |
+| `backend/ProtoHub/ProtoHub.Api/ProtoHub.Api/appsettings.Template.json` | 后端应用配置模板 |
+| `backend/ProtoHub/ProtoHub.Api/ProtoHub.Api/appsettings.json` | 后端应用配置（不入版本库， |
 
 ---
 
@@ -305,4 +317,8 @@ backend/ProtoHub/
 - 遵循 ThirdNet.Core.AspNetCore 框架规范
 - API 接口使用 POST 方法
 - 数据库操作通过 EF Core
-- 缓存使用 Redis
+- 密码使用 BCrypt 哈希（`PasswordHelper` 工具类）
+- 时间戳由 `ProtoHubDbContext.UpdateTimestamps` 自动管理，控制器中无需手动设置
+- 所有管理端接口必须添加 `[HasPermission]` 权限校验
+- DTO 类必须添加 `[Required]`、`[StringLength]`、`[Range]` 等验证注解
+- 敏感配置通过环境变量提供，不硬编码在源码中
