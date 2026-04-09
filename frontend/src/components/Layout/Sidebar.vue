@@ -65,17 +65,37 @@
     <!-- 底部区域 -->
     <div class="sidebar-footer">
       <!-- 用户头像 -->
-      <div class="user-section" @click="handleLogout">
-        <el-avatar :size="34" class="user-avatar">
-          {{ userStore.nickname?.charAt(0)?.toUpperCase() || 'U' }}
-        </el-avatar>
-        <transition name="fade">
-          <div v-if="!appStore.sidebarCollapsed" class="user-info">
-            <span class="user-name">{{ userStore.nickname || '用户' }}</span>
-            <span class="user-role">{{ userStore.roleNames.join('、') || '访客' }}</span>
+      <el-popover
+        ref="userPopoverRef"
+        :width="160"
+        placement="right-start"
+        trigger="click"
+        :teleported="true"
+        :popper-style="{ padding: '4px' }"
+      >
+        <template #reference>
+          <div class="user-section">
+            <el-avatar :size="34" class="user-avatar">
+              {{ userStore.nickname?.charAt(0)?.toUpperCase() || 'U' }}
+            </el-avatar>
+            <transition name="fade">
+              <div v-if="!appStore.sidebarCollapsed" class="user-info">
+                <span class="user-name">{{ userStore.nickname || '用户' }}</span>
+                <span class="user-role">{{ userStore.roleNames.join('、') || '访客' }}</span>
+              </div>
+            </transition>
           </div>
-        </transition>
-      </div>
+        </template>
+        <div class="user-menu-list">
+          <div class="user-menu-item" @click="openChangePassword">
+            <el-icon><Lock /></el-icon><span>修改密码</span>
+          </div>
+          <div class="user-menu-divider" />
+          <div class="user-menu-item danger" @click="handleLogoutClick">
+            <el-icon><SwitchButton /></el-icon><span>退出登录</span>
+          </div>
+        </div>
+      </el-popover>
 
       <!-- 功能按钮 -->
       <div class="footer-actions">
@@ -153,16 +173,37 @@
       </div>
     </el-drawer>
   </aside>
+
+  <!-- 修改密码弹窗 -->
+  <el-dialog v-model="passwordDialogVisible" title="修改密码" width="420px" @close="resetPasswordForm">
+    <el-form ref="passwordFormRef" :model="passwordForm" :rules="passwordRules" label-width="80px">
+      <el-form-item label="原密码" prop="oldPassword">
+        <el-input v-model="passwordForm.oldPassword" type="password" show-password placeholder="请输入原密码" />
+      </el-form-item>
+      <el-form-item label="新密码" prop="newPassword">
+        <el-input v-model="passwordForm.newPassword" type="password" show-password placeholder="请输入新密码" />
+      </el-form-item>
+      <el-form-item label="确认密码" prop="confirmPassword">
+        <el-input v-model="passwordForm.confirmPassword" type="password" show-password placeholder="请再次输入新密码" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button @click="passwordDialogVisible = false">取消</el-button>
+      <el-button type="primary" :loading="passwordLoading" @click="submitChangePassword">确定</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import { useAppStore } from '@/stores/app'
 import { useMenuStore } from '@/stores/menu'
 import { useUserStore } from '@/stores/user'
 import { useLogout } from '@/composables/useLogout'
-import { QuestionFilled, Sunny, Moon, ArrowRight, Expand, Fold } from '@element-plus/icons-vue'
+import { changePassword } from '@/api/auth'
+import { QuestionFilled, Sunny, Moon, ArrowRight, Expand, Fold, Lock, SwitchButton } from '@element-plus/icons-vue'
 import TypeIcon from '@/components/TypeIcon/index.vue'
 
 const router = useRouter()
@@ -173,6 +214,76 @@ const { handleLogout } = useLogout()
 
 const activeItemId = ref(null)
 const helpVisible = ref(false)
+
+// 修改密码相关
+const passwordDialogVisible = ref(false)
+const passwordLoading = ref(false)
+const passwordFormRef = ref(null)
+const passwordForm = reactive({
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: ''
+})
+
+const validateConfirmPassword = (rule, value, callback) => {
+  if (value !== passwordForm.newPassword) {
+    callback(new Error('两次输入的密码不一致'))
+  } else {
+    callback()
+  }
+}
+
+const passwordRules = {
+  oldPassword: [{ required: true, message: '请输入原密码', trigger: 'blur' }],
+  newPassword: [
+    { required: true, message: '请输入新密码', trigger: 'blur' },
+    { min: 6, message: '密码长度不能少于6个字符', trigger: 'blur' }
+  ],
+  confirmPassword: [
+    { required: true, message: '请再次输入新密码', trigger: 'blur' },
+    { validator: validateConfirmPassword, trigger: 'blur' }
+  ]
+}
+
+const userPopoverRef = ref(null)
+
+function openChangePassword() {
+  userPopoverRef.value?.hide()
+  passwordDialogVisible.value = true
+}
+
+function handleLogoutClick() {
+  userPopoverRef.value?.hide()
+  handleLogout()
+}
+
+function resetPasswordForm() {
+  passwordForm.oldPassword = ''
+  passwordForm.newPassword = ''
+  passwordForm.confirmPassword = ''
+  passwordFormRef.value?.resetFields()
+}
+
+async function submitChangePassword() {
+  const formEl = passwordFormRef.value
+  if (!formEl) return
+  await formEl.validate()
+
+  passwordLoading.value = true
+  try {
+    await changePassword(passwordForm.oldPassword, passwordForm.newPassword)
+    ElMessage.success('密码修改成功，请重新登录')
+    passwordDialogVisible.value = false
+    // 修改密码后强制重新登录
+    userStore.forceLogout()
+    menuStore.resetMenu()
+    router.push({ name: 'Login' })
+  } catch (error) {
+    ElMessage.error(error.message || '密码修改失败')
+  } finally {
+    passwordLoading.value = false
+  }
+}
 
 // 切换分组展开状态
 function toggleGroup(group) {
@@ -455,6 +566,7 @@ onMounted(() => {
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: var(--transition-fast);
+  outline: none;
 
   &:hover {
     background: var(--bg-hover);
@@ -498,6 +610,37 @@ onMounted(() => {
 .footer-actions {
   display: flex;
   justify-content: space-around;
+}
+
+// 用户菜单
+.user-menu-list {
+  margin: -4px;
+}
+
+.user-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  transition: background 0.2s;
+
+  &:hover {
+    background: var(--bg-hover);
+  }
+
+  &.danger {
+    color: var(--el-color-danger);
+  }
+}
+
+.user-menu-divider {
+  height: 1px;
+  background: var(--border-lighter);
+  margin: 4px 0;
 }
 
 .action-btn {

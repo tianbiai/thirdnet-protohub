@@ -86,7 +86,10 @@
       "Read(//tmp/**)",
       "Bash(taskkill //F //PID 43756)",
       "Bash(ls \"e:/VibeCoding/thirdnet/thirdnet-protohub/backend/ProtoHub/ProtoHub.Api/ProtoHub.Database/Migrations/\"*.cs)",
-      "Bash(dotnet tool:*)"
+      "Bash(dotnet tool:*)",
+      "Bash(dotnet --list-sdks)",
+      "Bash(dotnet --version)",
+      "Bash(code --list-extensions)"
     ]
   },
   "enabledPlugins": {}

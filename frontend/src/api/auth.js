@@ -49,8 +49,8 @@ export function getCurrentUser() {
  * @param {string} oldpassword - 旧密码
  * @param {string} newpassword - 新密码
  */
-export function changePassword(oldpassword, newpassword) {
-  return post('/api/app/auth/change-password', { oldpassword, newpassword })
+export function changePassword(oldPassword, newPassword) {
+  return post('/api/app/auth/change-password', { oldPassword, newPassword })
 }
 
 export default {
