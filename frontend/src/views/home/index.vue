@@ -12,6 +12,13 @@
           你好，<span class="user-name">{{ userStore.nickname }}</span>
         </h1>
         <p class="welcome-desc">欢迎使用 ProtoHub 原型视界，在这里管理你的项目和系统配置。</p>
+        <div class="hero-actions">
+          <button class="hero-tool-btn" @click="openProtoPick">
+            <el-icon><Position /></el-icon>
+            原型调试工具
+            <span class="btn-hint">在新窗口打开</span>
+          </button>
+        </div>
       </div>
     </section>
 
@@ -68,7 +75,7 @@
 import { computed } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useMenuStore } from '@/stores/menu'
-import { Folder, User, UserFilled, Lock, Menu, Setting, ArrowRight, Promotion } from '@element-plus/icons-vue'
+import { Folder, User, UserFilled, Lock, Menu, Setting, ArrowRight, Promotion, Position } from '@element-plus/icons-vue'
 
 const userStore = useUserStore()
 const menuStore = useMenuStore()
@@ -100,6 +107,11 @@ const quickLinks = computed(() => {
   }
   return links.slice(0, 8) // 最多展示8个
 })
+
+const openProtoPick = () => {
+  const baseUrl = import.meta.env.BASE_URL || './'
+  window.open(`${baseUrl}protopick/index.html`, '_blank')
+}
 </script>
 
 <style lang="scss" scoped>
@@ -191,6 +203,51 @@ const quickLinks = computed(() => {
   margin: 0;
   max-width: 480px;
   line-height: 1.7;
+}
+
+.hero-actions {
+  margin-top: 24px;
+}
+
+.hero-tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-600));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+    pointer-events: none;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 122, 255, 0.35);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  .btn-hint {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-regular);
+    opacity: 0.8;
+    margin-left: 4px;
+  }
 }
 
 // ===== 统计卡片网格 =====
@@ -401,6 +458,10 @@ const quickLinks = computed(() => {
 
   .ambient-bg {
     opacity: 0.25;
+  }
+
+  .hero-tool-btn {
+    background: linear-gradient(135deg, var(--primary-400), var(--primary-500));
   }
 
   .stat-card {
