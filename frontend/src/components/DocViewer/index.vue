@@ -27,51 +27,54 @@
   </div>
 </template>
 
-<script setup>
-import { ref, watch, computed } from 'vue'
+<script setup lang="ts">
+import { ref, watch } from 'vue'
 import { useDoc } from '@/composables/useDoc'
 import 'highlight.js/styles/github.css'
 
-const props = defineProps({
-  url: {
-    type: String,
-    required: true
-  }
-})
+/** 文档查看器组件属性 */
+const props = defineProps<{
+  /** 文档 URL 地址 */
+  url: string
+}>()
 
 const { docHtml, loading, loadDoc } = useDoc()
+/** 是否使用 iframe 备选方案 */
 const useIframeFallback = ref(false)
 
-// 重新加载
-function reload() {
+/** 重新加载文档 */
+function reload(): void {
   if (props.url) {
     autoLoad(props.url)
   }
 }
 
-// 在新窗口打开
-function openExternal() {
+/** 在新窗口打开文档 */
+function openExternal(): void {
   if (props.url) {
     window.open(props.url, '_blank', 'noopener,noreferrer')
   }
 }
 
-// 自动加载逻辑：外部URL直接用iframe，本地路径尝试fetch
-async function autoLoad(url) {
+/**
+ * 自动加载逻辑：外部 URL 直接用 iframe，本地路径尝试 fetch
+ * @param url - 文档地址
+ */
+async function autoLoad(url: string): Promise<void> {
   if (!url) return
 
-  // 外部URL直接使用iframe
+  // 外部 URL 直接使用 iframe
   if (url.startsWith('http://') || url.startsWith('https://')) {
     useIframeFallback.value = true
     return
   }
 
-  // 本地路径尝试fetch加载
+  // 本地路径尝试 fetch 加载
   useIframeFallback.value = false
   await loadDoc(url)
 }
 
-// 监听 URL 变化
+// 监听 URL 变化，自动重新加载
 watch(() => props.url, (newUrl) => {
   if (newUrl) {
     autoLoad(newUrl)
@@ -132,7 +135,7 @@ watch(() => props.url, (newUrl) => {
     flex: 1;
     width: 100%;
     border: none;
-    background: white;
+    background: var(--bg-primary);
   }
 }
 

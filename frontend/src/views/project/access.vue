@@ -80,14 +80,15 @@
   </ManagePageLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import ManagePageLayout from '@/components/ManagePageLayout/index.vue'
-import { getAccessList, grantAccess, revokeAccess } from '@/api/project-access'
-import { getGroupList as getProjectList } from '@/api/menu'
-import { getUserList } from '@/api/user'
+import { projectAccessApi } from '@/api/modules/manager/project-access'
+import { managerMenuApi } from '@/api/modules/manager/menu'
+import { userApi } from '@/api/modules/manager/user'
 import { useUserStore } from '@/stores/user'
 import { useAsyncLock } from '@/composables/useAsyncLock'
 
@@ -95,17 +96,45 @@ const userStore = useUserStore()
 
 const revokeLock = useAsyncLock()
 
+/** 访问授权项类型 */
+interface AccessItem {
+  id: number
+  userId: number
+  userName: string
+  nickName: string
+  projectId: number
+  projectName: string
+  accessType: string
+  grantedByName: string
+  createTime: string
+}
+
+/** 项目简要信息 */
+interface ProjectBrief {
+  id: number
+  name: string
+  [key: string]: unknown
+}
+
+/** 用户简要信息 */
+interface UserBrief {
+  id: number
+  userName: string
+  nickName: string
+  [key: string]: unknown
+}
+
 // 数据状态
-const loading = ref(false)
-const accessList = ref([])
-const projects = ref([])
-const selectedProjectId = ref(null)
+const loading = ref<boolean>(false)
+const accessList = ref<AccessItem[]>([])
+const projects = ref<ProjectBrief[]>([])
+const selectedProjectId = ref<number | null>(null)
 
 // 用户列表
-const userList = ref([])
+const userList = ref<UserBrief[]>([])
 
-// 过滤后的访问列表
-const filteredAccessList = computed(() => {
+/** 过滤后的访问列表 */
+const filteredAccessList = computed<AccessItem[]>(() => {
   if (!selectedProjectId.value) {
     return accessList.value
   }
@@ -113,64 +142,69 @@ const filteredAccessList = computed(() => {
 })
 
 // 添加成员对话框
-const grantDialogVisible = ref(false)
-const grantLoading = ref(false)
-const grantFormRef = ref(null)
-const grantFormData = reactive({
+const grantDialogVisible = ref<boolean>(false)
+const grantLoading = ref<boolean>(false)
+const grantFormRef = ref<FormInstance>()
+const grantFormData = reactive<{
+  userId: number | null
+  projectId: number | null
+  accessType: string
+}>({
   userId: null,
   projectId: null,
   accessType: 'view'
 })
 
-// 表单验证规则
-const grantRules = {
+/** 表单验证规则 */
+const grantRules: FormRules = {
   userId: [{ required: true, message: '请选择用户', trigger: 'change' }],
   projectId: [{ required: true, message: '请选择项目', trigger: 'change' }],
   accessType: [{ required: true, message: '请选择访问类型', trigger: 'change' }]
 }
 
-// 加载项目列表
-async function loadProjects() {
+/** 加载项目列表 */
+async function loadProjects(): Promise<void> {
   try {
-    const res = await getProjectList()
-    const groups = res.list || res || []
+    const res = await managerMenuApi.getGroupList()
+    const groups = Array.isArray(res) ? res : []
     projects.value = groups
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('加载项目列表失败:', error)
   }
 }
 
-// 加载用户列表
-async function loadUsers() {
+/** 加载用户列表 */
+async function loadUsers(): Promise<void> {
   try {
-    const res = await getUserList({ page: 1, pageSize: 100 })
+    const res = await userApi.getUserList({ page: 1, pageSize: 100 })
     userList.value = res.list || []
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('加载用户列表失败:', error)
   }
 }
 
-// 加载成员列表
-async function loadAccessList() {
+/** 加载成员列表 */
+async function loadAccessList(): Promise<void> {
   loading.value = true
   try {
-    const res = await getAccessList({ page: 1, pageSize: 100 })
+    const res = await projectAccessApi.getAccessList({ page: 1, pageSize: 100 })
     accessList.value = res.list || []
-  } catch (error) {
-    ElMessage.error(error.message || '加载成员列表失败')
+  } catch (error: unknown) {
+    const err = error as Error
+    ElMessage.error(err.message || '加载成员列表失败')
   } finally {
     loading.value = false
   }
 }
 
-// 显示添加成员对话框
-function showGrantDialog() {
+/** 显示添加成员对话框 */
+function showGrantDialog(): void {
   grantFormData.projectId = selectedProjectId.value
   grantDialogVisible.value = true
 }
 
-// 添加成员
-async function handleGrant() {
+/** 添加成员 */
+async function handleGrant(): Promise<void> {
   try {
     await grantFormRef.value?.validate()
   } catch {
@@ -179,19 +213,20 @@ async function handleGrant() {
 
   grantLoading.value = true
   try {
-    await grantAccess(grantFormData)
+    await projectAccessApi.grantAccess(grantFormData)
     ElMessage.success('添加成员成功')
     grantDialogVisible.value = false
     loadAccessList()
-  } catch (error) {
-    ElMessage.error(error.message || '添加成员失败')
+  } catch (error: unknown) {
+    const err = error as Error
+    ElMessage.error(err.message || '添加成员失败')
   } finally {
     grantLoading.value = false
   }
 }
 
-// 移除成员
-async function handleRevoke(row) {
+/** 移除成员 */
+async function handleRevoke(row: AccessItem): Promise<void> {
   await revokeLock.forKey(row.id, async () => {
     try {
       await ElMessageBox.confirm(`确定要移除成员 "${row.userName}" 吗？`, '提示', {
@@ -199,12 +234,13 @@ async function handleRevoke(row) {
         cancelButtonText: '取消',
         type: 'warning'
       })
-      await revokeAccess(row.id)
+      await projectAccessApi.revokeAccess(row.id)
       ElMessage.success('移除成员成功')
       loadAccessList()
-    } catch (error) {
+    } catch (error: unknown) {
       if (error !== 'cancel') {
-        ElMessage.error(error.message || '移除成员失败')
+        const err = error as Error
+        ElMessage.error(err.message || '移除成员失败')
       }
     }
   })()
@@ -216,6 +252,3 @@ onMounted(() => {
   loadAccessList()
 })
 </script>
-
-<style lang="scss" scoped>
-</style>

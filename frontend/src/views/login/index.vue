@@ -1,5 +1,5 @@
 <template>
-  <div class="login-page" ref="pageRef">
+  <div class="login-page">
     <!-- 粒子画布 -->
     <canvas ref="particleCanvas" class="particle-canvas"></canvas>
 
@@ -171,12 +171,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useMenuStore } from '@/stores/menu'
 import { ElMessage } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
 import { User, Lock, ArrowRight } from '@element-plus/icons-vue'
 
 const router = useRouter()
@@ -184,30 +185,37 @@ const route = useRoute()
 const userStore = useUserStore()
 const menuStore = useMenuStore()
 
-const formRef = ref(null)
-const loading = ref(false)
-const pageRef = ref(null)
-const particleCanvas = ref(null)
+/** 表单引用 */
+const formRef = ref<FormInstance>()
+/** 登录加载状态 */
+const loading = ref<boolean>(false)
+/** 粒子画布引用 */
+const particleCanvas = ref<HTMLCanvasElement>()
 
 // 全屏加载状态
-const showLoading = ref(false)
-const loadingText = ref('正在登录...')
-const loadingTip = ref('正在验证您的身份')
-const progressWidth = ref('0%')
+const showLoading = ref<boolean>(false)
+const loadingText = ref<string>('正在登录...')
+const loadingTip = ref<string>('正在验证您的身份')
+const progressWidth = ref<string>('0%')
 
-// 加载提示文案列表
-const loadingTips = [
+/** 加载提示文案列表 */
+const loadingTips: Array<{ text: string; tip: string }> = [
   { text: '正在验证身份', tip: '检查账号信息...' },
   { text: '加载用户数据', tip: '获取权限配置...' },
   { text: '即将进入', tip: '准备就绪...' }
 ]
 
-const loginForm = reactive({
+/** 登录表单数据 */
+const loginForm = reactive<{
+  username: string
+  password: string
+}>({
   username: '',
   password: ''
 })
 
-const rules = {
+/** 表单验证规则 */
+const rules: FormRules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' }
   ],
@@ -216,19 +224,38 @@ const rules = {
   ]
 }
 
-// 粒子系统
-let animationId = null
-let particles = []
-let mouseX = 0
-let mouseY = 0
+// ===== 粒子系统 =====
 
+/** 粒子类 */
 class Particle {
-  constructor(canvas) {
+  /** 粒子所在画布 */
+  private canvas: HTMLCanvasElement
+  /** X 坐标 */
+  x: number
+  /** Y 坐标 */
+  y: number
+  /** X 速度 */
+  vx: number
+  /** Y 速度 */
+  vy: number
+  /** 半径 */
+  radius: number
+  /** 透明度 */
+  opacity: number
+
+  constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas
+    this.x = 0
+    this.y = 0
+    this.vx = 0
+    this.vy = 0
+    this.radius = 0
+    this.opacity = 0
     this.reset()
   }
 
-  reset() {
+  /** 重置粒子位置和属性 */
+  reset(): void {
     this.x = Math.random() * this.canvas.width
     this.y = Math.random() * this.canvas.height
     this.vx = (Math.random() - 0.5) * 0.5
@@ -237,7 +264,8 @@ class Particle {
     this.opacity = Math.random() * 0.4 + 0.15
   }
 
-  update() {
+  /** 更新粒子位置（含鼠标交互） */
+  update(): void {
     // 鼠标交互
     const dx = mouseX - this.x
     const dy = mouseY - this.y
@@ -265,7 +293,8 @@ class Particle {
     this.y = Math.max(0, Math.min(this.canvas.height, this.y))
   }
 
-  draw(ctx) {
+  /** 绘制粒子 */
+  draw(ctx: CanvasRenderingContext2D): void {
     ctx.beginPath()
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
     // 使用 CSS 变量对应的颜色
@@ -274,14 +303,24 @@ class Particle {
   }
 }
 
-function initParticles() {
+/** 动画帧 ID */
+let animationId: number | null = null
+/** 粒子数组 */
+let particles: Particle[] = []
+/** 鼠标 X 坐标 */
+let mouseX = 0
+/** 鼠标 Y 坐标 */
+let mouseY = 0
+
+/** 初始化粒子系统，返回清理函数 */
+function initParticles(): (() => void) | undefined {
   const canvas = particleCanvas.value
   if (!canvas) return
 
-  const ctx = canvas.getContext('2d')
+  const ctx = canvas.getContext('2d')!
 
   // 设置画布尺寸
-  const resizeCanvas = () => {
+  const resizeCanvas = (): void => {
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
   }
@@ -295,8 +334,8 @@ function initParticles() {
     particles.push(new Particle(canvas))
   }
 
-  // 绘制连线
-  function drawConnections() {
+  /** 绘制粒子间连线 */
+  function drawConnections(): void {
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
         const dx = particles[i].x - particles[j].x
@@ -316,8 +355,8 @@ function initParticles() {
     }
   }
 
-  // 动画循环
-  function animate() {
+  /** 动画循环 */
+  function animate(): void {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     // 更新和绘制粒子
@@ -335,7 +374,7 @@ function initParticles() {
   animate()
 
   // 鼠标移动事件
-  const handleMouseMove = (e) => {
+  const handleMouseMove = (e: MouseEvent): void => {
     mouseX = e.clientX
     mouseY = e.clientY
   }
@@ -351,10 +390,11 @@ function initParticles() {
   }
 }
 
-let cleanupParticles = null
+/** 粒子系统清理函数 */
+let cleanupParticles: (() => void) | null = null
 
 onMounted(() => {
-  cleanupParticles = initParticles()
+  cleanupParticles = initParticles() ?? null
 })
 
 onUnmounted(() => {
@@ -363,9 +403,10 @@ onUnmounted(() => {
   }
 })
 
-async function handleLogin() {
+/** 处理登录 */
+async function handleLogin(): Promise<void> {
   try {
-    await formRef.value.validate()
+    await formRef.value?.validate()
     loading.value = true
 
     await userStore.login(loginForm.username, loginForm.password)
@@ -392,8 +433,8 @@ async function handleLogin() {
 
       // 动画进度
       const startTime = Date.now()
-      await new Promise(resolve => {
-        const updateProgress = () => {
+      await new Promise<void>(resolve => {
+        const updateProgress = (): void => {
           const elapsed = Date.now() - startTime
           const progress = Math.min(elapsed / stepDuration, 1)
           progressWidth.value = `${startProgress + (endProgress - startProgress) * progress}%`
@@ -412,14 +453,14 @@ async function handleLogin() {
     progressWidth.value = '100%'
 
     // 短暂停留后跳转
-    await new Promise(resolve => setTimeout(resolve, 300))
+    await new Promise<void>(resolve => setTimeout(resolve, 300))
 
-    const redirect = route.query.redirect || '/'
+    const redirect = (route.query.redirect as string) || '/'
     router.push(redirect)
   } catch (error) {
     showLoading.value = false
     progressWidth.value = '0%'
-    ElMessage.error(error.message || '登录失败')
+    ElMessage.error('账号或密码错误')
   } finally {
     loading.value = false
   }
@@ -597,34 +638,7 @@ async function handleLogin() {
   }
 }
 
-// 深色主题
-[data-theme="dark"] {
-  .gradient-mesh {
-    opacity: 0.3;
-  }
-
-  .aurora {
-    opacity: 0.5;
-
-    &.aurora-1 {
-      background: radial-gradient(circle, var(--primary-700) 0%, transparent 70%);
-    }
-
-    &.aurora-2 {
-      background: radial-gradient(circle, var(--primary-600) 0%, transparent 70%);
-    }
-
-    &.aurora-3 {
-      background: radial-gradient(circle, var(--primary-800) 0%, transparent 70%);
-    }
-  }
-
-  .grid-overlay {
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  }
-}
+// 深色主题 - 已移至下方非 scoped <style> 块
 
 // 登录容器
 .login-container {
@@ -800,16 +814,7 @@ async function handleLogin() {
   }
 }
 
-[data-theme="dark"] {
-  .feature-item {
-    background: rgba(28, 28, 30, 0.6);
-    border-color: rgba(255, 255, 255, 0.1);
-
-    &:hover {
-      background: rgba(44, 44, 46, 0.8);
-    }
-  }
-}
+// 深色主题 feature-item - 已移至下方非 scoped <style> 块
 
 // 登录卡片
 .login-card {
@@ -1213,20 +1218,7 @@ async function handleLogin() {
   }
 }
 
-// 深色主题加载动画
-[data-theme="dark"] {
-  .fullscreen-loading {
-    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-  }
-
-  .loading-logo {
-    background: var(--bg-secondary);
-  }
-
-  .loading-progress {
-    background: var(--bg-tertiary);
-  }
-}
+// 深色主题加载动画 - 已移至下方非 scoped <style> 块
 
 // 响应式
 @media (max-width: 900px) {
@@ -1281,6 +1273,58 @@ async function handleLogin() {
 
   .waves-container {
     height: 100px;
+  }
+}
+</style>
+
+<!-- 暗色主题覆盖（非 scoped，因为 :global() 在 scoped 中不生效） -->
+<style lang="scss">
+html.is-dark {
+  .login-page .gradient-mesh {
+    opacity: 0.3;
+  }
+
+  .login-page .aurora {
+    opacity: 0.5;
+
+    &.aurora-1 {
+      background: radial-gradient(circle, var(--primary-700) 0%, transparent 70%);
+    }
+
+    &.aurora-2 {
+      background: radial-gradient(circle, var(--primary-600) 0%, transparent 70%);
+    }
+
+    &.aurora-3 {
+      background: radial-gradient(circle, var(--primary-800) 0%, transparent 70%);
+    }
+  }
+
+  .login-page .grid-overlay {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  }
+
+  .login-page .feature-item {
+    background: rgba(28, 28, 30, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      background: rgba(44, 44, 46, 0.8);
+    }
+  }
+
+  .fullscreen-loading {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  }
+
+  .loading-logo {
+    background: var(--bg-secondary);
+  }
+
+  .loading-progress {
+    background: var(--bg-tertiary);
   }
 }
 </style>

@@ -12,12 +12,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-function goHome() {
+/** 返回首页 */
+function goHome(): void {
   router.push('/')
 }
 </script>

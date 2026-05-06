@@ -116,13 +116,14 @@
   </ManagePageLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
 import { Search, Plus, User } from '@element-plus/icons-vue'
 import ManagePageLayout from '@/components/ManagePageLayout/index.vue'
-import * as userApi from '@/api/user'
-import { getRoleList } from '@/api/role'
+import { userApi } from '@/api/modules/manager/user'
+import { roleApi } from '@/api/modules/manager/role'
 import { useUserStore } from '@/stores/user'
 import { useAsyncLock } from '@/composables/useAsyncLock'
 
@@ -130,22 +131,49 @@ const userStore = useUserStore()
 
 const deleteLock = useAsyncLock()
 
+/** 用户列表项类型 */
+interface UserItem {
+  id: number
+  userName: string
+  nickName: string
+  email: string
+  status: number
+  description: string
+  [key: string]: unknown
+}
+
+/** 角色简要信息类型 */
+interface RoleBrief {
+  id: number
+  code: string
+  name: string
+  [key: string]: unknown
+}
+
 // 数据状态
-const loading = ref(false)
-const users = ref([])
-const total = ref(0)
-const currentPage = ref(1)
-const pageSize = ref(10)
-const searchKeyword = ref('')
+const loading = ref<boolean>(false)
+const users = ref<UserItem[]>([])
+const total = ref<number>(0)
+const currentPage = ref<number>(1)
+const pageSize = ref<number>(10)
+const searchKeyword = ref<string>('')
 
 // 对话框状态
-const dialogVisible = ref(false)
-const isEdit = ref(false)
-const submitLoading = ref(false)
-const formRef = ref(null)
+const dialogVisible = ref<boolean>(false)
+const isEdit = ref<boolean>(false)
+const submitLoading = ref<boolean>(false)
+const formRef = ref<FormInstance>()
 
 // 表单数据
-const formData = reactive({
+const formData = reactive<{
+  id: number | null
+  userName: string
+  password: string
+  nickName: string
+  email: string
+  status: number
+  description: string
+}>({
   id: null,
   userName: '',
   password: '',
@@ -155,8 +183,8 @@ const formData = reactive({
   description: ''
 })
 
-// 表单验证规则
-const formRules = {
+/** 表单验证规则 */
+const formRules: FormRules = {
   userName: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
     { min: 3, max: 50, message: '用户名长度为3-50个字符', trigger: 'blur' }
@@ -171,14 +199,14 @@ const formRules = {
 }
 
 // 角色分配
-const roleDialogVisible = ref(false)
-const roleLoading = ref(false)
-const currentUser = ref(null)
-const allRoles = ref([])
-const selectedRoleIds = ref([])
+const roleDialogVisible = ref<boolean>(false)
+const roleLoading = ref<boolean>(false)
+const currentUser = ref<UserItem | null>(null)
+const allRoles = ref<RoleBrief[]>([])
+const selectedRoleIds = ref<number[]>([])
 
-// 加载用户列表
-async function loadUsers() {
+/** 加载用户列表 */
+async function loadUsers(): Promise<void> {
   loading.value = true
   try {
     const res = await userApi.getUserList({
@@ -188,21 +216,22 @@ async function loadUsers() {
     })
     users.value = res.list || []
     total.value = res.total || 0
-  } catch (error) {
-    ElMessage.error(error.message || '加载用户列表失败')
+  } catch (error: unknown) {
+    const err = error as Error
+    ElMessage.error(err.message || '加载用户列表失败')
   } finally {
     loading.value = false
   }
 }
 
-// 显示创建对话框
-function showCreateDialog() {
+/** 显示创建对话框 */
+function showCreateDialog(): void {
   isEdit.value = false
   dialogVisible.value = true
 }
 
-// 显示编辑对话框
-function showEditDialog(row) {
+/** 显示编辑对话框 */
+function showEditDialog(row: UserItem): void {
   isEdit.value = true
   Object.assign(formData, {
     id: row.id,
@@ -215,8 +244,8 @@ function showEditDialog(row) {
   dialogVisible.value = true
 }
 
-// 重置表单
-function resetForm() {
+/** 重置表单 */
+function resetForm(): void {
   formRef.value?.resetFields()
   Object.assign(formData, {
     id: null,
@@ -229,8 +258,8 @@ function resetForm() {
   })
 }
 
-// 提交表单
-async function handleSubmit() {
+/** 提交表单 */
+async function handleSubmit(): Promise<void> {
   try {
     await formRef.value?.validate()
   } catch {
@@ -248,15 +277,16 @@ async function handleSubmit() {
     }
     dialogVisible.value = false
     loadUsers()
-  } catch (error) {
-    ElMessage.error(error.message || '操作失败')
+  } catch (error: unknown) {
+    const err = error as Error
+    ElMessage.error(err.message || '操作失败')
   } finally {
     submitLoading.value = false
   }
 }
 
-// 删除用户
-async function handleDelete(row) {
+/** 删除用户 */
+async function handleDelete(row: UserItem): Promise<void> {
   await deleteLock.forKey(row.id, async () => {
     try {
       await ElMessageBox.confirm(`确定要删除用户 "${row.userName}" 吗？`, '提示', {
@@ -267,25 +297,26 @@ async function handleDelete(row) {
       await userApi.deleteUser(row.id)
       ElMessage.success('用户删除成功')
       loadUsers()
-    } catch (error) {
+    } catch (error: unknown) {
       if (error !== 'cancel') {
-        ElMessage.error(error.message || '删除失败')
+        const err = error as Error
+        ElMessage.error(err.message || '删除失败')
       }
     }
   })()
 }
 
-// 显示角色分配对话框
-async function showRoleDialog(row) {
+/** 显示角色分配对话框 */
+async function showRoleDialog(row: UserItem): Promise<void> {
   currentUser.value = row
   roleDialogVisible.value = true
 
   // 加载所有角色
   if (allRoles.value.length === 0) {
     try {
-      const res = await getRoleList()
-      allRoles.value = res.list || res || []
-    } catch (error) {
+      const res = await roleApi.getRoleList()
+      allRoles.value = Array.isArray(res) ? res : (res as unknown as { list: RoleBrief[] }).list || []
+    } catch (error: unknown) {
       ElMessage.error('加载角色列表失败')
     }
   }
@@ -294,20 +325,21 @@ async function showRoleDialog(row) {
   try {
     const res = await userApi.getUserRoles(row.id)
     selectedRoleIds.value = res.map(r => r.id)
-  } catch (error) {
+  } catch (error: unknown) {
     selectedRoleIds.value = []
   }
 }
 
-// 分配角色
-async function handleAssignRoles() {
+/** 分配角色 */
+async function handleAssignRoles(): Promise<void> {
   roleLoading.value = true
   try {
-    await userApi.assignUserRoles(currentUser.value.id, selectedRoleIds.value)
+    await userApi.assignUserRoles(currentUser.value!.id, selectedRoleIds.value)
     ElMessage.success('角色分配成功')
     roleDialogVisible.value = false
-  } catch (error) {
-    ElMessage.error(error.message || '角色分配失败')
+  } catch (error: unknown) {
+    const err = error as Error
+    ElMessage.error(err.message || '角色分配失败')
   } finally {
     roleLoading.value = false
   }

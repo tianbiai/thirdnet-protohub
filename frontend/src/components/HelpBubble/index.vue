@@ -42,32 +42,32 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 
-const props = defineProps({
-  title: {
-    type: String,
-    default: ''
-  },
-  items: {
-    type: Array,
-    default: () => []
-  },
-  placement: {
-    type: String,
-    default: 'bottom'
-  },
-  width: {
-    type: [String, Number],
-    default: 340
-  },
-  size: {
-    type: Number,
-    default: 18
-  }
-})
+/** 帮助条目数据 */
+interface HelpItem {
+  /** 条目标签 */
+  label?: string
+  /** 条目内容 */
+  content: string
+}
 
+/** 帮助气泡组件属性 */
+defineProps<{
+  /** 帮助标题 */
+  title?: string
+  /** 帮助条目列表 */
+  items?: HelpItem[]
+  /** 弹出位置 */
+  placement?: 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end' | 'right' | 'right-start' | 'right-end'
+  /** 弹出宽度 */
+  width?: string | number
+  /** 图标大小 */
+  size?: number
+}>()
+
+/** 是否显示工具提示 */
 const showTooltip = ref(false)
 </script>
 

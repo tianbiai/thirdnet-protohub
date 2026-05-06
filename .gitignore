@@ -5,8 +5,10 @@ dist/
 
 # IDE
 .vs/
+.vscode/
 .idea/
 .history/
+.playwright-mcp/
 
 # OS
 .DS_Store
@@ -29,3 +31,4 @@ coverage/
 
 # Secrets - use appsettings.Template.json as reference
 appsettings.json
+

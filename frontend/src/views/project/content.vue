@@ -122,7 +122,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useMenuStore } from '@/stores/menu'
@@ -135,36 +135,42 @@ const route = useRoute()
 const router = useRouter()
 const menuStore = useMenuStore()
 
-const iframeRef = ref(null)
-const linkIframeRef = ref(null)
-const changelogIframeRef = ref(null)
-const loading = ref(true)
-const linkCacheKey = ref(Date.now())
-const changelogCacheKey = ref(Date.now())
+/** IframeViewer 组件引用 */
+const iframeRef = ref<InstanceType<typeof IframeViewer>>()
+/** 超链接 iframe 引用 */
+const linkIframeRef = ref<HTMLIFrameElement>()
+/** 变更日志 iframe 引用 */
+const changelogIframeRef = ref<HTMLIFrameElement>()
+/** 加载状态 */
+const loading = ref<boolean>(true)
+/** 超链接缓存破坏键 */
+const linkCacheKey = ref<number>(Date.now())
+/** 变更日志缓存破坏键 */
+const changelogCacheKey = ref<number>(Date.now())
 
-// 当前内容项
-const item = computed(() => menuStore.findItemById(route.params.id))
+/** 当前内容项 */
+const item = computed(() => menuStore.findItemById(Number(route.params.id)))
 
-// 超链接 iframe 带缓存破坏的 URL
-const linkSrc = computed(() => cacheBustUrl(item.value?.url, linkCacheKey.value))
+/** 超链接 iframe 带缓存破坏的 URL */
+const linkSrc = computed<string>(() => cacheBustUrl(item.value?.url, linkCacheKey.value))
 
-// Changelog iframe 带缓存破坏的 URL
-const changelogSrc = computed(() => cacheBustUrl(item.value?.url, changelogCacheKey.value))
+/** 变更日志 iframe 带缓存破坏的 URL */
+const changelogSrc = computed<string>(() => cacheBustUrl(item.value?.url, changelogCacheKey.value))
 
-// 返回
-function goBack() {
+/** 返回上一页 */
+function goBack(): void {
   router.back()
 }
 
-// 在新窗口打开
-function openExternal() {
+/** 在新窗口打开 */
+function openExternal(): void {
   if (item.value?.url) {
     window.open(item.value.url, '_blank', 'noopener,noreferrer')
   }
 }
 
-// 刷新
-function refresh() {
+/** 刷新当前内容 */
+function refresh(): void {
   if (item.value?.type === 'link') {
     linkCacheKey.value = Date.now()
   } else if (item.value?.type === 'changelog') {

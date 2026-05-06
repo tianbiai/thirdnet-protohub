@@ -52,7 +52,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useMenuStore } from '@/stores/menu'
@@ -62,30 +62,30 @@ const route = useRoute()
 const router = useRouter()
 const menuStore = useMenuStore()
 
-// 当前项目
-const item = computed(() => menuStore.findItemById(route.params.id))
+/** 当前项目菜单项 */
+const item = computed(() => menuStore.findItemById(Number(route.params.id)))
 
-// 返回
-function goBack() {
+/** 返回上一页 */
+function goBack(): void {
   router.back()
 }
 
-// 打开项目
-function openProject() {
+/** 打开项目内容 */
+function openProject(): void {
   if (item.value) {
     router.push(`/content/${item.value.type}/${item.value.id}`)
   }
 }
 
-// 在新窗口打开
-function openExternal() {
+/** 在新窗口打开 URL */
+function openExternal(): void {
   if (item.value?.url) {
     window.open(item.value.url, '_blank', 'noopener,noreferrer')
   }
 }
 
-// 打开 URL
-function openUrl(url) {
+/** 打开指定 URL */
+function openUrl(url: string): void {
   window.open(url, '_blank', 'noopener,noreferrer')
 }
 

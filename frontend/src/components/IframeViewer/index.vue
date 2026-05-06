@@ -53,50 +53,66 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { cacheBustUrl } from '@/utils/menu'
 
-const props = defineProps({
-  src: {
-    type: String,
-    required: true
-  },
-  type: {
-    type: String,
-    default: 'web'
-  },
-  viewport: {
-    type: Object,
-    default: () => ({ width: 400, height: 812 })
-  }
-})
+/** 视口配置 */
+interface Viewport {
+  /** 宽度 */
+  width: number
+  /** 高度 */
+  height: number
+}
 
-const emit = defineEmits(['load', 'error'])
+/** iframe 查看器组件属性 */
+const props = defineProps<{
+  /** iframe 页面地址 */
+  src: string
+  /** 内容类型（web / mobile / miniprogram） */
+  type?: string
+  /** 移动端视口配置 */
+  viewport?: Viewport
+}>()
 
-const iframeRef = ref(null)
+const emit = defineEmits<{
+  /** iframe 加载完成 */
+  (e: 'load'): void
+  /** iframe 加载失败 */
+  (e: 'error', msg: string): void
+}>()
+
+/** iframe DOM 引用 */
+const iframeRef = ref<HTMLIFrameElement | null>(null)
+/** 是否正在加载 */
 const loading = ref(true)
-const error = ref(null)
+/** 错误信息 */
+const error = ref<string | null>(null)
+/** 缓存破坏键 */
 const cacheKey = ref(Date.now())
 
+/** 是否为移动端模式 */
 const isMobile = computed(() => props.type === 'mobile' || props.type === 'miniprogram')
 
-// 给 URL 追加时间戳参数，避免浏览器缓存
+/** 给 URL 追加时间戳参数，避免浏览器缓存 */
 const cacheBustedSrc = computed(() => cacheBustUrl(props.src, cacheKey.value))
 
-function onLoad() {
+/** iframe 加载完成回调 */
+function onLoad(): void {
   loading.value = false
   error.value = null
   emit('load')
 }
 
-function onError() {
+/** iframe 加载失败回调 */
+function onError(): void {
   loading.value = false
   error.value = '无法加载页面'
-  emit('error', error.value)
+  emit('error', error.value!)
 }
 
-function reload() {
+/** 重新加载 iframe */
+function reload(): void {
   if (iframeRef.value) {
     loading.value = true
     error.value = null
@@ -107,6 +123,7 @@ function reload() {
 
 defineExpose({ reload })
 
+// 监听 src 变化，重置加载状态
 watch(() => props.src, () => {
   loading.value = true
   error.value = null
@@ -152,7 +169,7 @@ watch(() => props.src, () => {
 .mobile-iframe {
   border: none;
   border-radius: 32px;
-  background: white;
+  background: var(--bg-primary);
   display: block;
 }
 

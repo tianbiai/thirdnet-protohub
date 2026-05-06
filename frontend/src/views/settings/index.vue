@@ -123,7 +123,7 @@
   </ManagePageLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { useAppStore } from '@/stores/app'
 import { useUserStore } from '@/stores/user'
@@ -137,7 +137,11 @@ const appStore = useAppStore()
 const userStore = useUserStore()
 const menuStore = useMenuStore()
 
-const settings = reactive({
+/** 设置表单数据 */
+const settings = reactive<{
+  theme: string
+  sidebarExpanded: boolean
+}>({
   theme: 'light',
   sidebarExpanded: true
 })
@@ -148,14 +152,14 @@ onMounted(() => {
   settings.sidebarExpanded = !appStore.sidebarCollapsed
 })
 
-// 处理主题变更
-function handleThemeChange(theme) {
+/** 处理主题变更 */
+function handleThemeChange(theme: string): void {
   appStore.setTheme(theme)
   ElMessage.success('主题已切换')
 }
 
-// 重置菜单配置
-async function resetMenuConfig() {
+/** 重置菜单配置 */
+async function resetMenuConfig(): Promise<void> {
   try {
     await ElMessageBox.confirm('确定要重置菜单配置吗？当前修改将丢失。', '提示', {
       confirmButtonText: '确定',
@@ -169,8 +173,8 @@ async function resetMenuConfig() {
   }
 }
 
-// 导出菜单配置
-function exportMenuConfig() {
+/** 导出菜单配置为 JSON 文件 */
+function exportMenuConfig(): void {
   const config = JSON.stringify(menuStore.menuConfig, null, 2)
   const blob = new Blob([config], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
@@ -359,17 +363,7 @@ function exportMenuConfig() {
   }
 }
 
-// 深色主题
-[data-theme="dark"] {
-  .settings-section {
-    background: var(--bg-secondary);
-    border-color: var(--border-light);
-  }
-
-  .user-profile-section {
-    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
-  }
-}
+// 深色主题覆盖已移至下方非 scoped <style> 块
 
 // 响应式
 @media (max-width: 600px) {
@@ -382,6 +376,20 @@ function exportMenuConfig() {
         align-items: flex-start;
       }
     }
+  }
+}
+</style>
+
+<!-- 暗色主题覆盖 -->
+<style lang="scss">
+html.is-dark {
+  .settings-section {
+    background: var(--bg-secondary);
+    border-color: var(--border-light);
+  }
+
+  .user-profile-section {
+    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
   }
 }
 </style>

@@ -30,19 +30,19 @@ namespace ProtoHub.Api.Controllers
 
             if (user == null)
             {
-                throw new WebApiException(System.Net.HttpStatusCode.Unauthorized, "用户名或密码错误");
+                throw new WebApiException(System.Net.HttpStatusCode.Unauthorized, "账号或密码错误");
             }
 
             // 使用 BCrypt 验证密码
             if (!PasswordHelper.VerifyPassword(password, user.password))
             {
-                throw new WebApiException(System.Net.HttpStatusCode.Unauthorized, "用户名或密码错误");
+                throw new WebApiException(System.Net.HttpStatusCode.Unauthorized, "账号或密码错误");
             }
 
             // 检查用户状态
             if (user.status != 1)
             {
-                throw new WebApiException(System.Net.HttpStatusCode.Forbidden, "账户已被禁用");
+                throw new WebApiException(System.Net.HttpStatusCode.Unauthorized, "账号或密码错误");
             }
 
             // 查询用户权限：通过 UserRole -> RolePermission -> Permission 获取

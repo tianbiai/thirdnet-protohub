@@ -26,10 +26,22 @@
   let originalConsoleError = null;
   let errorsVisible = false;
   let errorToastTimer = null;
+  let paused = false;
 
   function on(target, type, fn, capture) {
     target.addEventListener(type, fn, capture);
     listeners.push({ target, type, fn, capture });
+  }
+
+  const SELECTION_EVENTS = new Set(["mousedown", "click", "mousemove", "mouseup"]);
+
+  function toggleSelectionListeners(attach) {
+    for (const { target, type, fn, capture } of listeners) {
+      if (SELECTION_EVENTS.has(type)) {
+        if (attach) target.addEventListener(type, fn, capture);
+        else target.removeEventListener(type, fn, capture);
+      }
+    }
   }
 
   // ── Init ───────────────────────────────────────────────────
@@ -67,6 +79,8 @@
     removeAnnotationPopover();
     if (hoverBox) hoverBox.remove();
     if (chatPanel) chatPanel.remove();
+    const toast = document.querySelector(`.${NS}-error-toast`);
+    if (toast) toast.remove();
   }
 
   // ── Error capture ──────────────────────────────────────────
@@ -80,13 +94,16 @@
   }
 
   function showErrorToast(count) {
-    let toast = chatPanel.querySelector(`.${NS}-error-toast`);
+    let toast = document.querySelector(`.${NS}-error-toast`);
     if (!toast) {
       toast = document.createElement("div");
       toast.className = `${NS}-root ${NS}-error-toast`;
-      chatPanel.appendChild(toast);
+      document.body.appendChild(toast);
     }
     toast.textContent = `${count} error${count > 1 ? "s" : ""} captured`;
+    const pr = chatPanel.getBoundingClientRect();
+    toast.style.left = (pr.left + pr.width / 2) + "px";
+    toast.style.top = (pr.top - 8) + "px";
     toast.classList.add(`${NS}-error-toast-show`);
     if (errorToastTimer) clearTimeout(errorToastTimer);
     errorToastTimer = setTimeout(() => {
@@ -132,6 +149,14 @@
       originalConsoleError = null;
     }
     capturedErrors.length = 0;
+  }
+
+  function repositionToast() {
+    const toast = document.querySelector(`.${NS}-error-toast`);
+    if (!toast || !chatPanel) return;
+    const pr = chatPanel.getBoundingClientRect();
+    toast.style.left = (pr.left + pr.width / 2) + "px";
+    toast.style.top = (pr.top - 8) + "px";
   }
 
   function clearErrors() {
@@ -424,6 +449,34 @@
     removeAnnotationPopover();
   }
 
+  const PLAY_ICON = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+  const PAUSE_ICON = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+
+  function togglePause() {
+    paused = !paused;
+    const dot = chatPanel.querySelector(`.${NS}-status-dot`);
+    const label = chatPanel.querySelector(`.${NS}-status-label`);
+    const btn = chatPanel.querySelector('[data-action="pause"]');
+
+    if (paused) {
+      cancelDrag();
+      toggleSelectionListeners(false);
+      showHover(null);
+      lastMoveTarget = null;
+      rafPending = false;
+      dot.classList.add(`${NS}-status-dot-paused`);
+      label.textContent = "Paused";
+      btn.innerHTML = PLAY_ICON;
+      btn.title = "Resume";
+    } else {
+      toggleSelectionListeners(true);
+      dot.classList.remove(`${NS}-status-dot-paused`);
+      label.textContent = "Selecting";
+      btn.innerHTML = PAUSE_ICON;
+      btn.title = "Pause";
+    }
+  }
+
   function handleKeyDown(e) {
     if (isEditorElement(e.target) && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
     const mod = e.metaKey || e.ctrlKey;
@@ -431,6 +484,11 @@
     if (e.key === "Escape") {
       if (activePopover) { removeAnnotationPopover(); }
       else { clearSelection(); updateTags(); }
+      return;
+    }
+    if (e.key === "P" && e.shiftKey && !e.metaKey && !e.ctrlKey) {
+      e.preventDefault();
+      togglePause();
       return;
     }
     if (mod && e.key.toLowerCase() === "c" && !e.shiftKey && (selectedElements.length > 0 || capturedErrors.length > 0)) {
@@ -519,6 +577,9 @@
           <span class="${NS}-error-badge ${NS}-hidden">0</span>
         </span>
         <div class="${NS}-panel-actions">
+          <button class="${NS}-panel-btn ${NS}-panel-btn-pause" data-action="pause" title="Pause">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          </button>
           <button class="${NS}-panel-btn" data-action="close" title="Close">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
               <line x1="1" y1="1" x2="9" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -535,6 +596,7 @@
           <span><kbd>Drag</kbd> Multi</span>
           <span><kbd>\u2318C</kbd> Copy</span>
           <span><kbd>Esc</kbd> Clear</span>
+          <span><kbd>⇧P</kbd> Pause</span>
         </div>
         <button class="${NS}-copy-btn" disabled>Copy Prompt</button>
       </div>
@@ -543,6 +605,7 @@
 
     chatPanel.querySelector(`.${NS}-copy-btn`).onclick = () => copyPrompt();
     chatPanel.querySelector('[data-action="close"]').onclick = destroy;
+    chatPanel.querySelector('[data-action="pause"]').onclick = () => togglePause();
     chatPanel.querySelector(`.${NS}-error-badge`).onclick = (e) => {
       e.stopPropagation();
       errorsVisible = !errorsVisible;
@@ -625,6 +688,7 @@
         panel.style.top    = st + e.clientY - sy + "px";
         panel.style.right  = "auto";
         panel.style.bottom = "auto";
+        repositionToast();
       };
       const up = () => {
         document.removeEventListener("mousemove", move);

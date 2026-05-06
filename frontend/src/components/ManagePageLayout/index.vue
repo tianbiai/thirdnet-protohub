@@ -19,23 +19,22 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { HomeFilled } from '@element-plus/icons-vue'
 
-defineProps({
-  title: {
-    type: String,
-    required: true
-  },
-  subtitle: {
-    type: String,
-    default: ''
-  }
-})
+/** 管理页面布局组件属性 */
+defineProps<{
+  /** 页面标题 */
+  title: string
+  /** 页面副标题 */
+  subtitle?: string
+}>()
 
 const router = useRouter()
-function goHome() {
+
+/** 返回首页 */
+function goHome(): void {
   router.push('/')
 }
 </script>

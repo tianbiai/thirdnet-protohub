@@ -28,7 +28,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
 import { useAppStore } from '@/stores/app'
 import { useMenuStore } from '@/stores/menu'
@@ -37,8 +37,8 @@ import Sidebar from './Sidebar.vue'
 const appStore = useAppStore()
 const menuStore = useMenuStore()
 
-// 键盘快捷键
-function handleKeydown(e) {
+/** 键盘快捷键处理 */
+function handleKeydown(e: KeyboardEvent): void {
   // Ctrl/Cmd + B 切换侧边栏
   if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
     e.preventDefault()
@@ -117,25 +117,7 @@ onUnmounted(() => {
   background-size: 40px 40px;
 }
 
-[data-theme="dark"] {
-  .gradient-orb {
-    opacity: 0.15;
-
-    &.orb-1 {
-      background: linear-gradient(135deg, var(--primary-600), var(--primary-800));
-    }
-
-    &.orb-2 {
-      background: linear-gradient(135deg, var(--primary-700), var(--info-color));
-    }
-  }
-
-  .grid-pattern {
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  }
-}
+// 暗色主题覆盖已移至下方非 scoped <style> 块
 
 // 主容器
 .main-container {
@@ -225,6 +207,29 @@ onUnmounted(() => {
 
   .gradient-orb {
     display: none;
+  }
+}
+</style>
+
+<!-- 暗色主题覆盖（非 scoped，因为 :global() 在 scoped 中不生效） -->
+<style lang="scss">
+html.is-dark {
+  .gradient-orb {
+    opacity: 0.15;
+
+    &.orb-1 {
+      background: linear-gradient(135deg, var(--primary-600), var(--primary-800));
+    }
+
+    &.orb-2 {
+      background: linear-gradient(135deg, var(--primary-700), var(--info-color));
+    }
+  }
+
+  .grid-pattern {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   }
 }
 </style>

@@ -301,15 +301,16 @@
   </ManagePageLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search, Plus, MoreFilled, Edit, Delete, User, Upload, Top, Bottom } from '@element-plus/icons-vue'
+import type { FormInstance, FormRules } from 'element-plus'
+import { Search, Plus, MoreFilled, Edit, Delete, User, Top, Bottom } from '@element-plus/icons-vue'
 import ManagePageLayout from '@/components/ManagePageLayout/index.vue'
-import { getMenuConfig, getGroupList as getProjectList, createGroup as createProject, updateGroup as updateProject, deleteGroup as deleteProject, createItem, updateItem, deleteItem, reorderItems } from '@/api/menu'
-import { getAccessList, grantAccess, revokeAccess } from '@/api/project-access'
-import { getUserList } from '@/api/user'
-import { getTypeTag } from '@/utils/menu'
+import { menuApi } from '@/api/modules/app/menu'
+import { managerMenuApi } from '@/api/modules/manager/menu'
+import { projectAccessApi } from '@/api/modules/manager/project-access'
+import { userApi } from '@/api/modules/manager/user'
 import TypeIcon from '@/components/TypeIcon/index.vue'
 import { useUserStore } from '@/stores/user'
 import { useMenuStore } from '@/stores/menu'
@@ -326,29 +327,88 @@ const removeMemberLock = useAsyncLock()
 const deleteItemLock = useAsyncLock()
 const deleteProjectLock = useAsyncLock()
 
+/** 项目子项类型 */
+interface ProjectItem {
+  id: number
+  name: string
+  type: string
+  url?: string
+  description?: string
+  order: number
+  [key: string]: unknown
+}
+
+/** 项目分组类型 */
+interface ProjectGroup {
+  id: number
+  name: string
+  description?: string
+  order: number
+  items?: ProjectItem[]
+  children?: ProjectItem[]
+  [key: string]: unknown
+}
+
+/** 成员项类型 */
+interface MemberItem {
+  userId: number | null
+  userName?: string
+  nickName?: string
+  accessType: string
+  isCreator: boolean
+}
+
+/** 项目成员类型（来自 API） */
+interface ProjectMember {
+  id: number
+  userId: number
+  userName: string
+  nickName: string
+  accessType: string
+  grantedByName: string
+  createTime: string
+  [key: string]: unknown
+}
+
+/** 用户简要信息 */
+interface UserBrief {
+  id: number
+  userName: string
+  nickName: string
+  [key: string]: unknown
+}
+
 // 数据状态
-const loading = ref(false)
-const projects = ref([])
-const searchKeyword = ref('')
-const allUsers = ref([])
+const loading = ref<boolean>(false)
+const projects = ref<ProjectGroup[]>([])
+const searchKeyword = ref<string>('')
+const allUsers = ref<UserBrief[]>([])
 
 // 对话框状态
-const dialogVisible = ref(false)
-const editingProject = ref(null)
-const formRef = ref(null)
+const dialogVisible = ref<boolean>(false)
+const editingProject = ref<ProjectGroup | null>(null)
+const formRef = ref<FormInstance>()
 
 // 成员管理状态
-const memberDialogVisible = ref(false)
-const memberLoading = ref(false)
-const currentProject = ref(null)
-const projectMembers = ref([])
-const addMemberForm = reactive({
+const memberDialogVisible = ref<boolean>(false)
+const memberLoading = ref<boolean>(false)
+const currentProject = ref<ProjectGroup | null>(null)
+const projectMembers = ref<ProjectMember[]>([])
+const addMemberForm = reactive<{
+  userId: number | null
+  accessType: string
+}>({
   userId: null,
   accessType: 'view'
 })
 
 // 表单数据
-const projectForm = reactive({
+const projectForm = reactive<{
+  name: string
+  description: string
+  order: number
+  members: MemberItem[]
+}>({
   name: '',
   description: '',
   order: 1,
@@ -356,11 +416,11 @@ const projectForm = reactive({
 })
 
 // 表单验证规则
-const formRules = {
+const formRules: FormRules = {
   name: [{ required: true, message: '请输入项目名称', trigger: 'blur' }],
   members: [
     {
-      validator: (rule, value, callback) => {
+      validator: (_rule: unknown, value: MemberItem[], callback: (error?: Error) => void) => {
         if (!value || value.length === 0) {
           callback(new Error('请至少添加一名项目成员'))
         } else {
@@ -373,60 +433,61 @@ const formRules = {
 }
 
 // 新建成员选择状态
-const newMemberUserId = ref(null)
-const newMemberAccessType = ref('view')
+const newMemberUserId = ref<number | null>(null)
+const newMemberAccessType = ref<string>('view')
 
-// 可选用户（排除已在项目中的）
-const availableUsers = computed(() => {
+/** 可选用户（排除已在项目中的） */
+const availableUsers = computed<UserBrief[]>(() => {
   const memberIds = projectMembers.value.map(m => m.userId)
   return allUsers.value.filter(u => !memberIds.includes(u.id))
 })
 
-// 新建项目时可选的新成员（排除已添加的）
-const availableNewMembers = computed(() => {
+/** 新建项目时可选的新成员（排除已添加的） */
+const availableNewMembers = computed<UserBrief[]>(() => {
   const addedIds = projectForm.members.map(m => m.userId)
   return allUsers.value.filter(u => !addedIds.includes(u.id))
 })
 
-// 过滤后的项目列表
-const filteredProjects = computed(() => {
+/** 过滤后的项目列表 */
+const filteredProjects = computed<ProjectGroup[]>(() => {
   if (!searchKeyword.value) {
     return projects.value
   }
   const keyword = searchKeyword.value.toLowerCase()
   return projects.value.filter(p =>
     p.name.toLowerCase().includes(keyword) ||
-    p.description.toLowerCase().includes(keyword)
+    (p.description || '').toLowerCase().includes(keyword)
   )
 })
 
-// 加载项目列表
-async function loadProjects() {
+/** 加载项目列表 */
+async function loadProjects(): Promise<void> {
   loading.value = true
   try {
-    const res = await getMenuConfig()
+    const res = await menuApi.getMenuConfig()
     // 应用端接口返回分组数组，包含嵌套的 items
     const groups = Array.isArray(res) ? res : (res.groups || [])
     projects.value = groups.map(g => ({ ...g, items: g.items || g.children || [] }))
-  } catch (error) {
-    ElMessage.error(error.message || '加载项目列表失败')
+  } catch (error: unknown) {
+    const err = error as Error
+    ElMessage.error(err.message || '加载项目列表失败')
   } finally {
     loading.value = false
   }
 }
 
-// 加载所有用户
-async function loadAllUsers() {
+/** 加载所有用户 */
+async function loadAllUsers(): Promise<void> {
   try {
-    const res = await getUserList({ page: 1, pageSize: 100 })
+    const res = await userApi.getUserList({ page: 1, pageSize: 100 })
     allUsers.value = res.list || []
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('加载用户列表失败:', error)
   }
 }
 
-// 新建项目
-function handleCreateProject() {
+/** 新建项目 */
+function handleCreateProject(): void {
   editingProject.value = null
   // 默认将当前用户添加为创建者（管理员）
   const currentUser = allUsers.value.find(u => u.id === userStore.userInfo?.id)
@@ -443,8 +504,8 @@ function handleCreateProject() {
   dialogVisible.value = true
 }
 
-// 添加成员
-function addMember() {
+/** 添加成员（新建项目表单中） */
+function addMember(): void {
   if (!newMemberUserId.value) {
     ElMessage.warning('请选择用户')
     return
@@ -466,13 +527,13 @@ function addMember() {
   newMemberAccessType.value = 'view'
 }
 
-// 移除成员
-function removeMember(index) {
+/** 移除成员（新建项目表单中） */
+function removeMember(index: number): void {
   projectForm.members.splice(index, 1)
 }
 
-// 处理项目操作命令
-function handleProjectCommand(command, project) {
+/** 处理项目操作命令 */
+function handleProjectCommand(command: string, project: ProjectGroup): void {
   if (command === 'edit') {
     editingProject.value = project
     Object.assign(projectForm, {
@@ -495,18 +556,19 @@ function handleProjectCommand(command, project) {
         }
       )
       try {
-        await deleteProject(project.id)
+        await managerMenuApi.deleteGroup(project.id)
         ElMessage.success('删除成功')
         loadProjects()
-      } catch (error) {
-        ElMessage.error(error.message || '删除失败')
+      } catch (error: unknown) {
+        const err = error as Error
+        ElMessage.error(err.message || '删除失败')
       }
     })().catch(() => {})
   }
 }
 
-// 打开成员管理对话框
-async function openMemberDialog(project) {
+/** 打开成员管理对话框 */
+async function openMemberDialog(project: ProjectGroup): Promise<void> {
   currentProject.value = project
   addMemberForm.userId = null
   addMemberForm.accessType = 'view'
@@ -514,43 +576,45 @@ async function openMemberDialog(project) {
   await loadProjectMembers()
 }
 
-// 加载项目成员
-async function loadProjectMembers() {
+/** 加载项目成员 */
+async function loadProjectMembers(): Promise<void> {
   if (!currentProject.value) return
   memberLoading.value = true
   try {
-    const res = await getAccessList({ projectId: currentProject.value.id })
+    const res = await projectAccessApi.getAccessList({ projectId: currentProject.value.id })
     projectMembers.value = res.list || []
-  } catch (error) {
-    ElMessage.error(error.message || '加载成员列表失败')
+  } catch (error: unknown) {
+    const err = error as Error
+    ElMessage.error(err.message || '加载成员列表失败')
   } finally {
     memberLoading.value = false
   }
 }
 
-// 添加成员
+/** 添加成员（成员管理对话框） */
 const handleAddMember = addMemberLock.wrap(async () => {
   if (!addMemberForm.userId) {
     ElMessage.warning('请选择用户')
     return
   }
   try {
-    await grantAccess({
+    await projectAccessApi.grantAccess({
       userId: addMemberForm.userId,
-      projectId: currentProject.value.id,
+      projectId: currentProject.value!.id,
       accessType: addMemberForm.accessType
     })
     ElMessage.success('添加成功')
     addMemberForm.userId = null
     addMemberForm.accessType = 'view'
     loadProjectMembers()
-  } catch (error) {
-    ElMessage.error(error.message || '添加失败')
+  } catch (error: unknown) {
+    const err = error as Error
+    ElMessage.error(err.message || '添加失败')
   }
 })
 
-// 移除成员
-async function handleRemoveMember(member) {
+/** 移除成员（成员管理对话框） */
+async function handleRemoveMember(member: ProjectMember): Promise<void> {
   await removeMemberLock.forKey(member.id, async () => {
     await ElMessageBox.confirm(
       `确定要移除成员"${member.nickName}"吗？`,
@@ -562,60 +626,68 @@ async function handleRemoveMember(member) {
       }
     )
     try {
-      await revokeAccess(member.id)
+      await projectAccessApi.revokeAccess(member.id)
       ElMessage.success('移除成功')
       loadProjectMembers()
-    } catch (error) {
-      ElMessage.error(error.message || '移除失败')
+    } catch (error: unknown) {
+      const err = error as Error
+      ElMessage.error(err.message || '移除失败')
     }
   })()
 }
 
-// 提交表单
+/** 提交项目表单 */
 const handleSubmit = submitLock.wrap(async () => {
   try {
-    await formRef.value.validate()
+    await formRef.value?.validate()
     if (editingProject.value) {
-      await updateProject({ id: editingProject.value.id, ...projectForm })
+      await managerMenuApi.updateGroup({ id: editingProject.value.id, ...projectForm })
       ElMessage.success('更新成功')
     } else {
       // 新建项目时带上成员列表
       const { members, ...projectData } = projectForm
-      await createProject({
+      await managerMenuApi.createGroup({
         ...projectData,
         members: members.map(m => ({ user_id: m.userId, access_type: m.accessType }))
-      })
+      } as never)
       ElMessage.success('创建成功')
     }
     dialogVisible.value = false
     loadProjects()
     menuStore.loadMenuConfig(true)
-  } catch (error) {
+  } catch (error: unknown) {
     if (error !== false) {
-      ElMessage.error(error.message || '操作失败')
+      const err = error as Error
+      ElMessage.error(err.message || '操作失败')
     }
   }
 })
 
 // 子项管理状态
-const itemDialogVisible = ref(false)
-const editingItem = ref(null)
-const currentItemProject = ref(null)
-const itemFormRef = ref(null)
-const itemForm = reactive({
+const itemDialogVisible = ref<boolean>(false)
+const editingItem = ref<ProjectItem | null>(null)
+const currentItemProject = ref<ProjectGroup | null>(null)
+const itemFormRef = ref<FormInstance>()
+const itemForm = reactive<{
+  name: string
+  type: string
+  url: string
+  description: string
+}>({
   name: '',
   type: 'web',
   url: '',
   description: ''
 })
 
-const itemFormRules = {
+/** 子项表单验证规则 */
+const itemFormRules: FormRules = {
   name: [{ required: true, message: '请输入子项名称', trigger: 'blur' }],
   type: [{ required: true, message: '请选择类型', trigger: 'change' }]
 }
 
-// 新建子项
-function handleCreateItem(project) {
+/** 新建子项 */
+function handleCreateItem(project: ProjectGroup): void {
   currentItemProject.value = project
   editingItem.value = null
   Object.assign(itemForm, {
@@ -627,8 +699,8 @@ function handleCreateItem(project) {
   itemDialogVisible.value = true
 }
 
-// 编辑子项
-function handleEditItem(project, item) {
+/** 编辑子项 */
+function handleEditItem(project: ProjectGroup, item: ProjectItem): void {
   currentItemProject.value = project
   editingItem.value = item
   Object.assign(itemForm, {
@@ -640,8 +712,8 @@ function handleEditItem(project, item) {
   itemDialogVisible.value = true
 }
 
-// 删除子项
-async function handleDeleteItem(project, item) {
+/** 删除子项 */
+async function handleDeleteItem(_project: ProjectGroup, item: ProjectItem): Promise<void> {
   await deleteItemLock.forKey(item.id, async () => {
     await ElMessageBox.confirm(
       `确定要删除子项"${item.name}"吗？`,
@@ -653,48 +725,51 @@ async function handleDeleteItem(project, item) {
       }
     )
     try {
-      await deleteItem(item.id)
+      await managerMenuApi.deleteItem(item.id)
       ElMessage.success('删除成功')
       loadProjects()
       menuStore.loadMenuConfig(true)
-    } catch (error) {
-      ElMessage.error(error.message || '删除失败')
+    } catch (error: unknown) {
+      const err = error as Error
+      ElMessage.error(err.message || '删除失败')
     }
   })()
 }
 
-// 移动子项排序
-async function handleMoveItem(project, item, index, direction) {
-  const items = [...project.items]
+/** 移动子项排序 */
+async function handleMoveItem(project: ProjectGroup, _item: ProjectItem, index: number, direction: 'up' | 'down'): Promise<void> {
+  const items = [...(project.items || [])]
   const targetIndex = direction === 'up' ? index - 1 : index + 1
   // 交换位置
   ;[items[index], items[targetIndex]] = [items[targetIndex], items[index]]
   try {
-    await reorderItems(project.id, items)
+    // 新 API 的 reorderItems 只接收 ID 数组
+    await managerMenuApi.reorderItems(items.map(i => i.id))
     loadProjects()
     menuStore.loadMenuConfig(true)
-  } catch (error) {
-    ElMessage.error(error.message || '排序失败')
+  } catch (error: unknown) {
+    const err = error as Error
+    ElMessage.error(err.message || '排序失败')
   }
 }
 
-// 提交子项表单
+/** 提交子项表单 */
 const handleSubmitItem = submitItemLock.wrap(async () => {
   try {
-    await itemFormRef.value.validate()
+    await itemFormRef.value?.validate()
 
     const submitData = { ...itemForm }
 
     if (editingItem.value) {
-      await updateItem({
+      await managerMenuApi.updateItem({
         id: editingItem.value.id,
-        group_id: currentItemProject.value.id,
+        groupId: currentItemProject.value!.id,
         ...submitData
       })
       ElMessage.success('更新成功')
     } else {
-      await createItem({
-        group_id: currentItemProject.value.id,
+      await managerMenuApi.createItem({
+        groupId: currentItemProject.value!.id,
         ...submitData
       })
       ElMessage.success('创建成功')
@@ -702,9 +777,10 @@ const handleSubmitItem = submitItemLock.wrap(async () => {
     itemDialogVisible.value = false
     loadProjects()
     menuStore.loadMenuConfig(true)
-  } catch (error) {
+  } catch (error: unknown) {
     if (error !== false) {
-      ElMessage.error(error.message || '操作失败')
+      const err = error as Error
+      ElMessage.error(err.message || '操作失败')
     }
   }
 })
@@ -976,8 +1052,12 @@ onMounted(() => {
   }
 }
 
-// 深色主题
-[data-theme="dark"] {
+// 深色主题覆盖已移至下方非 scoped <style> 块
+</style>
+
+<!-- 暗色主题覆盖 -->
+<style lang="scss">
+html.is-dark {
   .project-card {
     background: var(--bg-secondary);
   }

@@ -194,15 +194,16 @@
   </el-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import type { FormInstance } from 'element-plus'
 import { useAppStore } from '@/stores/app'
 import { useMenuStore } from '@/stores/menu'
 import { useUserStore } from '@/stores/user'
 import { useLogout } from '@/composables/useLogout'
-import { changePassword } from '@/api/auth'
+import { authApi } from '@/api/modules/app/auth'
 import { QuestionFilled, Sunny, Moon, ArrowRight, Expand, Fold, Lock, SwitchButton } from '@element-plus/icons-vue'
 import TypeIcon from '@/components/TypeIcon/index.vue'
 
@@ -212,20 +213,28 @@ const menuStore = useMenuStore()
 const userStore = useUserStore()
 const { handleLogout } = useLogout()
 
-const activeItemId = ref(null)
+/** 当前激活的菜单项 ID */
+const activeItemId = ref<number | null>(null)
+/** 帮助抽屉是否可见 */
 const helpVisible = ref(false)
 
-// 修改密码相关
+// ---- 修改密码相关 ----
+
+/** 修改密码弹窗是否可见 */
 const passwordDialogVisible = ref(false)
+/** 修改密码提交中 */
 const passwordLoading = ref(false)
-const passwordFormRef = ref(null)
+/** 密码表单引用 */
+const passwordFormRef = ref<FormInstance | null>(null)
+/** 密码表单数据 */
 const passwordForm = reactive({
   oldPassword: '',
   newPassword: '',
   confirmPassword: ''
 })
 
-const validateConfirmPassword = (rule, value, callback) => {
+/** 确认密码校验器 */
+const validateConfirmPassword = (_rule: unknown, value: string, callback: (error?: Error) => void): void => {
   if (value !== passwordForm.newPassword) {
     callback(new Error('两次输入的密码不一致'))
   } else {
@@ -233,6 +242,7 @@ const validateConfirmPassword = (rule, value, callback) => {
   }
 }
 
+/** 密码表单校验规则 */
 const passwordRules = {
   oldPassword: [{ required: true, message: '请输入原密码', trigger: 'blur' }],
   newPassword: [
@@ -245,69 +255,78 @@ const passwordRules = {
   ]
 }
 
-const userPopoverRef = ref(null)
+/** 用户弹出框引用 */
+const userPopoverRef = ref<any>(null)
 
-function openChangePassword() {
+/** 打开修改密码弹窗 */
+function openChangePassword(): void {
   userPopoverRef.value?.hide()
   passwordDialogVisible.value = true
 }
 
-function handleLogoutClick() {
+/** 点击退出登录 */
+function handleLogoutClick(): void {
   userPopoverRef.value?.hide()
   handleLogout()
 }
 
-function resetPasswordForm() {
+/** 重置密码表单 */
+function resetPasswordForm(): void {
   passwordForm.oldPassword = ''
   passwordForm.newPassword = ''
   passwordForm.confirmPassword = ''
   passwordFormRef.value?.resetFields()
 }
 
-async function submitChangePassword() {
+/** 提交修改密码 */
+async function submitChangePassword(): Promise<void> {
   const formEl = passwordFormRef.value
   if (!formEl) return
   await formEl.validate()
 
   passwordLoading.value = true
   try {
-    await changePassword(passwordForm.oldPassword, passwordForm.newPassword)
+    await authApi.changePassword({
+      oldPassword: passwordForm.oldPassword,
+      newPassword: passwordForm.newPassword
+    })
     ElMessage.success('密码修改成功，请重新登录')
     passwordDialogVisible.value = false
     // 修改密码后强制重新登录
     userStore.forceLogout()
     menuStore.resetMenu()
     router.push({ name: 'Login' })
-  } catch (error) {
-    ElMessage.error(error.message || '密码修改失败')
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : '密码修改失败'
+    ElMessage.error(message)
   } finally {
     passwordLoading.value = false
   }
 }
 
-// 切换分组展开状态
-function toggleGroup(group) {
+/** 切换分组展开状态 */
+function toggleGroup(group: { id: number }): void {
   if (appStore.sidebarCollapsed) {
     appStore.setSidebarCollapsed(false)
   }
   menuStore.toggleGroupExpanded(group.id)
 }
 
-// 处理菜单项点击
-function handleItemClick(item) {
+/** 处理菜单项点击 */
+function handleItemClick(item: { id: number; type: string }): void {
   activeItemId.value = item.id
 
   // 所有类型都通过 iframe 加载到内容查看页
   router.push(`/content/${item.type}/${item.id}`)
 }
 
-// 显示帮助
-function showHelp() {
+/** 显示帮助抽屉 */
+function showHelp(): void {
   helpVisible.value = true
 }
 
-// 回到首页
-function goHome() {
+/** 回到首页 */
+function goHome(): void {
   activeItemId.value = null
   router.push('/')
 }

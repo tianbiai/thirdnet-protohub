@@ -2,8 +2,8 @@
   <router-view />
 </template>
 
-<script setup>
-// 根组件 - 路由视图出口
+<script setup lang="ts">
+/** 根组件 - 路由视图出口 */
 </script>
 
 <style>

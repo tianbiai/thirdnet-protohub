@@ -71,16 +71,43 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useMenuStore } from '@/stores/menu'
 import { Folder, User, UserFilled, Lock, Menu, Setting, ArrowRight, Promotion, Position } from '@element-plus/icons-vue'
+import type { Component } from 'vue'
 
 const userStore = useUserStore()
 const menuStore = useMenuStore()
 
-const allCards = [
+/** 首页卡片配置 */
+interface HomeCard {
+  /** 所需权限 */
+  permission: string
+  /** 跳转路径 */
+  path: string
+  /** 图标组件 */
+  icon: Component
+  /** CSS 类名 */
+  iconClass: string
+  /** 标题 */
+  title: string
+  /** 描述 */
+  desc: string
+}
+
+/** 快速链接项 */
+interface QuickLink {
+  /** 链接名称 */
+  name: string
+  /** 跳转路径 */
+  path: string
+  /** 菜单类型 */
+  type: string
+}
+
+const allCards: HomeCard[] = [
   { permission: 'projects:view', path: '/projects', icon: Folder, iconClass: 'project-card', title: '项目管理', desc: '管理项目、子项和成员' },
   { permission: 'user-manage:view', path: '/system/users', icon: User, iconClass: 'user-card', title: '用户管理', desc: '管理系统用户账号' },
   { permission: 'role-manage:view', path: '/system/roles', icon: UserFilled, iconClass: 'role-card', title: '角色管理', desc: '配置角色和权限' },
@@ -89,11 +116,12 @@ const allCards = [
   { permission: 'settings', path: '/settings', icon: Setting, iconClass: 'settings-card', title: '系统设置', desc: '个性化配置' },
 ]
 
-const homeCards = computed(() => allCards.filter(card => userStore.hasPermission(card.permission)))
+/** 根据权限过滤的首页卡片 */
+const homeCards = computed<HomeCard[]>(() => allCards.filter(card => userStore.hasPermission(card.permission)))
 
-// 从菜单配置中提取快速链接
-const quickLinks = computed(() => {
-  const links = []
+/** 从菜单配置中提取快速链接 */
+const quickLinks = computed<QuickLink[]>(() => {
+  const links: QuickLink[] = []
   for (const group of menuStore.groups) {
     if (group.children) {
       for (const item of group.children) {
@@ -108,7 +136,8 @@ const quickLinks = computed(() => {
   return links.slice(0, 8) // 最多展示8个
 })
 
-const openProtoPick = () => {
+/** 打开 ProtoPick 原型调试工具 */
+const openProtoPick = (): void => {
   const baseUrl = import.meta.env.BASE_URL || './'
   window.open(`${baseUrl}protopick/index.html`, '_blank')
 }
@@ -450,38 +479,7 @@ const openProtoPick = () => {
   }
 }
 
-// ===== 深色主题 =====
-[data-theme="dark"] {
-  .welcome-hero {
-    background: var(--bg-secondary);
-  }
-
-  .ambient-bg {
-    opacity: 0.25;
-  }
-
-  .hero-tool-btn {
-    background: linear-gradient(135deg, var(--primary-400), var(--primary-500));
-  }
-
-  .stat-card {
-    background: var(--bg-secondary);
-    border-color: var(--border-light);
-
-    &:hover {
-      background: var(--bg-tertiary);
-    }
-  }
-
-  .quick-link-card {
-    background: var(--bg-secondary);
-    border-color: var(--border-light);
-
-    &:hover {
-      background: var(--bg-tertiary);
-    }
-  }
-}
+// ===== 深色主题覆盖已移至下方非 scoped <style> 块 =====
 
 // ===== 尊重用户减少动画偏好 =====
 @media (prefers-reduced-motion: reduce) {
@@ -518,6 +516,41 @@ const openProtoPick = () => {
 
   .quick-links-grid {
     grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<!-- 暗色主题覆盖（非 scoped，因为 :global() 在 scoped 中不生效） -->
+<style lang="scss">
+html.is-dark {
+  .home-page .welcome-hero {
+    background: var(--bg-secondary);
+  }
+
+  .home-page .ambient-bg {
+    opacity: 0.25;
+  }
+
+  .home-page .hero-tool-btn {
+    background: linear-gradient(135deg, var(--primary-400), var(--primary-500));
+  }
+
+  .home-page .stat-card {
+    background: var(--bg-secondary);
+    border-color: var(--border-light);
+
+    &:hover {
+      background: var(--bg-tertiary);
+    }
+  }
+
+  .home-page .quick-link-card {
+    background: var(--bg-secondary);
+    border-color: var(--border-light);
+
+    &:hover {
+      background: var(--bg-tertiary);
+    }
   }
 }
 </style>

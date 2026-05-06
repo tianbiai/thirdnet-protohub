@@ -32,20 +32,29 @@
   </ManagePageLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import ManagePageLayout from '@/components/ManagePageLayout/index.vue'
-import { getPermissionList } from '@/api/permission'
+import { permissionApi } from '@/api/modules/manager/permission'
+
+/** 权限项类型 */
+interface PermissionItem {
+  id: number
+  code: string
+  name: string
+  category: string
+  description: string
+}
 
 // 数据状态
-const loading = ref(false)
-const permissions = ref([])
-const searchKeyword = ref('')
+const loading = ref<boolean>(false)
+const permissions = ref<PermissionItem[]>([])
+const searchKeyword = ref<string>('')
 
-// 过滤后的权限列表
-const filteredPermissions = computed(() => {
+/** 过滤后的权限列表 */
+const filteredPermissions = computed<PermissionItem[]>(() => {
   if (!searchKeyword.value) {
     return permissions.value
   }
@@ -56,14 +65,15 @@ const filteredPermissions = computed(() => {
   )
 })
 
-// 加载权限列表
-async function loadPermissions() {
+/** 加载权限列表 */
+async function loadPermissions(): Promise<void> {
   loading.value = true
   try {
-    const res = await getPermissionList()
-    permissions.value = res.list || res || []
-  } catch (error) {
-    ElMessage.error(error.message || '加载权限列表失败')
+    const res = await permissionApi.getPermissionList()
+    permissions.value = Array.isArray(res) ? res : (res as unknown as { list: PermissionItem[] }).list || []
+  } catch (error: unknown) {
+    const err = error as Error
+    ElMessage.error(err.message || '加载权限列表失败')
   } finally {
     loading.value = false
   }

@@ -12,22 +12,21 @@
   </span>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Monitor, Cellphone, Link, Notebook } from '@element-plus/icons-vue'
 import { getTypeTag } from '@/utils/menu'
+import type { Component } from 'vue'
 
-defineProps({
-  type: {
-    type: String,
-    default: 'web'
-  },
-  size: {
-    type: Number,
-    default: 14
-  }
-})
+/** 类型图标组件属性 */
+defineProps<{
+  /** 菜单项类型 */
+  type?: string
+  /** 图标大小 */
+  size?: number
+}>()
 
-const typeIconMap = { web: Monitor, miniprogram: Cellphone, link: Link, changelog: Notebook }
+/** 类型到图标组件的映射表 */
+const typeIconMap: Record<string, Component> = { web: Monitor, miniprogram: Cellphone, link: Link, changelog: Notebook }
 </script>
 
 <style lang="scss" scoped>
