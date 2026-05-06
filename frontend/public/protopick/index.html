@@ -47,7 +47,7 @@
     font-size:34px;font-weight:700;color:#f4f4f5;
     letter-spacing:-.03em;line-height:1.1;margin-bottom:10px;
   }
-  .sub{font-size:15px;color:#71717a;line-height:1.6;font-weight:400}
+  .sub{font-size:15px;color:#a1a1aa;line-height:1.6;font-weight:400}
   /* ── Install cards ── */
   .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:36px}
   .card{
@@ -86,7 +86,7 @@
     letter-spacing:-.01em;
   }
   .card-desc{
-    font-size:13px;color:#71717a;line-height:1.65;
+    font-size:13px;color:#a1a1aa;line-height:1.65;
     margin-bottom:18px;min-height:44px;
   }
   .card-action{
@@ -94,7 +94,7 @@
     padding:11px 20px;
     border-radius:9px;font-size:13px;font-weight:600;
     cursor:pointer;transition:all 200ms cubic-bezier(.4,0,.2,1);
-    text-decoration:none;border:1px solid rgba(249,115,22,0.2);
+    text-decoration:none;border:1.5px solid rgba(249,115,22,0.45);
     background:rgba(249,115,22,0.08);color:#fb923c;
     font-family:inherit;width:100%;gap:7px;
   }
@@ -104,13 +104,48 @@
   .card.chrome .card-action{cursor:grab}
   .card.chrome .card-action:active{cursor:grabbing}
   .card.chrome .card-action.loading{background:#27272a;color:#52525b;cursor:wait;border-color:rgba(255,255,255,0.06)}
+  /* ── Drag hint animation ── */
+  @keyframes drag-float{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-8px)}
+  }
+  @keyframes drag-glow{
+    0%,100%{box-shadow:0 0 0 0 rgba(249,115,22,0)}
+    50%{box-shadow:0 0 16px 2px rgba(249,115,22,0.18)}
+  }
+  @keyframes hint-label-fade{
+    0%,100%{opacity:.55}
+    50%{opacity:1}
+  }
+  @keyframes hint-arrow-bounce{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-5px)}
+  }
+  .drag-hint{position:relative;display:flex;flex-direction:column;align-items:center}
+  .drag-hint-label{
+    display:flex;align-items:center;gap:5px;
+    font-size:11px;font-weight:600;color:#fb923c;
+    margin-top:10px;
+    animation:hint-label-fade 2.2s ease-in-out infinite;
+    pointer-events:none;user-select:none;
+  }
+  .drag-hint-label svg{
+    animation:hint-arrow-bounce 1.6s ease-in-out infinite;
+    flex-shrink:0;
+  }
+  .card.chrome .card-action:not(.loading):not(.hint-stopped){
+    animation:drag-float 2.2s ease-in-out infinite,drag-glow 2.2s ease-in-out infinite;
+  }
+  .card.chrome .card-action:not(.loading):hover{
+    animation:none;
+  }
   .card-action.done{
     color:#4ade80!important;
     border-color:rgba(74,222,128,0.2)!important;
     background:rgba(74,222,128,0.06)!important;
     box-shadow:none!important;transform:none!important;
   }
-  .card-hint{font-size:12px;color:#71717a;margin-top:12px;text-align:center}
+  .card-hint{font-size:12px;color:#a1a1aa;margin-top:12px;text-align:center}
   .err{color:#f97316;font-size:12px;margin-top:10px;text-align:center;display:none}
   /* ── Section title ── */
   .steps-wrap{
@@ -121,7 +156,7 @@
   }
   .section-title{
     display:flex;align-items:center;gap:8px;
-    font-size:13px;font-weight:600;color:#71717a;
+    font-size:15px;font-weight:600;color:#e4e4e7;
     letter-spacing:.02em;text-transform:uppercase;
     margin-bottom:4px;
   }
@@ -152,7 +187,7 @@
     font-size:14px;font-weight:600;color:#e4e4e7;
     margin-bottom:6px;letter-spacing:-.01em;
   }
-  .step-desc{font-size:13px;color:#71717a;line-height:1.6}
+  .step-desc{font-size:13px;color:#a1a1aa;line-height:1.6}
   .step-desc br{display:block;margin-top:4px;content:""}
   /* ── Step illustrations ── */
   .step-illust{
@@ -292,6 +327,14 @@ document.addEventListener("DOMContentLoaded", function () {
     link.href = "javascript:" + encodeURIComponent(bmCode);
     link.classList.remove("loading");
 
+    // Stop drag hint animation on first interaction
+    link.addEventListener("mousedown", function() {
+      link.classList.add("hint-stopped");
+      var hint = document.getElementById("drag-hint-label");
+      if (hint) hint.style.display = "none";
+    });
+
+
     if (copyConsoleBtn) {
       copyConsoleBtn.onclick = function() {
         navigator.clipboard.writeText(bmCode).then(function() {
@@ -307,6 +350,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }).catch(function () {
     document.getElementById("bm-err").style.display = "block";
     link.classList.remove("loading");
+
   });
 });
 </script>
@@ -325,7 +369,10 @@ document.addEventListener("DOMContentLoaded", function () {
         <span class="card-browser-name">Chrome / Edge</span>
       </div>
       <p class="card-desc">拖拽下方按钮到书签栏，在目标页面点击书签即可启动。</p>
-      <a class="card-action loading" id="bm-link" href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg> 拖拽到书签栏</a>
+      <div class="drag-hint">
+<a class="card-action loading" id="bm-link" href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg> ProtoPick</a>
+<div class="drag-hint-label" id="drag-hint-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>拖拽到浏览器书签栏</div>
+</div>
       <p class="card-hint">一次性操作，之后点击书签即用</p>
       <p class="err" id="bm-err">资源加载失败，请确保此页面通过 HTTP(S) 访问。</p>
     </div>
@@ -341,7 +388,7 @@ document.addEventListener("DOMContentLoaded", function () {
   </div>
   <div class="steps-wrap">
     <div class="section-title">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e4e4e7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
       使用说明
     </div>
     <div class="steps">
