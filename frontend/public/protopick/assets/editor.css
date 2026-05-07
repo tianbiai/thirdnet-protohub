@@ -698,3 +698,273 @@
 .ai-editor-flash-boundary {
   animation: ai-editor-flash-boundary 200ms ease-out;
 }
+
+/* ── History button (panel header) ──────────────────────── */
+.ai-editor-history-btn {
+  position: relative;
+}
+
+.ai-editor-history-badge {
+  position: absolute;
+  top: -3px;
+  right: -5px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* ── History dropdown ───────────────────────────────────── */
+.ai-editor-history-dropdown {
+  position: absolute;
+  top: 36px;
+  left: 0;
+  right: 0;
+  z-index: 2147483646;
+  background: #0a0a0f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.ai-editor-history-empty {
+  text-align: center;
+  padding: 20px 10px;
+  color: #52525b;
+  font-size: 12px;
+}
+
+.ai-editor-history-item {
+  padding: 7px 8px;
+  border-radius: 6px;
+  cursor: default;
+  margin-bottom: 3px;
+  transition: background 100ms;
+}
+
+.ai-editor-history-item:hover {
+  background: #141420;
+}
+
+.ai-editor-history-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.ai-editor-history-summary {
+  font-size: 12px;
+  color: #e2e8f0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+  font-family: 'SF Mono', Menlo, Monaco, monospace;
+}
+
+.ai-editor-history-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+.ai-editor-history-actions {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.ai-editor-history-act-btn {
+  border: none;
+  border-radius: 3px;
+  padding: 2px 6px;
+  font-size: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 100ms;
+}
+
+.ai-editor-history-copy-btn {
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+}
+
+.ai-editor-history-copy-btn:hover {
+  background: rgba(99, 102, 241, 0.25);
+}
+
+.ai-editor-history-copy-btn.copied {
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+}
+
+.ai-editor-history-detail-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+}
+
+.ai-editor-history-detail-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #d4d4d8;
+}
+
+/* ── History preview (hover) ────────────────────────────── */
+.ai-editor-history-preview {
+  background: #050507;
+  border-radius: 4px;
+  padding: 5px 8px;
+  margin-top: 4px;
+  font-size: 10px;
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+.ai-editor-history-preview-el {
+  color: #e2e8f0;
+}
+
+.ai-editor-history-preview-note {
+  color: #f59e0b;
+  font-style: italic;
+}
+
+/* ── History detail (expanded) ──────────────────────────── */
+.ai-editor-history-detail {
+  background: #050507;
+  border-radius: 4px;
+  padding: 6px 8px;
+  margin-top: 4px;
+}
+
+.ai-editor-history-detail-text {
+  font-size: 10px;
+  color: #94a3b8;
+  font-family: 'SF Mono', Menlo, Monaco, monospace;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.ai-editor-history-detail-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.ai-editor-history-detail-copy {
+  border: none;
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-size: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  transition: background 100ms;
+}
+
+.ai-editor-history-detail-copy:hover {
+  background: rgba(99, 102, 241, 0.25);
+}
+
+.ai-editor-history-detail-copy.copied {
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+}
+
+.ai-editor-history-detail-delete {
+  border: none;
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-size: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  background: rgba(255, 255, 255, 0.05);
+  color: #71717a;
+  transition: color 100ms, background 100ms;
+}
+
+.ai-editor-history-detail-delete:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* ── History clear all ──────────────────────────────────── */
+.ai-editor-history-footer {
+  padding: 6px 8px 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 4px;
+}
+
+.ai-editor-history-clear-all {
+  border: none;
+  background: none;
+  color: #52525b;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 2px 4px;
+  font-family: inherit;
+  transition: color 100ms;
+}
+
+.ai-editor-history-clear-all:hover {
+  color: #ef4444;
+}
+
+/* ── History confirm inline ─────────────────────────────── */
+.ai-editor-history-confirm {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.ai-editor-history-confirm-yes {
+  border: none;
+  border-radius: 3px;
+  padding: 2px 8px;
+  font-size: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.ai-editor-history-confirm-yes:hover {
+  background: rgba(239, 68, 68, 0.25);
+}
+
+.ai-editor-history-confirm-no {
+  border: none;
+  border-radius: 3px;
+  padding: 2px 8px;
+  font-size: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  background: rgba(255, 255, 255, 0.05);
+  color: #a1a1aa;
+}
+
+.ai-editor-history-confirm-no:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
