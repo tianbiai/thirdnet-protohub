@@ -2,7 +2,7 @@
 .ai-editor-root,
 .ai-editor-root * {
   box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   line-height: 1.4;
 }
 
@@ -11,9 +11,9 @@
   position: fixed;
   pointer-events: none;
   z-index: 2147483640;
-  border: 1.5px dashed rgba(0, 0, 0, 0.22);
+  border: 1.5px dashed rgba(249, 115, 22, 0.35);
   border-radius: 3px;
-  background: rgba(0, 0, 0, 0.03);
+  background: rgba(249, 115, 22, 0.03);
   opacity: 0;
   transition: opacity 80ms ease;
 }
@@ -28,9 +28,9 @@
   position: fixed;
   pointer-events: none;
   z-index: 2147483641;
-  border: 2px solid #111;
+  border: 2px solid #f97316;
   border-radius: 3px;
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(249, 115, 22, 0.06);
   opacity: 0;
   transform-origin: center;
   animation: ai-editor-sel-in 180ms cubic-bezier(0.2, 0, 0.1, 1) forwards;
@@ -46,8 +46,8 @@
   position: fixed;
   width: 7px;
   height: 7px;
-  background: #111;
-  border: 1.5px solid #fff;
+  background: #f97316;
+  border: 1.5px solid #050507;
   border-radius: 1.5px;
   pointer-events: none;
   z-index: 2147483642;
@@ -66,12 +66,13 @@
   position: fixed;
   pointer-events: none;
   z-index: 2147483643;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.01em;
-  color: #fff;
-  background: #111;
-  padding: 2px 6px;
+  color: #e4e4e7;
+  background: #050507;
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  padding: 3px 8px;
   border-radius: 3px;
   white-space: nowrap;
   opacity: 0;
@@ -82,12 +83,12 @@
 .ai-editor-annotate-btn {
   position: fixed;
   z-index: 2147483643;
-  width: 20px;
-  height: 20px;
-  border: none;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(249, 115, 22, 0.3);
   border-radius: 4px;
-  background: #333;
-  color: #aaa;
+  background: #050507;
+  color: #fb923c;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -99,53 +100,79 @@
 }
 
 .ai-editor-annotate-btn:hover {
-  background: #555;
-  color: #fff;
+  background: #1a1a1f;
+  color: #fdba74;
 }
 
 .ai-editor-annotate-btn.ai-editor-has-note {
-  background: #2563eb;
-  color: #fff;
+  background: rgba(249, 115, 22, 0.15);
+  color: #fb923c;
+  border-color: rgba(249, 115, 22, 0.5);
 }
 
 .ai-editor-annotate-btn.ai-editor-has-note:hover {
-  background: #1d4ed8;
+  background: rgba(249, 115, 22, 0.25);
+}
+
+/* ── Add-to-candidates button (per-element) ─────────── */
+.ai-editor-add-btn {
+  position: fixed;
+  z-index: 2147483643;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  border-radius: 4px;
+  background: #050507;
+  color: #4ade80;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  opacity: 0;
+  animation: ai-editor-label-in 180ms ease forwards;
+  transition: background 100ms, color 100ms;
+}
+
+.ai-editor-add-btn:hover {
+  background: rgba(74, 222, 128, 0.1);
+  color: #86efac;
 }
 
 /* ── Annotation popover ──────────────────────────────────── */
 .ai-editor-annotate-popover {
   position: fixed;
   z-index: 2147483646;
-  width: 240px;
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  width: 260px;
+  background: #0a0a0f;
+  border: 1px solid rgba(249, 115, 22, 0.25);
   border-radius: 10px;
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5);
   padding: 8px;
   user-select: text;
 }
 
 .ai-editor-annotate-input {
   width: 100%;
-  border: 1px solid #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
-  padding: 6px 8px;
-  font-size: 12px;
+  padding: 7px 10px;
+  font-size: 13px;
   resize: none;
   outline: none;
-  background: #fafafa;
-  color: #1a1a1a;
+  background: rgba(255, 255, 255, 0.04);
+  color: #e4e4e7;
   font-family: inherit;
   transition: border-color 150ms;
 }
 
 .ai-editor-annotate-input:focus {
-  border-color: #111;
-  background: #fff;
+  border-color: rgba(249, 115, 22, 0.4);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .ai-editor-annotate-input::placeholder {
-  color: #bbb;
+  color: #52525b;
 }
 
 .ai-editor-annotate-actions {
@@ -159,38 +186,53 @@
 .ai-editor-annotate-clear {
   border: none;
   border-radius: 5px;
-  padding: 4px 10px;
-  font-size: 11px;
+  padding: 5px 12px;
+  font-size: 12px;
   cursor: pointer;
   transition: background 100ms;
 }
 
 .ai-editor-annotate-done {
-  background: #111;
-  color: #fff;
+  background: rgba(249, 115, 22, 0.15);
+  color: #fb923c;
 }
 
 .ai-editor-annotate-done:hover {
-  background: #333;
+  background: rgba(249, 115, 22, 0.25);
 }
 
 .ai-editor-annotate-clear {
-  background: #f0f0f0;
-  color: #666;
+  background: rgba(255, 255, 255, 0.05);
+  color: #71717a;
 }
 
 .ai-editor-annotate-clear:hover {
-  background: #e0e0e0;
+  background: rgba(255, 255, 255, 0.1);
+  color: #a1a1aa;
 }
 
-/* ── Marquee (drag to select) ────────────────────────────── */
-.ai-editor-marquee {
-  position: fixed;
-  border: 1.5px dashed #555;
-  background: rgba(100, 120, 255, 0.06);
-  border-radius: 2px;
-  pointer-events: none;
-  z-index: 2147483645;
+/* ── Candidate panel ────────────────────────────── */
+.ai-editor-candidate-panel {
+  padding: 8px 10px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.ai-editor-candidate-panel.ai-editor-hidden {
+  display: none;
+}
+.ai-editor-candidate-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+.ai-editor-tag-block {
+  display: flex;
+  width: 100%;
+  max-width: none;
+  margin-bottom: 4px;
+}
+.ai-editor-tag-block:last-child {
+  margin-bottom: 0;
 }
 
 /* ── Error badge (panel header) ──────────────────────────── */
@@ -205,10 +247,10 @@
   justify-content: center;
   background: #ef4444;
   color: #fff;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
-  min-width: 15px;
-  height: 15px;
+  min-width: 17px;
+  height: 17px;
   padding: 0 4px;
   border-radius: 8px;
   cursor: pointer;
@@ -229,9 +271,9 @@
   transform: translateX(-50%) translateY(8px);
   background: #ef4444;
   color: #fff;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  padding: 6px 14px;
+  padding: 7px 16px;
   border-radius: 8px;
   white-space: nowrap;
   opacity: 0;
@@ -247,7 +289,7 @@
 
 /* ── Error section (panel body) ──────────────────────────── */
 .ai-editor-error-section {
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   max-height: 160px;
   overflow-y: auto;
 }
@@ -259,7 +301,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 6px 10px 2px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   color: #ef4444;
   letter-spacing: 0.02em;
@@ -267,8 +309,8 @@
 .ai-editor-error-clear {
   border: none;
   background: none;
-  font-size: 10px;
-  color: #999;
+  font-size: 11px;
+  color: #52525b;
   cursor: pointer;
   padding: 0;
   font-family: inherit;
@@ -278,20 +320,20 @@
 }
 .ai-editor-error-item {
   padding: 4px 10px 6px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 .ai-editor-error-item:last-child {
   border-bottom: none;
 }
 .ai-editor-error-msg {
-  font-size: 10px;
-  color: #333;
+  font-size: 12px;
+  color: #d4d4d8;
   line-height: 1.4;
   word-break: break-word;
 }
 .ai-editor-error-stack {
-  font-size: 9px;
-  color: #999;
+  font-size: 10px;
+  color: #52525b;
   line-height: 1.5;
   white-space: pre-wrap;
   word-break: break-all;
@@ -305,31 +347,31 @@
   bottom: 20px;
   right: 20px;
   z-index: 2147483644;
-  width: 300px;
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.09);
+  width: 340px;
+  background: #050507;
+  border: 2.5px solid rgba(249, 115, 22, 0.7);
   border-radius: 12px;
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.03),
-    0 4px 6px -1px rgba(0, 0, 0, 0.06),
-    0 16px 32px -4px rgba(0, 0, 0, 0.11);
+    0 0 0 1px rgba(0, 0, 0, 0.3),
+    0 4px 6px -1px rgba(0, 0, 0, 0.3),
+    0 16px 32px -4px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   user-select: none;
 }
 
 /* ── Drag handle ─────────────────────────────────────────── */
 .ai-editor-drag-handle {
-  height: 32px;
+  height: 36px;
   display: flex;
   align-items: center;
   cursor: grab;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   transition: background 120ms;
   padding: 0 6px 0 12px;
 }
 
 .ai-editor-drag-handle:hover {
-  background: rgba(0, 0, 0, 0.02);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .ai-editor-drag-handle:active {
@@ -338,9 +380,9 @@
 
 .ai-editor-drag-title {
   flex: 1;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
-  color: #bbb;
+  color: #d4d4d8;
   letter-spacing: 0.03em;
   user-select: none;
   display: flex;
@@ -349,8 +391,8 @@
 }
 
 .ai-editor-status-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: #4ade80;
   flex-shrink: 0;
@@ -362,7 +404,7 @@
 }
 
 .ai-editor-status-label {
-  color: #bbb;
+  color: #d4d4d8;
 }
 
 .ai-editor-panel-actions {
@@ -372,11 +414,11 @@
 }
 
 .ai-editor-panel-btn {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border: none;
   background: none;
-  color: #ccc;
+  color: #a1a1aa;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -387,8 +429,8 @@
 }
 
 .ai-editor-panel-btn:hover {
-  color: #444;
-  background: rgba(0, 0, 0, 0.06);
+  color: #e4e4e7;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .ai-editor-panel-btn-pause {
@@ -401,30 +443,26 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 4px;
-  padding: 8px 10px 4px;
-}
-
-.ai-editor-chat-tags.ai-editor-hidden {
-  display: none;
+  padding: 0;
 }
 
 .ai-editor-tag {
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  padding: 2px 2px 2px 8px;
-  background: #f5f5f5;
-  border: 1px solid #e8e8e8;
+  padding: 3px 3px 3px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
-  font-size: 11px;
-  color: #333;
-  max-width: 220px;
+  font-size: 13px;
+  color: #d4d4d8;
+  max-width: 260px;
   user-select: none;
 }
 
 .ai-editor-tag-num {
-  font-size: 10px;
-  color: #aaa;
+  font-size: 12px;
+  color: #f97316;
   flex-shrink: 0;
   margin-right: 1px;
 }
@@ -438,13 +476,13 @@
 .ai-editor-tag-x {
   background: none;
   border: none;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   padding: 0;
   margin-left: 1px;
   cursor: pointer;
-  color: #bbb;
-  font-size: 14px;
+  color: #a1a1aa;
+  font-size: 16px;
   line-height: 1;
   flex-shrink: 0;
   display: flex;
@@ -455,8 +493,8 @@
 }
 
 .ai-editor-tag-x:hover {
-  color: #333;
-  background: rgba(0, 0, 0, 0.08);
+  color: #e4e4e7;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* ── Tags utility buttons ────────────────────────────────── */
@@ -464,21 +502,105 @@
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  padding: 2px 8px;
+  padding: 3px 10px;
   background: none;
-  border: 1px solid #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
-  font-size: 10px;
-  color: #999;
+  font-size: 12px;
+  color: #a1a1aa;
   cursor: pointer;
   transition: color 100ms, border-color 100ms, background 100ms;
   white-space: nowrap;
 }
 
 .ai-editor-tags-action:hover {
-  color: #333;
-  border-color: #bbb;
-  background: #f5f5f5;
+  color: #e4e4e7;
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* ── Selection panel (two rows) ──────────────────────────── */
+.ai-editor-selection-panel {
+  padding: 8px 10px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ai-editor-selection-panel.ai-editor-hidden {
+  display: none;
+}
+
+.ai-editor-selection-row {
+  padding: 4px 0;
+}
+
+.ai-editor-selection-row + .ai-editor-selection-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 6px;
+  margin-top: 2px;
+}
+
+.ai-editor-selection-heading {
+  font-size: 12px;
+  font-weight: 600;
+  color: #f97316;
+  letter-spacing: 0.04em;
+  margin-bottom: 5px;
+}
+
+/* ── CSS path breadcrumb ─────────────────────────────────── */
+.ai-editor-css-paths {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ai-editor-css-path-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: wrap;
+  line-height: 1.5;
+}
+
+.ai-editor-css-path-num {
+  font-size: 11px;
+  color: #f97316;
+  flex-shrink: 0;
+  margin-right: 2px;
+}
+
+.ai-editor-css-path-seg {
+  font-size: 12px;
+  color: #a1a1aa;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'SF Mono', Menlo, Monaco, monospace;
+  cursor: pointer;
+  transition: color 100ms, background 100ms, border-color 100ms;
+  border: 1px solid transparent;
+}
+
+.ai-editor-css-path-seg:hover {
+  color: #fb923c;
+  background: rgba(249, 115, 22, 0.1);
+  border-color: rgba(249, 115, 22, 0.25);
+}
+
+.ai-editor-css-path-active {
+  color: #f4f4f5;
+  background: rgba(249, 115, 22, 0.12);
+  border-color: rgba(249, 115, 22, 0.3);
+}
+
+.ai-editor-css-path-sep {
+  font-size: 11px;
+  color: #71717a;
+  flex-shrink: 0;
 }
 
 /* ── Copy Prompt button ──────────────────────────────────── */
@@ -486,20 +608,22 @@
   display: block;
   width: calc(100% - 16px);
   margin: 6px 8px 8px;
-  padding: 8px 0;
-  border: none;
+  padding: 9px 0;
+  border: 2px solid rgba(249, 115, 22, 0.55);
   border-radius: 8px;
-  background: #111;
-  color: #fff;
-  font-size: 12px;
+  background: rgba(249, 115, 22, 0.08);
+  color: #fb923c;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.02em;
   cursor: pointer;
-  transition: background 150ms, transform 100ms;
+  transition: background 150ms, border-color 150ms, transform 100ms;
 }
 
 .ai-editor-copy-btn:hover {
-  background: #333;
+  background: rgba(249, 115, 22, 0.14);
+  border-color: rgba(249, 115, 22, 0.4);
+  color: #fdba74;
 }
 
 .ai-editor-copy-btn:active {
@@ -507,14 +631,17 @@
 }
 
 .ai-editor-copy-btn:disabled {
-  background: #e0e0e0;
-  color: #aaa;
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.06);
+  color: #71717a;
   cursor: default;
   transform: none;
 }
 
 .ai-editor-copy-btn.ai-editor-copy-done {
-  background: #16a34a;
+  border-color: rgba(74, 222, 128, 0.2);
+  background: rgba(74, 222, 128, 0.06);
+  color: #4ade80;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -524,28 +651,40 @@
 /* ── Shortcuts hint ─────────────────────────────────────── */
 .ai-editor-shortcuts {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px 8px;
-  padding: 6px 10px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 6px 10px;
+  padding: 4px 10px 6px;
   font-size: 10px;
-  color: #999;
+  color: #d4d4d8;
 }
 
 .ai-editor-shortcuts span {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .ai-editor-shortcuts kbd {
   display: inline-block;
-  background: #f0f0f0;
-  border: 1px solid #e0e0e0;
-  border-radius: 3px;
-  padding: 0 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 2px;
+  padding: 0 3px;
   font-size: 9px;
   font-family: inherit;
-  color: #666;
-  line-height: 1.6;
+  color: #e4e4e7;
+  line-height: 1.5;
+}
+
+/* ── DOM nav boundary flash ────────────────────────────── */
+@keyframes ai-editor-flash-boundary {
+  0% { border-color: rgba(249, 115, 22, 0.35); }
+  50% { border-color: rgba(239, 68, 68, 0.8); }
+  100% { border-color: rgba(249, 115, 22, 0.35); }
+}
+.ai-editor-flash-boundary {
+  animation: ai-editor-flash-boundary 200ms ease-out;
 }
