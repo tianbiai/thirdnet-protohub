@@ -571,7 +571,7 @@
         document.removeEventListener("mousedown", closeOnOutside, true);
         return;
       }
-      if (e.target.closest(`.${NS}-history-modal-overlay`) || e.target.closest('[data-action="history"]')) return;
+      if (e.target.closest(`.${NS}-history-modal-overlay`) || e.target.closest(`.${NS}-history-detail-overlay`) || e.target.closest('[data-action="history"]')) return;
       historyDropdown.remove();
       historyDropdown = null;
       historyOpen = false;
@@ -583,12 +583,6 @@
     }, 0);
   }
 
-  function formatFullTime(ts) {
-    const d = new Date(ts);
-    const pad = (n) => String(n).padStart(2, "0");
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  }
-
   function createHistoryModal() {
     const overlay = document.createElement("div");
     overlay.className = `${NS}-root ${NS}-history-modal-overlay`;
@@ -596,24 +590,44 @@
     const modal = document.createElement("div");
     modal.className = `${NS}-history-list-modal`;
 
+    const history = loadHistory();
+
     // Header
     const header = document.createElement("div");
     header.className = `${NS}-history-list-header`;
     const title = document.createElement("span");
     title.className = `${NS}-history-list-title`;
     title.textContent = "历史记录";
+    const headerRight = document.createElement("div");
+    headerRight.style.cssText = "display:flex;align-items:center;gap:8px;";
+    if (history.length > 0) {
+      const clearAllBtn = document.createElement("button");
+      clearAllBtn.className = `${NS}-history-clear-all`;
+      clearAllBtn.textContent = "清空全部";
+      const resetBtn = () => { clearAllBtn.textContent = "清空全部"; clearAllBtn.classList.remove("confirming"); clearAllBtn.onclick = askConfirm; };
+      const doClear = (e2) => { e2.stopPropagation(); clearAllHistory(); toggleHistoryDropdown(); };
+      const askConfirm = (e) => {
+        e.stopPropagation();
+        clearAllBtn.textContent = "确认？";
+        clearAllBtn.classList.add("confirming");
+        clearAllBtn.onclick = doClear;
+        setTimeout(() => { if (clearAllBtn.isConnected) resetBtn(); }, 3000);
+      };
+      clearAllBtn.onclick = askConfirm;
+      headerRight.appendChild(clearAllBtn);
+    }
     const closeBtn = document.createElement("button");
     closeBtn.className = `${NS}-panel-btn`;
     closeBtn.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><line x1="1" y1="1" x2="9" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="9" y1="1" x2="1" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
     closeBtn.title = "关闭";
     closeBtn.onclick = (e) => { e.stopPropagation(); toggleHistoryDropdown(); };
+    headerRight.appendChild(closeBtn);
     header.appendChild(title);
-    header.appendChild(closeBtn);
+    header.appendChild(headerRight);
 
     const list = document.createElement("div");
     list.className = `${NS}-history-list`;
 
-    const history = loadHistory();
     if (history.length === 0) {
       list.innerHTML = `<div class="${NS}-history-empty">暂无复制历史</div>`;
     } else {
@@ -641,13 +655,8 @@
         metaText += ` · ${relativeTime(record.timestamp)}`;
         meta.textContent = metaText;
 
-        const timeRow = document.createElement("div");
-        timeRow.className = `${NS}-history-time`;
-        timeRow.textContent = formatFullTime(record.timestamp);
-
         left.appendChild(summary);
         left.appendChild(meta);
-        left.appendChild(timeRow);
 
         const actions = document.createElement("div");
         actions.className = `${NS}-history-actions`;
@@ -692,45 +701,8 @@
       });
     }
 
-    // Footer
-    const footer = document.createElement("div");
-    footer.className = `${NS}-history-footer`;
-    if (history.length > 0) {
-      const clearAllBtn = document.createElement("button");
-      clearAllBtn.className = `${NS}-history-clear-all`;
-      clearAllBtn.textContent = "清空全部";
-      clearAllBtn.onclick = (e) => {
-        e.stopPropagation();
-        footer.innerHTML = "";
-        const confirm = document.createElement("div");
-        confirm.className = `${NS}-history-confirm`;
-        confirm.textContent = "确认清空？";
-        const yesBtn = document.createElement("button");
-        yesBtn.className = `${NS}-history-confirm-yes`;
-        yesBtn.textContent = "确认";
-        yesBtn.onclick = (e2) => {
-          e2.stopPropagation();
-          clearAllHistory();
-          toggleHistoryDropdown();
-        };
-        const noBtn = document.createElement("button");
-        noBtn.className = `${NS}-history-confirm-no`;
-        noBtn.textContent = "取消";
-        noBtn.onclick = (e2) => {
-          e2.stopPropagation();
-          footer.innerHTML = "";
-          footer.appendChild(clearAllBtn);
-        };
-        confirm.appendChild(yesBtn);
-        confirm.appendChild(noBtn);
-        footer.appendChild(confirm);
-      };
-      footer.appendChild(clearAllBtn);
-    }
-
     modal.appendChild(header);
     modal.appendChild(list);
-    modal.appendChild(footer);
     overlay.appendChild(modal);
 
     overlay.onclick = (e) => { if (e.target === overlay) toggleHistoryDropdown(); };
@@ -745,7 +717,7 @@
     if (!record) return;
 
     const overlay = document.createElement("div");
-    overlay.className = `${NS}-root ${NS}-history-modal-overlay`;
+    overlay.className = `${NS}-root ${NS}-history-detail-overlay`;
 
     const modal = document.createElement("div");
     modal.className = `${NS}-history-modal`;
@@ -830,9 +802,8 @@
       e.stopPropagation();
       deleteHistoryRecord(recordId);
       closeHistoryDetailModal();
-      if (historyDropdown) { historyDropdown.remove(); historyDropdown = null; }
-      historyOpen = false;
-      expandedHistoryId = null;
+      // Refresh history list
+      if (historyDropdown) { historyDropdown.remove(); historyDropdown = null; historyOpen = false; }
       toggleHistoryDropdown();
     };
     actions.appendChild(copyBtn);
@@ -850,7 +821,7 @@
   }
 
   function closeHistoryDetailModal() {
-    const existing = document.querySelector(`.${NS}-history-modal-overlay`);
+    const existing = document.querySelector(`.${NS}-history-detail-overlay`);
     if (existing) existing.remove();
     expandedHistoryId = null;
   }

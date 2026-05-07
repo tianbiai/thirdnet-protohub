@@ -876,7 +876,8 @@
 }
 
 /* ── History detail modal ─────────────────────────────── */
-.ai-editor-history-modal-overlay {
+.ai-editor-history-modal-overlay,
+.ai-editor-history-detail-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -1063,12 +1064,6 @@
 }
 
 /* ── History clear all ──────────────────────────────────── */
-.ai-editor-history-footer {
-  padding: 6px 8px 4px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  margin-top: 4px;
-}
-
 .ai-editor-history-clear-all {
   border: none;
   background: none;
@@ -1080,46 +1075,7 @@
   transition: color 100ms;
 }
 
-.ai-editor-history-clear-all:hover {
+.ai-editor-history-clear-all:hover,
+.ai-editor-history-clear-all.confirming {
   color: #ef4444;
-}
-
-/* ── History confirm inline ─────────────────────────────── */
-.ai-editor-history-confirm {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 0;
-  font-size: 11px;
-  color: #94a3b8;
-}
-
-.ai-editor-history-confirm-yes {
-  border: none;
-  border-radius: 3px;
-  padding: 2px 8px;
-  font-size: 10px;
-  cursor: pointer;
-  font-family: inherit;
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
-}
-
-.ai-editor-history-confirm-yes:hover {
-  background: rgba(239, 68, 68, 0.25);
-}
-
-.ai-editor-history-confirm-no {
-  border: none;
-  border-radius: 3px;
-  padding: 2px 8px;
-  font-size: 10px;
-  cursor: pointer;
-  font-family: inherit;
-  background: rgba(255, 255, 255, 0.05);
-  color: #a1a1aa;
-}
-
-.ai-editor-history-confirm-no:hover {
-  background: rgba(255, 255, 255, 0.1);
 }
