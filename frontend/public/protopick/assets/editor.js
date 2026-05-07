@@ -88,6 +88,9 @@
       document.removeEventListener("mouseup", panelDragListeners.up);
       panelDragListeners = null;
     }
+    historyDropdown = null;
+    historyOpen = false;
+    expandedHistoryId = null;
     delete window.__selectorDestroy;
   }
 
@@ -878,7 +881,8 @@
     }
 
     if (e.key === "Escape") {
-      if (activePopover) { removeAnnotationPopover(); }
+      if (historyOpen) { toggleHistoryDropdown(); }
+      else if (activePopover) { removeAnnotationPopover(); }
       else if (selectedElements.length > 0) { clearSelection(); updateTags(); }
       else if (candidateElements.length > 0) { clearAllCandidates(); }
       return;
@@ -1273,7 +1277,13 @@
   function copyPrompt() {
     const text = buildPromptText();
     if (!text) return;
-    writeToClipboard(text);
+
+    const domElements = [...candidateElements];
+    selectedElements.forEach(el => {
+      if (!domElements.includes(el)) domElements.push(el);
+    });
+    const serializedElements = domElements.map(el => serializeElementContext(el));
+    writeToClipboard(text, serializedElements, domElements);
     showCopyFeedback("已复制");
   }
 
@@ -1320,21 +1330,28 @@
     return lines.join("\n");
   }
 
-  function writeToClipboard(text) {
+  function writeToClipboard(text, serializedElements, domElements) {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+      navigator.clipboard.writeText(text).then(() => {
+        if (serializedElements) saveToHistory(text, serializedElements, domElements);
+      }).catch(() => {
+        fallbackCopy(text, serializedElements, domElements);
+      });
     } else {
-      fallbackCopy(text);
+      fallbackCopy(text, serializedElements, domElements);
     }
   }
 
-  function fallbackCopy(text) {
+  function fallbackCopy(text, serializedElements, domElements) {
     const ta = document.createElement("textarea");
     ta.value = text;
     ta.style.cssText = "position:fixed;opacity:0;top:0;left:0";
     document.body.appendChild(ta);
     ta.focus(); ta.select();
-    try { document.execCommand("copy"); } catch (_) {}
+    try {
+      const ok = document.execCommand("copy");
+      if (ok && serializedElements) saveToHistory(text, serializedElements, domElements);
+    } catch (_) {}
     ta.remove();
   }
 
