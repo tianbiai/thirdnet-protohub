@@ -563,15 +563,14 @@
     }
     historyOpen = true;
     expandedHistoryId = null;
-    historyDropdown = createHistoryDropdown();
-    chatPanel.appendChild(historyDropdown);
+    historyDropdown = createHistoryModal();
 
     const closeOnOutside = (e) => {
       if (!historyDropdown) {
         document.removeEventListener("mousedown", closeOnOutside, true);
         return;
       }
-      if (e.target.closest(`.${NS}-history-dropdown`) || e.target.closest('[data-action="history"]')) return;
+      if (e.target.closest(`.${NS}-history-modal-overlay`) || e.target.closest('[data-action="history"]')) return;
       historyDropdown.remove();
       historyDropdown = null;
       historyOpen = false;
@@ -583,116 +582,167 @@
     }, 0);
   }
 
-  function createHistoryDropdown() {
-    const dd = document.createElement("div");
-    dd.className = `${NS}-root ${NS}-history-dropdown`;
+  function formatFullTime(ts) {
+    const d = new Date(ts);
+    const pad = (n) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function createHistoryModal() {
+    const overlay = document.createElement("div");
+    overlay.className = `${NS}-root ${NS}-history-modal-overlay`;
+
+    const modal = document.createElement("div");
+    modal.className = `${NS}-history-list-modal`;
+
+    // Header
+    const header = document.createElement("div");
+    header.className = `${NS}-history-list-header`;
+    const title = document.createElement("span");
+    title.className = `${NS}-history-list-title`;
+    title.textContent = "历史记录";
+    const closeBtn = document.createElement("button");
+    closeBtn.className = `${NS}-panel-btn`;
+    closeBtn.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><line x1="1" y1="1" x2="9" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="9" y1="1" x2="1" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+    closeBtn.title = "关闭";
+    closeBtn.onclick = (e) => { e.stopPropagation(); toggleHistoryDropdown(); };
+    header.appendChild(title);
+    header.appendChild(closeBtn);
+
+    const list = document.createElement("div");
+    list.className = `${NS}-history-list`;
+
     const history = loadHistory();
     if (history.length === 0) {
-      dd.innerHTML = `<div class="${NS}-history-empty">暂无复制历史</div>`;
-      return dd;
-    }
-    history.forEach(record => {
-      const item = document.createElement("div");
-      item.className = `${NS}-history-item`;
-      item.dataset.id = record.id;
-      const row = document.createElement("div");
-      row.className = `${NS}-history-item-row`;
-      const left = document.createElement("div");
-      left.style.cssText = "flex:1;min-width:0;";
-      const summary = document.createElement("div");
-      summary.className = `${NS}-history-summary`;
-      summary.textContent = record.summary || record.elements.map(e => e.selector.split(">").pop()).join(" + ");
-      const meta = document.createElement("div");
-      meta.className = `${NS}-history-meta`;
-      const elCount = record.elements.length;
-      const hasNotes = record.elements.some(e => e.annotation);
-      let metaText = `${elCount} 个元素`;
-      if (hasNotes) metaText += " · 含备注";
-      metaText += ` · ${relativeTime(record.timestamp)}`;
-      meta.textContent = metaText;
-      left.appendChild(summary);
-      left.appendChild(meta);
-      const actions = document.createElement("div");
-      actions.className = `${NS}-history-actions`;
-      const copyBtn = document.createElement("button");
-      copyBtn.className = `${NS}-history-act-btn ${NS}-history-copy-btn`;
-      copyBtn.textContent = "复制";
-      copyBtn.onclick = (e) => {
-        e.stopPropagation();
-        writeToClipboard(record.prompt);
-        copyBtn.textContent = "Copied";
-        copyBtn.classList.add("copied");
-        setTimeout(() => {
-          copyBtn.textContent = "复制";
-          copyBtn.classList.remove("copied");
-        }, 2000);
-      };
-      const detailBtn = document.createElement("button");
-      detailBtn.className = `${NS}-history-act-btn ${NS}-history-detail-btn`;
-      detailBtn.textContent = "详情";
-      detailBtn.onclick = (e) => {
-        e.stopPropagation();
-        showHistoryDetailModal(record.id);
-      };
-      actions.appendChild(copyBtn);
-      actions.appendChild(detailBtn);
-      row.appendChild(left);
-      row.appendChild(actions);
-      item.appendChild(row);
-      item.addEventListener("mouseenter", () => {
-        if (expandedHistoryId === record.id) return;
-        removePreviewFromItem(item);
-        const preview = document.createElement("div");
-        preview.className = `${NS}-history-preview`;
-        record.elements.forEach((el, i) => {
-          const line = document.createElement("div");
-          line.innerHTML = `<span class="${NS}-history-preview-el">${i + 1}. ${escapeHtml(el.selector.split(">").pop())}</span>${el.annotation ? ` <span class="${NS}-history-preview-note">— ${escapeHtml(el.annotation)}</span>` : ""}`;
-          preview.appendChild(line);
+      list.innerHTML = `<div class="${NS}-history-empty">暂无复制历史</div>`;
+    } else {
+      history.forEach(record => {
+        const item = document.createElement("div");
+        item.className = `${NS}-history-item`;
+        item.dataset.id = record.id;
+
+        const row = document.createElement("div");
+        row.className = `${NS}-history-item-row`;
+
+        const left = document.createElement("div");
+        left.style.cssText = "flex:1;min-width:0;";
+
+        const summary = document.createElement("div");
+        summary.className = `${NS}-history-summary`;
+        summary.textContent = record.summary || record.elements.map(e => e.selector.split(">").pop()).join(" + ");
+
+        const meta = document.createElement("div");
+        meta.className = `${NS}-history-meta`;
+        const elCount = record.elements.length;
+        const hasNotes = record.elements.some(e => e.annotation);
+        let metaText = `${elCount} 个元素`;
+        if (hasNotes) metaText += " · 含备注";
+        metaText += ` · ${relativeTime(record.timestamp)}`;
+        meta.textContent = metaText;
+
+        const timeRow = document.createElement("div");
+        timeRow.className = `${NS}-history-time`;
+        timeRow.textContent = formatFullTime(record.timestamp);
+
+        left.appendChild(summary);
+        left.appendChild(meta);
+        left.appendChild(timeRow);
+
+        const actions = document.createElement("div");
+        actions.className = `${NS}-history-actions`;
+
+        const copyBtn = document.createElement("button");
+        copyBtn.className = `${NS}-history-act-btn ${NS}-history-copy-btn`;
+        copyBtn.textContent = "复制";
+        copyBtn.onclick = (e) => {
+          e.stopPropagation();
+          writeToClipboard(record.prompt);
+          copyBtn.textContent = "Copied";
+          copyBtn.classList.add("copied");
+          setTimeout(() => { copyBtn.textContent = "复制"; copyBtn.classList.remove("copied"); }, 2000);
+        };
+
+        const detailBtn = document.createElement("button");
+        detailBtn.className = `${NS}-history-act-btn ${NS}-history-detail-btn`;
+        detailBtn.textContent = "详情";
+        detailBtn.onclick = (e) => {
+          e.stopPropagation();
+          showHistoryDetailModal(record.id);
+        };
+
+        actions.appendChild(copyBtn);
+        actions.appendChild(detailBtn);
+
+        row.appendChild(left);
+        row.appendChild(actions);
+        item.appendChild(row);
+
+        // Hover preview
+        item.addEventListener("mouseenter", () => {
+          if (expandedHistoryId) return;
+          removePreviewFromItem(item);
+          const preview = document.createElement("div");
+          preview.className = `${NS}-history-preview`;
+          record.elements.forEach((el, i) => {
+            const line = document.createElement("div");
+            line.innerHTML = `<span class="${NS}-history-preview-el">${i + 1}. ${escapeHtml(el.selector.split(">").pop())}</span>${el.annotation ? ` <span class="${NS}-history-preview-note">— ${escapeHtml(el.annotation)}</span>` : ""}`;
+            preview.appendChild(line);
+          });
+          item.appendChild(preview);
         });
-        item.appendChild(preview);
+        item.addEventListener("mouseleave", () => {
+          if (expandedHistoryId) return;
+          removePreviewFromItem(item);
+        });
+
+        list.appendChild(item);
       });
-      item.addEventListener("mouseleave", () => {
-        if (expandedHistoryId === record.id) return;
-        removePreviewFromItem(item);
-      });
-      dd.appendChild(item);
-    });
+    }
+
+    // Footer
     const footer = document.createElement("div");
     footer.className = `${NS}-history-footer`;
-    const clearAllBtn = document.createElement("button");
-    clearAllBtn.className = `${NS}-history-clear-all`;
-    clearAllBtn.textContent = "清空全部";
-    clearAllBtn.onclick = (e) => {
-      e.stopPropagation();
-      footer.innerHTML = "";
-      const confirm = document.createElement("div");
-      confirm.className = `${NS}-history-confirm`;
-      confirm.textContent = "确认清空？";
-      const yesBtn = document.createElement("button");
-      yesBtn.className = `${NS}-history-confirm-yes`;
-      yesBtn.textContent = "确认";
-      yesBtn.onclick = (e2) => {
-        e2.stopPropagation();
-        clearAllHistory();
-        if (historyDropdown) { historyDropdown.remove(); historyDropdown = null; }
-        historyOpen = false;
-        toggleHistoryDropdown();
-      };
-      const noBtn = document.createElement("button");
-      noBtn.className = `${NS}-history-confirm-no`;
-      noBtn.textContent = "取消";
-      noBtn.onclick = (e2) => {
-        e2.stopPropagation();
+    if (history.length > 0) {
+      const clearAllBtn = document.createElement("button");
+      clearAllBtn.className = `${NS}-history-clear-all`;
+      clearAllBtn.textContent = "清空全部";
+      clearAllBtn.onclick = (e) => {
+        e.stopPropagation();
         footer.innerHTML = "";
-        footer.appendChild(clearAllBtn);
+        const confirm = document.createElement("div");
+        confirm.className = `${NS}-history-confirm`;
+        confirm.textContent = "确认清空？";
+        const yesBtn = document.createElement("button");
+        yesBtn.className = `${NS}-history-confirm-yes`;
+        yesBtn.textContent = "确认";
+        yesBtn.onclick = (e2) => {
+          e2.stopPropagation();
+          clearAllHistory();
+          toggleHistoryDropdown();
+        };
+        const noBtn = document.createElement("button");
+        noBtn.className = `${NS}-history-confirm-no`;
+        noBtn.textContent = "取消";
+        noBtn.onclick = (e2) => {
+          e2.stopPropagation();
+          footer.innerHTML = "";
+          footer.appendChild(clearAllBtn);
+        };
+        confirm.appendChild(yesBtn);
+        confirm.appendChild(noBtn);
+        footer.appendChild(confirm);
       };
-      confirm.appendChild(yesBtn);
-      confirm.appendChild(noBtn);
-      footer.appendChild(confirm);
-    };
-    footer.appendChild(clearAllBtn);
-    dd.appendChild(footer);
-    return dd;
+      footer.appendChild(clearAllBtn);
+    }
+
+    modal.appendChild(header);
+    modal.appendChild(list);
+    modal.appendChild(footer);
+    overlay.appendChild(modal);
+
+    overlay.onclick = (e) => { if (e.target === overlay) toggleHistoryDropdown(); };
+
+    return overlay;
   }
 
   function removePreviewFromItem(item) {
