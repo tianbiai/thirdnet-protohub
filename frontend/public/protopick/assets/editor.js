@@ -678,23 +678,15 @@
         row.appendChild(actions);
         item.appendChild(row);
 
-        // Hover preview
-        item.addEventListener("mouseenter", () => {
-          if (expandedHistoryId) return;
-          removePreviewFromItem(item);
-          const preview = document.createElement("div");
-          preview.className = `${NS}-history-preview`;
-          record.elements.forEach((el, i) => {
-            const line = document.createElement("div");
-            line.innerHTML = `<span class="${NS}-history-preview-el">${i + 1}. ${escapeHtml(el.selector.split(">").pop())}</span>${el.annotation ? ` <span class="${NS}-history-preview-note">— ${escapeHtml(el.annotation)}</span>` : ""}`;
-            preview.appendChild(line);
-          });
-          item.appendChild(preview);
+        // Always show element preview
+        const preview = document.createElement("div");
+        preview.className = `${NS}-history-preview`;
+        record.elements.forEach((el, i) => {
+          const line = document.createElement("div");
+          line.innerHTML = `<span class="${NS}-history-preview-el">${i + 1}. ${escapeHtml(el.selector.split(">").pop())}</span>${el.annotation ? ` <span class="${NS}-history-preview-note">— ${escapeHtml(el.annotation)}</span>` : ""}`;
+          preview.appendChild(line);
         });
-        item.addEventListener("mouseleave", () => {
-          if (expandedHistoryId) return;
-          removePreviewFromItem(item);
-        });
+        item.appendChild(preview);
 
         list.appendChild(item);
       });
@@ -744,11 +736,6 @@
     overlay.onclick = (e) => { if (e.target === overlay) toggleHistoryDropdown(); };
 
     return overlay;
-  }
-
-  function removePreviewFromItem(item) {
-    const preview = item.querySelector(`.${NS}-history-preview`);
-    if (preview) preview.remove();
   }
 
   function showHistoryDetailModal(recordId) {

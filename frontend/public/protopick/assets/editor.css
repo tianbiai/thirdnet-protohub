@@ -769,11 +769,16 @@
   border-radius: 6px;
   cursor: default;
   margin-bottom: 3px;
+  background: #0f0f18;
   transition: background 100ms;
 }
 
-.ai-editor-history-item:hover {
+.ai-editor-history-item:nth-child(even) {
   background: #141420;
+}
+
+.ai-editor-history-item:hover {
+  background: #1a1a2a;
 }
 
 .ai-editor-history-item-row {
