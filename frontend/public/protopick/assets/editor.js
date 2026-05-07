@@ -27,6 +27,9 @@
   let errorsVisible = false;
   let errorToastTimer = null;
   let paused = false;
+  let historyDropdown = null;
+  let historyOpen = false;
+  let expandedHistoryId = null;
 
   function on(target, type, fn, capture) {
     target.addEventListener(type, fn, capture);
@@ -450,6 +453,312 @@
     updateTags();
   }
 
+  // ── History storage ─────────────────────────────────────────
+  const HISTORY_KEY = "protopick_history";
+  const HISTORY_MAX = 10;
+
+  function loadHistory() {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      if (!raw) return [];
+      const data = JSON.parse(raw);
+      return Array.isArray(data) ? data : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function serializeElementContext(el) {
+    const aiId = el.getAttribute(AI_ID);
+    const ctx = buildElementContext(el);
+    return {
+      selector: ctx.selector,
+      tag: ctx.tag,
+      text: ctx.text,
+      source: ctx.source || "",
+      component: ctx.component || "",
+      annotation: annotations.get(aiId) || ""
+    };
+  }
+
+  function buildSummary(domElements) {
+    return domElements.slice(0, 2).map(el => elementLabel(el)).join(" + ");
+  }
+
+  function relativeTime(ts) {
+    const diff = Date.now() - ts;
+    const sec = Math.floor(diff / 1000);
+    if (sec < 60) return "刚刚";
+    const min = Math.floor(sec / 60);
+    if (min < 60) return `${min}分钟前`;
+    const hr = Math.floor(min / 60);
+    if (hr < 24) return `${hr}小时前`;
+    if (hr < 48) return "昨天";
+    const d = new Date(ts);
+    return `${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  }
+
+  function saveToHistory(promptText, serializedElements, domElements) {
+    try {
+      const history = loadHistory();
+      if (history.length > 0 && history[0].prompt === promptText) return;
+      const now = Date.now();
+      const record = {
+        id: now.toString(36) + "-" + Math.random().toString(16).slice(2, 6),
+        timestamp: now,
+        pagePath: window.location.pathname,
+        pageTitle: document.title,
+        elements: serializedElements,
+        prompt: promptText,
+        summary: buildSummary(domElements)
+      };
+      history.unshift(record);
+      if (history.length > HISTORY_MAX) history.length = HISTORY_MAX;
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+      updateHistoryBadge();
+    } catch (_) {
+      // localStorage unavailable or full — silent fail
+    }
+  }
+
+  function deleteHistoryRecord(id) {
+    try {
+      let history = loadHistory();
+      history = history.filter(r => r.id !== id);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+      updateHistoryBadge();
+    } catch (_) {}
+  }
+
+  function clearAllHistory() {
+    try {
+      localStorage.removeItem(HISTORY_KEY);
+      updateHistoryBadge();
+    } catch (_) {}
+  }
+
+  function updateHistoryBadge() {
+    if (!chatPanel) return;
+    const badge = chatPanel.querySelector(`.${NS}-history-badge`);
+    if (!badge) return;
+    const count = loadHistory().length;
+    if (count > 0) {
+      badge.textContent = count > 9 ? "9+" : String(count);
+      badge.style.display = "";
+    } else {
+      badge.style.display = "none";
+    }
+  }
+
+  function toggleHistoryDropdown() {
+    if (historyOpen && historyDropdown) {
+      historyDropdown.remove();
+      historyDropdown = null;
+      historyOpen = false;
+      expandedHistoryId = null;
+      return;
+    }
+    historyOpen = true;
+    expandedHistoryId = null;
+    historyDropdown = createHistoryDropdown();
+    chatPanel.appendChild(historyDropdown);
+
+    const closeOnOutside = (e) => {
+      if (!historyDropdown) {
+        document.removeEventListener("mousedown", closeOnOutside, true);
+        return;
+      }
+      if (e.target.closest(`.${NS}-history-dropdown`) || e.target.closest('[data-action="history"]')) return;
+      historyDropdown.remove();
+      historyDropdown = null;
+      historyOpen = false;
+      expandedHistoryId = null;
+      document.removeEventListener("mousedown", closeOnOutside, true);
+    };
+    setTimeout(() => {
+      document.addEventListener("mousedown", closeOnOutside, true);
+    }, 0);
+  }
+
+  function createHistoryDropdown() {
+    const dd = document.createElement("div");
+    dd.className = `${NS}-root ${NS}-history-dropdown`;
+    const history = loadHistory();
+    if (history.length === 0) {
+      dd.innerHTML = `<div class="${NS}-history-empty">暂无复制历史</div>`;
+      return dd;
+    }
+    history.forEach(record => {
+      const item = document.createElement("div");
+      item.className = `${NS}-history-item`;
+      item.dataset.id = record.id;
+      const row = document.createElement("div");
+      row.className = `${NS}-history-item-row`;
+      const left = document.createElement("div");
+      left.style.cssText = "flex:1;min-width:0;";
+      const summary = document.createElement("div");
+      summary.className = `${NS}-history-summary`;
+      summary.textContent = record.summary || record.elements.map(e => e.selector.split(">").pop()).join(" + ");
+      const meta = document.createElement("div");
+      meta.className = `${NS}-history-meta`;
+      const elCount = record.elements.length;
+      const hasNotes = record.elements.some(e => e.annotation);
+      let metaText = `${elCount} 个元素`;
+      if (hasNotes) metaText += " · 含备注";
+      metaText += ` · ${relativeTime(record.timestamp)}`;
+      meta.textContent = metaText;
+      left.appendChild(summary);
+      left.appendChild(meta);
+      const actions = document.createElement("div");
+      actions.className = `${NS}-history-actions`;
+      const copyBtn = document.createElement("button");
+      copyBtn.className = `${NS}-history-act-btn ${NS}-history-copy-btn`;
+      copyBtn.textContent = "复制";
+      copyBtn.onclick = (e) => {
+        e.stopPropagation();
+        writeToClipboard(record.prompt);
+        copyBtn.textContent = "Copied";
+        copyBtn.classList.add("copied");
+        setTimeout(() => {
+          copyBtn.textContent = "复制";
+          copyBtn.classList.remove("copied");
+        }, 2000);
+      };
+      const detailBtn = document.createElement("button");
+      detailBtn.className = `${NS}-history-act-btn ${NS}-history-detail-btn`;
+      detailBtn.textContent = "详情";
+      detailBtn.onclick = (e) => {
+        e.stopPropagation();
+        toggleDetailInDropdown(record.id, item, detailBtn);
+      };
+      actions.appendChild(copyBtn);
+      actions.appendChild(detailBtn);
+      row.appendChild(left);
+      row.appendChild(actions);
+      item.appendChild(row);
+      item.addEventListener("mouseenter", () => {
+        if (expandedHistoryId === record.id) return;
+        removePreviewFromItem(item);
+        const preview = document.createElement("div");
+        preview.className = `${NS}-history-preview`;
+        record.elements.forEach((el, i) => {
+          const line = document.createElement("div");
+          line.innerHTML = `<span class="${NS}-history-preview-el">${i + 1}. ${escapeHtml(el.selector.split(">").pop())}</span>${el.annotation ? ` <span class="${NS}-history-preview-note">— ${escapeHtml(el.annotation)}</span>` : ""}`;
+          preview.appendChild(line);
+        });
+        item.appendChild(preview);
+      });
+      item.addEventListener("mouseleave", () => {
+        if (expandedHistoryId === record.id) return;
+        removePreviewFromItem(item);
+      });
+      dd.appendChild(item);
+    });
+    const footer = document.createElement("div");
+    footer.className = `${NS}-history-footer`;
+    const clearAllBtn = document.createElement("button");
+    clearAllBtn.className = `${NS}-history-clear-all`;
+    clearAllBtn.textContent = "清空全部";
+    clearAllBtn.onclick = (e) => {
+      e.stopPropagation();
+      footer.innerHTML = "";
+      const confirm = document.createElement("div");
+      confirm.className = `${NS}-history-confirm`;
+      confirm.textContent = "确认清空？";
+      const yesBtn = document.createElement("button");
+      yesBtn.className = `${NS}-history-confirm-yes`;
+      yesBtn.textContent = "确认";
+      yesBtn.onclick = (e2) => {
+        e2.stopPropagation();
+        clearAllHistory();
+        if (historyDropdown) { historyDropdown.remove(); historyDropdown = null; }
+        historyOpen = false;
+        toggleHistoryDropdown();
+      };
+      const noBtn = document.createElement("button");
+      noBtn.className = `${NS}-history-confirm-no`;
+      noBtn.textContent = "取消";
+      noBtn.onclick = (e2) => {
+        e2.stopPropagation();
+        footer.innerHTML = "";
+        footer.appendChild(clearAllBtn);
+      };
+      confirm.appendChild(yesBtn);
+      confirm.appendChild(noBtn);
+      footer.appendChild(confirm);
+    };
+    footer.appendChild(clearAllBtn);
+    dd.appendChild(footer);
+    return dd;
+  }
+
+  function removePreviewFromItem(item) {
+    const preview = item.querySelector(`.${NS}-history-preview`);
+    if (preview) preview.remove();
+  }
+
+  function toggleDetailInDropdown(recordId, itemEl, detailBtn) {
+    if (expandedHistoryId === recordId) {
+      const detail = itemEl.querySelector(`.${NS}-history-detail`);
+      if (detail) detail.remove();
+      expandedHistoryId = null;
+      detailBtn.textContent = "详情";
+      return;
+    }
+    if (historyDropdown && expandedHistoryId) {
+      const prevItem = historyDropdown.querySelector(`[data-id="${expandedHistoryId}"]`);
+      if (prevItem) {
+        const prevDetail = prevItem.querySelector(`.${NS}-history-detail`);
+        if (prevDetail) prevDetail.remove();
+        const prevBtn = prevItem.querySelector(`.${NS}-history-detail-btn`);
+        if (prevBtn) prevBtn.textContent = "详情";
+      }
+      if (prevItem) removePreviewFromItem(prevItem);
+    }
+    expandedHistoryId = recordId;
+    removePreviewFromItem(itemEl);
+    const history = loadHistory();
+    const record = history.find(r => r.id === recordId);
+    if (!record) return;
+    const detail = document.createElement("div");
+    detail.className = `${NS}-history-detail`;
+    const text = document.createElement("div");
+    text.className = `${NS}-history-detail-text`;
+    text.textContent = record.prompt;
+    const detailActions = document.createElement("div");
+    detailActions.className = `${NS}-history-detail-actions`;
+    const copyBtn = document.createElement("button");
+    copyBtn.className = `${NS}-history-detail-copy`;
+    copyBtn.textContent = "复制 Prompt";
+    copyBtn.onclick = (e) => {
+      e.stopPropagation();
+      writeToClipboard(record.prompt);
+      copyBtn.textContent = "Copied";
+      copyBtn.classList.add("copied");
+      setTimeout(() => {
+        copyBtn.textContent = "复制 Prompt";
+        copyBtn.classList.remove("copied");
+      }, 2000);
+    };
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = `${NS}-history-detail-delete`;
+    deleteBtn.textContent = "删除";
+    deleteBtn.onclick = (e) => {
+      e.stopPropagation();
+      deleteHistoryRecord(recordId);
+      if (historyDropdown) { historyDropdown.remove(); historyDropdown = null; }
+      historyOpen = false;
+      expandedHistoryId = null;
+      toggleHistoryDropdown();
+    };
+    detailActions.appendChild(copyBtn);
+    detailActions.appendChild(deleteBtn);
+    detail.appendChild(text);
+    detail.appendChild(detailActions);
+    itemEl.appendChild(detail);
+    detailBtn.textContent = "收起 ▲";
+  }
+
   const PLAY_ICON = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
   const PAUSE_ICON = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
 
@@ -672,6 +981,10 @@
           <span class="${NS}-error-badge ${NS}-hidden">0</span>
         </span>
         <div class="${NS}-panel-actions">
+          <button class="${NS}-panel-btn ${NS}-history-btn" data-action="history" title="历史记录">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span class="${NS}-history-badge" style="display:none;">0</span>
+          </button>
           <button class="${NS}-panel-btn ${NS}-panel-btn-pause" data-action="pause" title="暂停">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
           </button>
@@ -719,6 +1032,7 @@
     chatPanel.querySelector(`.${NS}-copy-btn`).onclick = () => copyPrompt();
     chatPanel.querySelector('[data-action="close"]').onclick = destroy;
     chatPanel.querySelector('[data-action="pause"]').onclick = () => togglePause();
+    chatPanel.querySelector('[data-action="history"]').onclick = (e) => { e.stopPropagation(); toggleHistoryDropdown(); };
     chatPanel.querySelector(`.${NS}-error-badge`).onclick = (e) => {
       e.stopPropagation();
       errorsVisible = !errorsVisible;
@@ -726,6 +1040,7 @@
     };
 
     makeDraggable(chatPanel, chatPanel.querySelector(`.${NS}-drag-handle`));
+    updateHistoryBadge();
   }
 
   function updateErrorBadge() {
