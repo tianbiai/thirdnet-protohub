@@ -564,6 +564,7 @@
     historyOpen = true;
     expandedHistoryId = null;
     historyDropdown = createHistoryModal();
+    document.body.appendChild(historyDropdown);
 
     const closeOnOutside = (e) => {
       if (!historyDropdown) {
