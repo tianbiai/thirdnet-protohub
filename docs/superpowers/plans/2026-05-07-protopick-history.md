@@ -58,12 +58,9 @@ Add new state variables alongside existing ones (after line 29), and add the cor
     };
   }
 
-  function buildSummary(serializedElements) {
-    return serializedElements.slice(0, 2).map(e => {
-      if (e.annotation) return `${e.tag}.${e.selector.split(">").pop().trim().replace(/:nth-child\(\d+\)/, "")} ✎`;
-      const seg = e.selector.split(">").pop().trim();
-      return seg.length > 24 ? seg.slice(0, 24) + "…" : seg;
-    }).join(" + ");
+  function buildSummary(domElements) {
+    // Use elementLabel() on live DOM elements, as spec requires
+    return domElements.slice(0, 2).map(el => elementLabel(el)).join(" + ");
   }
 
   function relativeTime(ts) {
@@ -79,7 +76,7 @@ Add new state variables alongside existing ones (after line 29), and add the cor
     return `${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   }
 
-  function saveToHistory(promptText, elements) {
+  function saveToHistory(promptText, serializedElements, domElements) {
     try {
       const history = loadHistory();
       if (history.length > 0 && history[0].prompt === promptText) return;
@@ -89,9 +86,9 @@ Add new state variables alongside existing ones (after line 29), and add the cor
         timestamp: now,
         pagePath: window.location.pathname,
         pageTitle: document.title,
-        elements: elements,
+        elements: serializedElements,
         prompt: promptText,
-        summary: buildSummary(elements)
+        summary: buildSummary(domElements)
       };
       history.unshift(record);
       if (history.length > HISTORY_MAX) history.length = HISTORY_MAX;
@@ -152,23 +149,6 @@ git commit -m "feat(protopick): add history data layer — load/save/serialize/r
 /* ── History button (panel header) ──────────────────────── */
 .ai-editor-history-btn {
   position: relative;
-  width: 24px;
-  height: 24px;
-  border: none;
-  background: none;
-  color: #a1a1aa;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: color 100ms, background 100ms;
-  padding: 0;
-}
-
-.ai-editor-history-btn:hover {
-  color: #e4e4e7;
-  background: rgba(255, 255, 255, 0.06);
 }
 
 .ai-editor-history-badge {
@@ -466,7 +446,7 @@ Change:
 To:
 ```html
         <div class="${NS}-panel-actions">
-          <button class="${NS}-history-btn" data-action="history" title="历史记录">
+          <button class="${NS}-panel-btn ${NS}-history-btn" data-action="history" title="历史记录">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             <span class="${NS}-history-badge" style="display:none;">0</span>
           </button>
@@ -526,21 +506,22 @@ Place these after `updateHistoryBadge()` (after the functions added in Task 1):
     historyDropdown = createHistoryDropdown();
     chatPanel.appendChild(historyDropdown);
 
-    // Close on outside click
+    // Close on outside click — register directly (not via on()) to avoid listeners array bloat
     const closeOnOutside = (e) => {
-      if (!historyDropdown) return;
-      if (e.target.closest(`.${NS}-history-dropdown`) || e.target.closest('[data-action="history"]')) return;
-      if (historyDropdown) {
-        historyDropdown.remove();
-        historyDropdown = null;
-        historyOpen = false;
-        expandedHistoryId = null;
+      if (!historyDropdown) {
+        document.removeEventListener("mousedown", closeOnOutside, true);
+        return;
       }
+      if (e.target.closest(`.${NS}-history-dropdown`) || e.target.closest('[data-action="history"]')) return;
+      historyDropdown.remove();
+      historyDropdown = null;
+      historyOpen = false;
+      expandedHistoryId = null;
       document.removeEventListener("mousedown", closeOnOutside, true);
     };
     // Delay to avoid the current click
     setTimeout(() => {
-      on(document, "mousedown", closeOnOutside, true);
+      document.addEventListener("mousedown", closeOnOutside, true);
     }, 0);
   }
 
@@ -791,16 +772,16 @@ Replace the existing `copyPrompt()` function (lines 958-963) with:
 
 ```javascript
   function copyPrompt() {
-    const allElements = [...candidateElements];
-    selectedElements.forEach(el => {
-      if (!allElements.includes(el)) allElements.push(el);
-    });
-
     const text = buildPromptText();
     if (!text) return;
 
-    const serializedElements = allElements.map(el => serializeElementContext(el));
-    writeToClipboard(text, serializedElements);
+    // Collect elements from candidates + selected (same merge logic as buildPromptText)
+    const domElements = [...candidateElements];
+    selectedElements.forEach(el => {
+      if (!domElements.includes(el)) domElements.push(el);
+    });
+    const serializedElements = domElements.map(el => serializeElementContext(el));
+    writeToClipboard(text, serializedElements, domElements);
     showCopyFeedback("已复制");
   }
 ```
@@ -810,39 +791,41 @@ Replace the existing `copyPrompt()` function (lines 958-963) with:
 Replace the existing `writeToClipboard()` function (lines 1008-1014) with:
 
 ```javascript
-  function writeToClipboard(text, serializedElements) {
+  function writeToClipboard(text, serializedElements, domElements) {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(text).then(() => {
-        if (serializedElements) saveToHistory(text, serializedElements);
+        if (serializedElements) saveToHistory(text, serializedElements, domElements);
       }).catch(() => {
-        fallbackCopy(text, serializedElements);
+        fallbackCopy(text, serializedElements, domElements);
       });
     } else {
-      fallbackCopy(text, serializedElements);
+      fallbackCopy(text, serializedElements, domElements);
     }
   }
 ```
 
 Note: History button's quick copy calls `writeToClipboard(record.prompt)` without elements — `serializedElements` will be `undefined`, so `saveToHistory` won't be called (correct: re-copying old history should not create a new record).
 
-- [ ] **Step 3: Modify `fallbackCopy()` to accept elements and save history**
+- [ ] **Step 3: Modify `fallbackCopy()` to accept elements and save history only on success**
 
 Replace the existing `fallbackCopy()` function (lines 1016-1024) with:
 
 ```javascript
-  function fallbackCopy(text, serializedElements) {
+  function fallbackCopy(text, serializedElements, domElements) {
     const ta = document.createElement("textarea");
     ta.value = text;
     ta.style.cssText = "position:fixed;opacity:0;top:0;left:0";
     document.body.appendChild(ta);
     ta.focus(); ta.select();
     try {
-      document.execCommand("copy");
-      if (serializedElements) saveToHistory(text, serializedElements);
+      const ok = document.execCommand("copy");
+      if (ok && serializedElements) saveToHistory(text, serializedElements, domElements);
     } catch (_) {}
     ta.remove();
   }
 ```
+
+Key change: `execCommand("copy")` returns a boolean — only save history when it returns `true`.
 
 - [ ] **Step 4: Commit**
 
