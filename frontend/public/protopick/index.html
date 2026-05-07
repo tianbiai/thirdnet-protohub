@@ -321,6 +321,48 @@
     color:#71717a;font-size:10px;line-height:1.4;margin-top:2px;
     font-family:'SF Mono',Menlo,Monaco,'Cascadia Code','Consolas',monospace;
   }
+  .illust-history{
+    margin-top:12px;border-radius:10px;overflow:hidden;
+    border:1.5px solid rgba(255,255,255,0.28);
+    background:rgba(255,255,255,0.015);
+  }
+  .illust-history-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:8px 12px;
+    background:rgba(255,255,255,0.03);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    font-size:12px;color:#d4d4d8;font-weight:500;
+  }
+  .illust-history-header-right{
+    display:flex;align-items:center;gap:6px;
+    font-size:10px;color:#71717a;
+  }
+  .illust-history-header-btn{
+    background:none;border:1px solid rgba(255,255,255,0.08);
+    color:#71717a;padding:1px 6px;border-radius:3px;font-size:9px;
+    font-family:inherit;cursor:default;
+  }
+  .illust-history-item{
+    padding:8px 12px;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+  }
+  .illust-history-item:last-child{border-bottom:none}
+  .illust-history-item:nth-child(even){background:rgba(255,255,255,0.01)}
+  .illust-history-summary{font-size:11px;color:#e2e8f0;font-weight:500}
+  .illust-history-meta{font-size:10px;color:#71717a;margin-top:2px}
+  .illust-history-actions{
+    float:right;display:flex;gap:4px;margin-top:-18px;
+  }
+  .illust-history-act{
+    font-size:9px;padding:1px 6px;border-radius:3px;
+    background:none;border:1px solid rgba(255,255,255,0.08);
+    color:#71717a;font-family:inherit;cursor:default;
+  }
+  .illust-history-act.copy{color:#6366f1;border-color:rgba(99,102,241,0.2)}
+  .illust-history-preview{
+    font-size:10px;color:#52525b;margin-top:4px;
+    font-family:'SF Mono',Menlo,Monaco,'Cascadia Code','Consolas',monospace;
+  }
   code{
     background:rgba(255,255,255,0.05);color:#d4d4d8;
     padding:2px 6px;border-radius:4px;font-size:12px;
@@ -471,7 +513,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <p class="step-desc">
           打开你想修改的网页，点击书签栏按钮（Chrome）或粘贴控制台代码（其他浏览器）。<br>
           适用于所有页面 &mdash; <code>localhost</code> &middot; Vue &middot; React &middot; 生产环境<br>
-          面板标题栏可拖拽移动，点击 <span style="color:#fbbf24">⏸</span> 按钮或按 <span class="kbd">&#8679;P</span> 暂停/恢复选取。
+          面板标题栏可拖拽移动，按 <span class="kbd">&#8679;P</span> 暂停/恢复选取，点击历史按钮查看复制记录。
         </p>
         <div class="step-illust">
           <div class="illust-bar">
@@ -517,7 +559,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="illust-elem highlight">
               <div class="illust-label">&lt;section class="hero"&gt;</div>
               <div class="illust-text">Welcome back, Alex</div>
-              <div class="illust-badge blue">main › section.hero</div>
+              <div class="illust-badge blue">main &rsaquo; section.hero</div>
             </div>
             <div class="illust-cursor" style="right:28px;top:54px">
               <svg viewBox="0 0 20 20" fill="none"><path d="M3 1l14 9-7 2-3 7z" fill="#f97316" stroke="#7c2d12" stroke-width="1"/></svg>
@@ -534,8 +576,8 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="step-body">
         <div class="step-title">方向键快速导航 DOM</div>
         <p class="step-desc">
-          选取元素后，使用 <span class="kbd">↑</span> <span class="kbd">↓</span> <span class="kbd">←</span> <span class="kbd">→</span> 方向键在 DOM 树中快速移动选区。<br>
-          <span class="kbd">↑</span> 跳到父元素 &middot; <span class="kbd">↓</span> 进入子元素 &middot; <span class="kbd">←</span> <span class="kbd">→</span> 切换兄弟元素。到达边界时选框闪红提示。
+          选取元素后，使用 <span class="kbd">&uarr;</span> <span class="kbd">&darr;</span> <span class="kbd">&larr;</span> <span class="kbd">&rarr;</span> 方向键在 DOM 树中快速移动选区。<br>
+          <span class="kbd">&uarr;</span> 跳到父元素 &middot; <span class="kbd">&darr;</span> 进入子元素 &middot; <span class="kbd">&larr;</span> <span class="kbd">&rarr;</span> 切换兄弟元素。到达边界时选框闪红提示。
         </p>
         <div class="step-illust">
           <div class="illust-bar">
@@ -552,10 +594,10 @@ document.addEventListener("DOMContentLoaded", function () {
               <div class="illust-label">&lt;main&gt;</div>
               <div class="illust-text" style="display:flex;flex-direction:column;gap:6px">
                 <span style="padding:4px 8px;border-radius:4px;border:1px dashed rgba(255,255,255,0.12)">section.hero &nbsp;<span style="color:#71717a">&larr; 当前选中</span></span>
-                <span style="padding:4px 8px;border-radius:4px;border:1px dashed rgba(249,115,22,0.25);color:#fb923c">section.features &nbsp;<span style="opacity:.6">→ 按右箭头</span></span>
+                <span style="padding:4px 8px;border-radius:4px;border:1px dashed rgba(249,115,22,0.25);color:#fb923c">section.features &nbsp;<span style="opacity:.6">&rarr; 按右箭头</span></span>
               </div>
             </div>
-            <div class="illust-badge orange" style="margin-top:8px">↑ 父级 &nbsp; ↓ 子级 &nbsp; ← → 兄弟</div>
+            <div class="illust-badge orange" style="margin-top:8px">&uarr; 父级 &nbsp; &darr; 子级 &nbsp; &larr; &rarr; 兄弟</div>
           </div>
         </div>
       </div>
@@ -568,7 +610,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="step-body">
         <div class="step-title">批注并加入收集区</div>
         <p class="step-desc">
-          点击 <span style="color:#fb923c">✏</span> 按钮为元素添加修改说明，比如「改成圆角」或「颜色太深」。然后点击 <span style="color:#4ade80">＋</span> 按钮或按 <span class="kbd">&#8984;Enter</span> 将元素加入收集区。<br>
+          点击 <span style="color:#fb923c">&#9998;</span> 按钮为元素添加修改说明，比如「改成圆角」或「颜色太深」。然后点击 <span style="color:#4ade80">＋</span> 按钮或按 <span class="kbd">&#8984;Enter</span> 将元素加入收集区。<br>
           可重复选取多个元素，逐一添加批注后加入收集区，统一生成提示词。
         </p>
         <div class="step-illust">
@@ -581,12 +623,12 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="illust-elem highlight">
               <div class="illust-label">&lt;section class="hero"&gt;</div>
               <div class="illust-text">Welcome back, Alex</div>
-              <div class="illust-badge orange">✏ 把背景改成渐变色，文字居中</div>
+              <div class="illust-badge orange">&#9998; 把背景改成渐变色，文字居中</div>
             </div>
             <div class="illust-elem highlight">
               <div class="illust-label">&lt;nav class="sidebar"&gt;</div>
               <div class="illust-text">Home &middot; Analytics &middot; Users</div>
-              <div class="illust-badge orange">✏ 加一个折叠功能</div>
+              <div class="illust-badge orange">&#9998; 加一个折叠功能</div>
             </div>
           </div>
         </div>
@@ -646,6 +688,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="step">
       <div class="step-indicator">
         <div class="step-num">6</div>
+        <div class="step-line"></div>
       </div>
       <div class="step-body">
         <div class="step-title">按 <span class="kbd">&#8984;C</span> 复制，粘贴给 AI</div>
@@ -666,7 +709,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 2. nav.sidebar &lt;nav&gt;
    selector: header > nav:nth-child(1)
-   text: "Home · Analytics · Users"
+   text: "Home &middot; Analytics &middot; Users"
    html: &lt;nav class="sidebar"&gt;...&lt;/nav&gt;
    instruction: 加一个折叠功能
 
@@ -680,6 +723,51 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="illust-ai-body">
               <div class="illust-ai-label">Claude Code / Cursor / Codex</div>
               <div class="illust-ai-text">AI 收到所有已收集元素的完整上下文和修改说明，精确理解每个元素要改什么，直接输出对应的代码修改。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-indicator">
+        <div class="step-num">7</div>
+      </div>
+      <div class="step-body">
+        <div class="step-title">复制历史，随时回溯</div>
+        <p class="step-desc">
+          每次复制 Prompt 后自动保存到历史记录（按域名隔离，保留最近 10 条）。点击面板标题栏的历史按钮即可查看。<br>
+          支持快速复制、查看详情和删除，无需重新选取元素。
+        </p>
+        <div class="step-illust">
+          <div class="illust-history">
+            <div class="illust-history-header">
+              <span>历史记录</span>
+              <div class="illust-history-header-right">
+                <span class="illust-history-header-btn">清空全部</span>
+                <span class="illust-history-header-btn">&times;</span>
+              </div>
+            </div>
+            <div class="illust-history-item">
+              <div style="display:flex;align-items:baseline;justify-content:space-between">
+                <div class="illust-history-summary">section.hero + nav.sidebar</div>
+              </div>
+              <div class="illust-history-meta">2 个元素 &middot; 含备注 &middot; 5分钟前</div>
+              <div class="illust-history-preview">1. section.hero &mdash; 把背景改成渐变色 &nbsp; 2. nav.sidebar &mdash; 加一个折叠功能</div>
+              <div class="illust-history-actions">
+                <span class="illust-history-act copy">复制</span>
+                <span class="illust-history-act">详情</span>
+              </div>
+            </div>
+            <div class="illust-history-item">
+              <div style="display:flex;align-items:baseline;justify-content:space-between">
+                <div class="illust-history-summary">button.submit</div>
+              </div>
+              <div class="illust-history-meta">1 个元素 &middot; 1小时前</div>
+              <div class="illust-history-preview">1. button.submit</div>
+              <div class="illust-history-actions">
+                <span class="illust-history-act copy">复制</span>
+                <span class="illust-history-act">详情</span>
+              </div>
             </div>
           </div>
         </div>
