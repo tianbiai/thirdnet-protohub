@@ -632,7 +632,7 @@
       detailBtn.textContent = "详情";
       detailBtn.onclick = (e) => {
         e.stopPropagation();
-        toggleDetailInDropdown(record.id, item, detailBtn);
+        showHistoryDetailModal(record.id);
       };
       actions.appendChild(copyBtn);
       actions.appendChild(detailBtn);
@@ -700,66 +700,121 @@
     if (preview) preview.remove();
   }
 
-  function toggleDetailInDropdown(recordId, itemEl, detailBtn) {
-    if (expandedHistoryId === recordId) {
-      const detail = itemEl.querySelector(`.${NS}-history-detail`);
-      if (detail) detail.remove();
-      expandedHistoryId = null;
-      detailBtn.textContent = "详情";
-      return;
-    }
-    if (historyDropdown && expandedHistoryId) {
-      const prevItem = historyDropdown.querySelector(`[data-id="${expandedHistoryId}"]`);
-      if (prevItem) {
-        const prevDetail = prevItem.querySelector(`.${NS}-history-detail`);
-        if (prevDetail) prevDetail.remove();
-        const prevBtn = prevItem.querySelector(`.${NS}-history-detail-btn`);
-        if (prevBtn) prevBtn.textContent = "详情";
-      }
-      if (prevItem) removePreviewFromItem(prevItem);
-    }
-    expandedHistoryId = recordId;
-    removePreviewFromItem(itemEl);
+  function showHistoryDetailModal(recordId) {
+    closeHistoryDetailModal();
     const history = loadHistory();
     const record = history.find(r => r.id === recordId);
     if (!record) return;
-    const detail = document.createElement("div");
-    detail.className = `${NS}-history-detail`;
-    const text = document.createElement("div");
-    text.className = `${NS}-history-detail-text`;
-    text.textContent = record.prompt;
-    const detailActions = document.createElement("div");
-    detailActions.className = `${NS}-history-detail-actions`;
+
+    const overlay = document.createElement("div");
+    overlay.className = `${NS}-root ${NS}-history-modal-overlay`;
+
+    const modal = document.createElement("div");
+    modal.className = `${NS}-history-modal`;
+
+    // Header
+    const header = document.createElement("div");
+    header.className = `${NS}-history-modal-header`;
+    const title = document.createElement("div");
+    title.className = `${NS}-history-modal-title`;
+    title.textContent = record.summary || "历史记录详情";
+    const timeSpan = document.createElement("span");
+    timeSpan.className = `${NS}-history-modal-time`;
+    timeSpan.textContent = `${relativeTime(record.timestamp)} · ${record.pagePath}`;
+    const headerLeft = document.createElement("div");
+    headerLeft.appendChild(title);
+    headerLeft.appendChild(timeSpan);
+    const closeBtn = document.createElement("button");
+    closeBtn.className = `${NS}-panel-btn`;
+    closeBtn.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><line x1="1" y1="1" x2="9" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="9" y1="1" x2="1" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+    closeBtn.title = "关闭";
+    closeBtn.onclick = (e) => { e.stopPropagation(); closeHistoryDetailModal(); };
+    header.appendChild(headerLeft);
+    header.appendChild(closeBtn);
+
+    // Element list
+    const elSection = document.createElement("div");
+    elSection.className = `${NS}-history-modal-elements`;
+    record.elements.forEach((el, i) => {
+      const elRow = document.createElement("div");
+      elRow.className = `${NS}-history-modal-el`;
+      const elLabel = document.createElement("div");
+      elLabel.className = `${NS}-history-modal-el-label`;
+      elLabel.innerHTML = `<span class="${NS}-history-modal-el-num">${i + 1}</span> <span class="${NS}-history-modal-el-tag">&lt;${escapeHtml(el.tag)}&gt;</span> <span class="${NS}-history-modal-el-selector">${escapeHtml(el.selector)}</span>`;
+      if (el.component) {
+        elLabel.innerHTML += ` <span class="${NS}-history-modal-el-component">${escapeHtml(el.component)}</span>`;
+      }
+      elRow.appendChild(elLabel);
+      if (el.source) {
+        const src = document.createElement("div");
+        src.className = `${NS}-history-modal-el-source`;
+        src.textContent = el.source;
+        elRow.appendChild(src);
+      }
+      if (el.annotation) {
+        const note = document.createElement("div");
+        note.className = `${NS}-history-modal-el-note`;
+        note.textContent = el.annotation;
+        elRow.appendChild(note);
+      }
+      elSection.appendChild(elRow);
+    });
+
+    // Prompt text
+    const promptSection = document.createElement("div");
+    promptSection.className = `${NS}-history-modal-prompt`;
+    const promptLabel = document.createElement("div");
+    promptLabel.className = `${NS}-history-modal-prompt-label`;
+    promptLabel.textContent = "Prompt";
+    const promptText = document.createElement("div");
+    promptText.className = `${NS}-history-modal-prompt-text`;
+    promptText.textContent = record.prompt;
+    promptSection.appendChild(promptLabel);
+    promptSection.appendChild(promptText);
+
+    // Actions
+    const actions = document.createElement("div");
+    actions.className = `${NS}-history-modal-actions`;
     const copyBtn = document.createElement("button");
-    copyBtn.className = `${NS}-history-detail-copy`;
+    copyBtn.className = `${NS}-history-modal-copy`;
     copyBtn.textContent = "复制 Prompt";
     copyBtn.onclick = (e) => {
       e.stopPropagation();
       writeToClipboard(record.prompt);
       copyBtn.textContent = "Copied";
       copyBtn.classList.add("copied");
-      setTimeout(() => {
-        copyBtn.textContent = "复制 Prompt";
-        copyBtn.classList.remove("copied");
-      }, 2000);
+      setTimeout(() => { copyBtn.textContent = "复制 Prompt"; copyBtn.classList.remove("copied"); }, 2000);
     };
     const deleteBtn = document.createElement("button");
-    deleteBtn.className = `${NS}-history-detail-delete`;
+    deleteBtn.className = `${NS}-history-modal-delete`;
     deleteBtn.textContent = "删除";
     deleteBtn.onclick = (e) => {
       e.stopPropagation();
       deleteHistoryRecord(recordId);
+      closeHistoryDetailModal();
       if (historyDropdown) { historyDropdown.remove(); historyDropdown = null; }
       historyOpen = false;
       expandedHistoryId = null;
       toggleHistoryDropdown();
     };
-    detailActions.appendChild(copyBtn);
-    detailActions.appendChild(deleteBtn);
-    detail.appendChild(text);
-    detail.appendChild(detailActions);
-    itemEl.appendChild(detail);
-    detailBtn.textContent = "收起 ▲";
+    actions.appendChild(copyBtn);
+    actions.appendChild(deleteBtn);
+
+    modal.appendChild(header);
+    modal.appendChild(elSection);
+    modal.appendChild(promptSection);
+    modal.appendChild(actions);
+    overlay.appendChild(modal);
+
+    overlay.onclick = (e) => { if (e.target === overlay) closeHistoryDetailModal(); };
+    document.body.appendChild(overlay);
+    expandedHistoryId = recordId;
+  }
+
+  function closeHistoryDetailModal() {
+    const existing = document.querySelector(`.${NS}-history-modal-overlay`);
+    if (existing) existing.remove();
+    expandedHistoryId = null;
   }
 
   const PLAY_ICON = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
@@ -881,7 +936,8 @@
     }
 
     if (e.key === "Escape") {
-      if (historyOpen) { toggleHistoryDropdown(); }
+      if (expandedHistoryId) { closeHistoryDetailModal(); }
+      else if (historyOpen) { toggleHistoryDropdown(); }
       else if (activePopover) { removeAnnotationPopover(); }
       else if (selectedElements.length > 0) { clearSelection(); updateTags(); }
       else if (candidateElements.length > 0) { clearAllCandidates(); }
