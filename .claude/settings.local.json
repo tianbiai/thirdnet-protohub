@@ -103,7 +103,18 @@
       "mcp__plugin_playwright_playwright__browser_take_screenshot",
       "mcp__plugin_playwright_playwright__browser_hover",
       "mcp__plugin_playwright_playwright__browser_evaluate",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "mcp__plugin_playwright_playwright__browser_type",
+      "mcp__plugin_playwright_playwright__browser_press_key",
+      "mcp__plugin_playwright_playwright__browser_console_messages",
+      "mcp__plugin_playwright_playwright__browser_run_code_unsafe",
+      "Bash(xxd)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3)",
+      "Bash(node -e ' *)",
+      "Bash(bash \"C:/Users/pig_l/.claude/plugins/cache/claude-plugins-official/superpowers/unknown/skills/brainstorming/scripts/start-server.sh\" --project-dir \"E:/SVN/AI/V1.0.0/Program/2_SourceCode/InterFace/protohub\")",
+      "Bash(python -m http.server 8888)",
+      "Bash(xxd \"frontend/public/protopick/index.html\")"
     ]
   },
   "enabledPlugins": {}

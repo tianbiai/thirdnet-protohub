@@ -888,7 +888,7 @@ onMounted(() => {
   }
 
   .items-list {
-    max-height: 280px;
+    max-height: 480px;
     overflow-y: auto;
   }
 }

@@ -9,6 +9,7 @@
 
   const NS = "ai-editor";
   const AI_ID = "data-ai-id";
+  const MAX_HTML_LENGTH = 2000;
 
   let selectedElements = [];
   let candidateElements = [];
@@ -207,7 +208,14 @@
     const r = el.getBoundingClientRect();
     if (r.width < 2 && r.height < 2) return false;
     const s = getComputedStyle(el);
-    return s.display !== "none" && s.visibility !== "hidden" && s.opacity !== "0";
+    if (s.display === "none" || s.visibility === "hidden" || s.opacity === "0") return false;
+    let ancestor = el.parentElement;
+    while (ancestor && ancestor !== document.body) {
+      const as = getComputedStyle(ancestor);
+      if (as.display === "none" || as.visibility === "hidden" || as.opacity === "0") return false;
+      ancestor = ancestor.parentElement;
+    }
+    return true;
   }
 
   function isMeaningful(el) {
@@ -469,9 +477,20 @@
     }
   }
 
-  // ── DOM navigation ──────────────────────────────────────
+  function flashBoundary(el) {
+    el.classList.remove(NS + "-flash-boundary");
+    void el.offsetWidth;
+    el.classList.add(NS + "-flash-boundary");
+    setTimeout(function () { el.classList.remove(NS + "-flash-boundary"); }, 250);
+  }
+
+  let navRafPending = false;
+  let navRafKey = null;
+
   function navigateDOM(key) {
-    const current = lastMoveTarget ? resolveTarget(lastMoveTarget) : null;
+    const hasSelection = selectedElements.length > 0;
+    const current = hasSelection ? selectedElements[selectedElements.length - 1]
+                 : lastMoveTarget ? resolveTarget(lastMoveTarget) : null;
     if (!current) return;
 
     let target = null;
@@ -505,15 +524,26 @@
     }
 
     if (target) {
-      showHover(target);
       lastMoveTarget = target;
+      if (hasSelection) {
+        saveActivePopover();
+        clearSelection();
+        addSelection(target);
+        updateTags();
+        showHover(null);
+      } else {
+        showHover(target);
+      }
     } else {
-      showHover(current);
-      lastMoveTarget = current;
-      hoverBox.classList.remove(NS + "-flash-boundary");
-      void hoverBox.offsetWidth;
-      hoverBox.classList.add(NS + "-flash-boundary");
-      setTimeout(() => { hoverBox.classList.remove(NS + "-flash-boundary"); }, 250);
+      if (hasSelection) {
+        const aiId = current.getAttribute(AI_ID);
+        const ov = aiId && selOverlays.get(aiId);
+        if (ov && ov.box) flashBoundary(ov.box);
+      } else {
+        showHover(current);
+        lastMoveTarget = current;
+        flashBoundary(hoverBox);
+      }
     }
   }
 
@@ -522,12 +552,19 @@
     if (isEditorElement(e.target) && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
     const mod = e.metaKey || e.ctrlKey;
 
-    // Arrow key DOM navigation
+    // Arrow key DOM navigation (rAF-throttled)
     if (e.key === "ArrowUp" || e.key === "ArrowDown" || e.key === "ArrowLeft" || e.key === "ArrowRight") {
       if (paused) return;
       if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT") return;
       e.preventDefault();
-      navigateDOM(e.key);
+      navRafKey = e.key;
+      if (!navRafPending) {
+        navRafPending = true;
+        requestAnimationFrame(function () {
+          navigateDOM(navRafKey);
+          navRafPending = false;
+        });
+      }
       return;
     }
 
@@ -653,7 +690,7 @@
             <div class="${NS}-chat-tags"></div>
           </div>
           <div class="${NS}-selection-row">
-            <div class="${NS}-selection-heading">CSS 路径</div>
+            <div class="${NS}-selection-heading">DOM 路径</div>
             <div class="${NS}-css-paths"></div>
           </div>
         </div>
@@ -666,10 +703,11 @@
         </div>
         <div class="${NS}-error-section ${NS}-hidden"></div>
         <button class="${NS}-copy-btn" disabled>复制提示词</button>
+        <div class="${NS}-shortcuts-heading">快捷键</div>
         <div class="${NS}-shortcuts">
           <span><kbd>Click</kbd> 选取</span>
           <span><kbd>↑↓←→</kbd> DOM导航</span>
-          <span><kbd>⌘Enter</kbd> 加入候选</span>
+          <span><kbd>⌘Enter</kbd> 加入收集区</span>
           <span><kbd>⌘C</kbd> 复制</span>
           <span><kbd>Esc</kbd> 清除</span>
           <span><kbd>⇧P</kbd> 暂停</span>
@@ -812,7 +850,7 @@
         const tag = document.createElement("span");
         tag.className = `${NS}-tag`;
         const hasNote = annotations.has(aiId);
-        tag.innerHTML = `<span class="${NS}-tag-num">${i + 1}</span><span class="${NS}-tag-label">${escapeHtml(elementLabel(el))}${hasNote ? ' ✎' : ''}</span><button class="${NS}-tag-x" data-aiid="${aiId}" title="移除">×</button>`;
+        tag.innerHTML = `<span class="${NS}-tag-num">${i + 1}</span><span class="${NS}-tag-label">${escapeHtml(elementLabel(el))}${hasNote ? ' ✎' : ''}</span><button class="${NS}-tag-x" data-aiid="${escapeHtml(aiId)}" title="移除">×</button>`;
         tagsContainer.appendChild(tag);
       }
 
@@ -885,7 +923,7 @@
         const tag = document.createElement("span");
         tag.className = `${NS}-tag ${NS}-tag-block`;
         const hasNote = annotations.has(aiId);
-        tag.innerHTML = `<span class="${NS}-tag-num">${i + 1}</span><span class="${NS}-tag-label">${escapeHtml(elementLabel(el))}${hasNote ? ' ✎' : ''}</span><button class="${NS}-tag-x" data-aiid="${aiId}" title="移除">×</button>`;
+        tag.innerHTML = `<span class="${NS}-tag-num">${i + 1}</span><span class="${NS}-tag-label">${escapeHtml(elementLabel(el))}${hasNote ? ' ✎' : ''}</span><button class="${NS}-tag-x" data-aiid="${escapeHtml(aiId)}" title="移除">×</button>`;
         candidateList.appendChild(tag);
       });
 
@@ -1114,7 +1152,7 @@
       selector: buildSelector(el),
       tag: el.tagName.toLowerCase(),
       text: truncate(el.textContent, 80),
-      outerHTML: el.outerHTML.replace(/\s*data-ai-id="[^"]*"/g, "").slice(0, 200),
+      outerHTML: el.outerHTML.replace(/\s*data-ai-id="[^"]*"/g, "").slice(0, MAX_HTML_LENGTH),
       dataAttrs,
       ...frameworkInfo,
     };
@@ -1129,9 +1167,12 @@
       if (node.id) { parts.unshift(`#${node.id}`); break; }
       const p = node.parentElement;
       if (p) {
-        const siblings = Array.from(p.children);
-        const idx = siblings.indexOf(node);
-        if (siblings.length > 1) seg += `:nth-child(${idx + 1})`;
+        let idx = 0;
+        for (let s = p.firstElementChild; s; s = s.nextElementSibling) {
+          idx++;
+          if (s === node) break;
+        }
+        if (p.children.length > 1) seg += `:nth-child(${idx})`;
       }
       parts.unshift(seg);
       node = node.parentElement;

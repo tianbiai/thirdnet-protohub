@@ -5,12 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ThirdNet ProtoPick — 视觉元素选取器</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='2' y='2' width='28' height='28' rx='6' fill='%23050507'/><rect x='9' y='9' width='14' height='14' rx='2' fill='none' stroke='%2360a5fa' stroke-width='1.5' stroke-dasharray='3 2'/><path d='M7 7l4.5 4.5M25 25l-4.5-4.5M7 25l4.5-4.5M25 7l-4.5 4.5' stroke='%23f97316' stroke-width='2' stroke-linecap='round'/></svg>">
-<link href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5/index.min.css" rel="stylesheet">
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   body{
     background:#050507;color:#d4d4d8;
-    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
     min-height:100dvh;display:flex;align-items:center;justify-content:center;
     -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
     overflow-x:hidden;
@@ -47,19 +46,19 @@
     font-size:34px;font-weight:700;color:#f4f4f5;
     letter-spacing:-.03em;line-height:1.1;margin-bottom:10px;
   }
-  .sub{font-size:15px;color:#a1a1aa;line-height:1.6;font-weight:400}
+  .sub{font-size:15px;color:#d4d4d8;line-height:1.6;font-weight:400}
   /* ── Install cards ── */
   .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:36px}
   .card{
     padding:24px 20px;
     background:rgba(255,255,255,0.02);
-    border:1px solid rgba(255,255,255,0.15);
+    border:1px solid rgba(249,115,22,0.35);
     border-radius:14px;
     position:relative;overflow:hidden;
     transition:border-color 250ms ease,box-shadow 250ms ease;
   }
   .card:hover{
-    border-color:rgba(255,255,255,0.1);
+    border-color:rgba(249,115,22,0.55);
     box-shadow:0 8px 32px -8px rgba(0,0,0,0.4);
   }
   /* shimmer on hover */
@@ -85,8 +84,23 @@
     font-size:15px;font-weight:700;color:#e4e4e7;
     letter-spacing:-.01em;
   }
+  .card-badge{
+    margin-left:auto;
+    padding:2px 10px;border-radius:100px;
+    background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.2);
+    font-size:10px;font-weight:600;color:#4ade80;letter-spacing:.03em;
+  }
+  .card.recommended{
+    border:2.5px solid rgba(249,115,22,0.6);
+    background:rgba(249,115,22,0.05);
+    box-shadow:0 0 24px -4px rgba(249,115,22,0.2),0 0 48px -8px rgba(249,115,22,0.1);
+  }
+  .card.recommended:hover{
+    border-color:rgba(249,115,22,0.75);
+    box-shadow:0 0 32px -4px rgba(249,115,22,0.28),0 8px 32px -8px rgba(0,0,0,0.4);
+  }
   .card-desc{
-    font-size:13px;color:#a1a1aa;line-height:1.65;
+    font-size:13px;color:#d4d4d8;line-height:1.65;
     margin-bottom:18px;min-height:44px;
   }
   .card-action{
@@ -104,6 +118,8 @@
   .card.chrome .card-action{cursor:grab}
   .card.chrome .card-action:active{cursor:grabbing}
   .card.chrome .card-action.loading{background:#27272a;color:#52525b;cursor:wait;border-color:rgba(255,255,255,0.06)}
+  #bm-link{border-color:#f97316;background:#f97316;color:#fff}
+  #bm-link:hover{background:#ea580c;border-color:#ea580c;color:#fff}
   /* ── Drag hint animation ── */
   @keyframes drag-float{
     0%,100%{transform:translateY(0)}
@@ -124,7 +140,7 @@
   .drag-hint{position:relative;display:flex;flex-direction:column;align-items:center}
   .drag-hint-label{
     display:flex;align-items:center;gap:5px;
-    font-size:11px;font-weight:600;color:#fb923c;
+    font-size:14px;font-weight:600;color:#fb923c;
     margin-top:10px;
     animation:hint-label-fade 2.2s ease-in-out infinite;
     pointer-events:none;user-select:none;
@@ -145,12 +161,12 @@
     background:rgba(74,222,128,0.06)!important;
     box-shadow:none!important;transform:none!important;
   }
-  .card-hint{font-size:12px;color:#a1a1aa;margin-top:12px;text-align:center}
+  .card-hint{font-size:12px;color:#d4d4d8;margin-top:12px;text-align:center}
   .err{color:#f97316;font-size:12px;margin-top:10px;text-align:center;display:none}
   /* ── Section title ── */
   .steps-wrap{
     padding:20px;
-    border:1px solid rgba(255,255,255,0.15);
+    border:1px solid rgba(249,115,22,0.35);
     border-radius:14px;
     background:rgba(255,255,255,0.01);
   }
@@ -187,7 +203,7 @@
     font-size:14px;font-weight:600;color:#e4e4e7;
     margin-bottom:6px;letter-spacing:-.01em;
   }
-  .step-desc{font-size:13px;color:#a1a1aa;line-height:1.6}
+  .step-desc{font-size:13px;color:#e4e4e7;line-height:1.6}
   .step-desc br{display:block;margin-top:4px;content:""}
   /* ── Step illustrations ── */
   .step-illust{
@@ -228,7 +244,7 @@
     border-color:rgba(96,165,250,0.35);
   }
   .illust-label{
-    font-size:10px;color:#a1a1aa;letter-spacing:.02em;
+    font-size:10px;color:#d4d4d8;letter-spacing:.02em;
     margin-bottom:4px;
   }
   .illust-text{font-size:11px;color:#71717a;line-height:1.4}
@@ -266,15 +282,54 @@
   .illust-badge.blue{background:rgba(37,99,235,0.1);color:#60a5fa}
   .illust-badge.green{background:rgba(74,222,128,0.08);color:#4ade80}
   .illust-badge.orange{background:rgba(249,115,22,0.1);color:#fb923c}
+  .illust-badge.red{background:rgba(239,68,68,0.1);color:#ef4444}
+  .illust-panel{
+    margin-top:12px;border-radius:10px;overflow:hidden;
+    border:1.5px solid rgba(255,255,255,0.28);
+    background:rgba(255,255,255,0.015);
+  }
+  .illust-panel-header{
+    display:flex;align-items:center;gap:6px;
+    padding:8px 12px;
+    background:rgba(255,255,255,0.03);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    font-size:12px;color:#d4d4d8;font-weight:500;
+  }
+  .illust-panel-dot{
+    width:6px;height:6px;border-radius:50%;background:#4ade80;flex-shrink:0;
+  }
+  .illust-panel-badge{
+    margin-left:auto;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:#ef4444;color:#fff;font-size:9px;font-weight:700;
+    min-width:15px;height:15px;padding:0 4px;border-radius:8px;
+  }
+  .illust-panel-body{padding:8px 12px}
+  .illust-error-row{
+    display:flex;align-items:flex-start;gap:6px;
+    padding:5px 0;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+    font-size:11px;
+  }
+  .illust-error-row:last-child{border-bottom:none}
+  .illust-error-dot{
+    width:5px;height:5px;border-radius:50%;background:#ef4444;
+    margin-top:4px;flex-shrink:0;
+  }
+  .illust-error-msg{color:#d4d4d8;line-height:1.4}
+  .illust-error-stack{
+    color:#71717a;font-size:10px;line-height:1.4;margin-top:2px;
+    font-family:'SF Mono',Menlo,Monaco,'Cascadia Code','Consolas',monospace;
+  }
   code{
-    background:rgba(255,255,255,0.05);color:#a1a1aa;
+    background:rgba(255,255,255,0.05);color:#d4d4d8;
     padding:2px 6px;border-radius:4px;font-size:12px;
     font-family:'SF Mono',Menlo,Monaco,'Cascadia Code','Consolas',monospace;
   }
   .kbd{
     display:inline-block;
     background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);
-    color:#a1a1aa;padding:2px 7px;border-radius:5px;
+    color:#d4d4d8;padding:2px 7px;border-radius:5px;
     font-size:11px;font-family:inherit;font-weight:500;
   }
   /* ── Footer ── */
@@ -288,9 +343,10 @@
   /* ── Entrance animations ── */
   @keyframes fade-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
   @keyframes scale-in{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
-  @keyframes border-breathe{0%,100%{border-color:rgba(255,255,255,0.15)}50%{border-color:rgba(255,255,255,0.35)}}
+  @keyframes border-breathe{0%,100%{border-color:rgba(249,115,22,0.35)}50%{border-color:rgba(249,115,22,0.6)}}
+  @keyframes border-breathe-rec{0%,100%{border-color:rgba(249,115,22,0.5)}50%{border-color:rgba(249,115,22,0.75)}}
   .header{animation:fade-up .5s cubic-bezier(.22,1,.36,1) both}
-  .card:nth-child(1){animation:scale-in .45s cubic-bezier(.22,1,.36,1) .12s both,border-breathe 4s ease-in-out 1s infinite}
+  .card:nth-child(1){animation:scale-in .45s cubic-bezier(.22,1,.36,1) .12s both,border-breathe-rec 4s ease-in-out 1s infinite}
   .card:nth-child(2){animation:scale-in .45s cubic-bezier(.22,1,.36,1) .22s both,border-breathe 4s ease-in-out 1.1s infinite}
   .steps-wrap{animation:fade-up .5s cubic-bezier(.22,1,.36,1) .28s both,border-breathe 4s ease-in-out 1.2s infinite}
   .footer{animation:fade-up .4s cubic-bezier(.22,1,.36,1) .48s both}
@@ -330,21 +386,33 @@ document.addEventListener("DOMContentLoaded", function () {
     // Stop drag hint animation on first interaction
     link.addEventListener("mousedown", function() {
       link.classList.add("hint-stopped");
-      var hint = document.getElementById("drag-hint-label");
-      if (hint) hint.style.display = "none";
     });
 
 
     if (copyConsoleBtn) {
+      var showCopied = function() {
+        copyConsoleBtn.textContent = "已复制！";
+        copyConsoleBtn.classList.add("done");
+        setTimeout(function() {
+          copyConsoleBtn.textContent = "复制控制台代码";
+          copyConsoleBtn.classList.remove("done");
+        }, 2000);
+      };
+      var fallbackCopy = function(text) {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.cssText = "position:fixed;opacity:0;top:0;left:0";
+        document.body.appendChild(ta);
+        ta.focus(); ta.select();
+        try { document.execCommand("copy"); showCopied(); } catch(_) {}
+        ta.remove();
+      };
       copyConsoleBtn.onclick = function() {
-        navigator.clipboard.writeText(bmCode).then(function() {
-          copyConsoleBtn.textContent = "已复制！";
-          copyConsoleBtn.classList.add("done");
-          setTimeout(function() {
-            copyConsoleBtn.textContent = "复制控制台代码";
-            copyConsoleBtn.classList.remove("done");
-          }, 2000);
-        });
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(bmCode).then(showCopied).catch(function() { fallbackCopy(bmCode); });
+        } else {
+          fallbackCopy(bmCode);
+        }
       };
     }
   }).catch(function () {
@@ -363,14 +431,15 @@ document.addEventListener("DOMContentLoaded", function () {
     <p class="sub">指向任意元素，告诉 AI 该怎么改。</p>
   </div>
   <div class="cards">
-    <div class="card chrome">
+    <div class="card chrome recommended">
       <div class="card-browser">
         <div class="card-icon">C</div>
         <span class="card-browser-name">Chrome / Edge</span>
+	        <span class="card-badge">推荐</span>
       </div>
       <p class="card-desc">拖拽下方按钮到书签栏，在目标页面点击书签即可启动。</p>
       <div class="drag-hint">
-<a class="card-action loading" id="bm-link" href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg> ProtoPick</a>
+<a class="card-action loading" id="bm-link" href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg> 原型工具</a>
 <div class="drag-hint-label" id="drag-hint-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>拖拽到浏览器书签栏</div>
 </div>
       <p class="card-hint">一次性操作，之后点击书签即用</p>
@@ -401,7 +470,8 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="step-title">在目标页面启动 ProtoPick</div>
         <p class="step-desc">
           打开你想修改的网页，点击书签栏按钮（Chrome）或粘贴控制台代码（其他浏览器）。<br>
-          适用于所有页面 &mdash; <code>localhost</code> &middot; Vue &middot; React &middot; 生产环境
+          适用于所有页面 &mdash; <code>localhost</code> &middot; Vue &middot; React &middot; 生产环境<br>
+          面板标题栏可拖拽移动，点击 <span style="color:#fbbf24">⏸</span> 按钮或按 <span class="kbd">&#8679;P</span> 暂停/恢复选取。
         </p>
         <div class="step-illust">
           <div class="illust-bar">
@@ -430,7 +500,8 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="step-body">
         <div class="step-title">悬停高亮，点击选取元素</div>
         <p class="step-desc">
-          鼠标移到页面元素上，蓝色高亮框自动跟随。点击即选取该元素，支持多次点击选取多个元素。
+          鼠标移到页面元素上，橙色高亮框自动跟随。点击即选取该元素，右侧出现操作按钮。<br>
+          面板中显示 DOM 路径面包屑，点击路径段可快速跳转到父级元素。
         </p>
         <div class="step-illust">
           <div class="illust-bar">
@@ -445,11 +516,11 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
             <div class="illust-elem highlight">
               <div class="illust-label">&lt;section class="hero"&gt;</div>
-              <div class="illust-text">Welcome back, Alex &larr; 已选取</div>
-              <div class="illust-badge blue">div.card &middot; React: HeroSection</div>
+              <div class="illust-text">Welcome back, Alex</div>
+              <div class="illust-badge blue">main › section.hero</div>
             </div>
             <div class="illust-cursor" style="right:28px;top:54px">
-              <svg viewBox="0 0 20 20" fill="none"><path d="M3 1l14 9-7 2-3 7z" fill="#60a5fa" stroke="#1e3a5f" stroke-width="1"/></svg>
+              <svg viewBox="0 0 20 20" fill="none"><path d="M3 1l14 9-7 2-3 7z" fill="#f97316" stroke="#7c2d12" stroke-width="1"/></svg>
             </div>
           </div>
         </div>
@@ -461,9 +532,44 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="step-line"></div>
       </div>
       <div class="step-body">
-        <div class="step-title">为元素添加说明</div>
+        <div class="step-title">方向键快速导航 DOM</div>
         <p class="step-desc">
-          点击元素后，弹出的批注框中输入你对这个元素的修改要求，比如「改成圆角」或「这里的颜色太深了」。
+          选取元素后，使用 <span class="kbd">↑</span> <span class="kbd">↓</span> <span class="kbd">←</span> <span class="kbd">→</span> 方向键在 DOM 树中快速移动选区。<br>
+          <span class="kbd">↑</span> 跳到父元素 &middot; <span class="kbd">↓</span> 进入子元素 &middot; <span class="kbd">←</span> <span class="kbd">→</span> 切换兄弟元素。到达边界时选框闪红提示。
+        </p>
+        <div class="step-illust">
+          <div class="illust-bar">
+            <span class="illust-dot r"></span><span class="illust-dot y"></span><span class="illust-dot g"></span>
+            <span class="illust-nav"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></span>
+            <span class="illust-bar-url"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>localhost:5173/dashboard</span>
+          </div>
+          <div class="illust-body">
+            <div class="illust-elem">
+              <div class="illust-label">&lt;header&gt;</div>
+              <div class="illust-text">Dashboard &middot; Settings &middot; Profile</div>
+            </div>
+            <div class="illust-elem">
+              <div class="illust-label">&lt;main&gt;</div>
+              <div class="illust-text" style="display:flex;flex-direction:column;gap:6px">
+                <span style="padding:4px 8px;border-radius:4px;border:1px dashed rgba(255,255,255,0.12)">section.hero &nbsp;<span style="color:#71717a">&larr; 当前选中</span></span>
+                <span style="padding:4px 8px;border-radius:4px;border:1px dashed rgba(249,115,22,0.25);color:#fb923c">section.features &nbsp;<span style="opacity:.6">→ 按右箭头</span></span>
+              </div>
+            </div>
+            <div class="illust-badge orange" style="margin-top:8px">↑ 父级 &nbsp; ↓ 子级 &nbsp; ← → 兄弟</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-indicator">
+        <div class="step-num">4</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-body">
+        <div class="step-title">批注并加入收集区</div>
+        <p class="step-desc">
+          点击 <span style="color:#fb923c">✏</span> 按钮为元素添加修改说明，比如「改成圆角」或「颜色太深」。然后点击 <span style="color:#4ade80">＋</span> 按钮或按 <span class="kbd">&#8984;Enter</span> 将元素加入收集区。<br>
+          可重复选取多个元素，逐一添加批注后加入收集区，统一生成提示词。
         </p>
         <div class="step-illust">
           <div class="illust-bar">
@@ -475,12 +581,12 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="illust-elem highlight">
               <div class="illust-label">&lt;section class="hero"&gt;</div>
               <div class="illust-text">Welcome back, Alex</div>
-              <div class="illust-badge orange">✏️ 把背景改成渐变色，文字居中</div>
+              <div class="illust-badge orange">✏ 把背景改成渐变色，文字居中</div>
             </div>
             <div class="illust-elem highlight">
               <div class="illust-label">&lt;nav class="sidebar"&gt;</div>
               <div class="illust-text">Home &middot; Analytics &middot; Users</div>
-              <div class="illust-badge orange">✏️ 加一个折叠功能</div>
+              <div class="illust-badge orange">✏ 加一个折叠功能</div>
             </div>
           </div>
         </div>
@@ -488,27 +594,92 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
     <div class="step">
       <div class="step-indicator">
-        <div class="step-num">4</div>
+        <div class="step-num">5</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-body">
+        <div class="step-title">自动捕获控制台报错</div>
+        <p class="step-desc">
+          ProtoPick 启动后自动监听页面的 <code>console.error</code>、运行时异常和未处理的 Promise 拒绝。<br>
+          捕获到错误时，面板标题栏出现红色徽章，顶部弹出提示。点击徽章可展开错误详情，报错信息也会一并复制到提示词中。
+        </p>
+        <div class="step-illust">
+          <div class="illust-bar">
+            <span class="illust-dot r"></span><span class="illust-dot y"></span><span class="illust-dot g"></span>
+            <span class="illust-nav"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></span>
+            <span class="illust-bar-url"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>localhost:5173/dashboard</span>
+          </div>
+          <div class="illust-body">
+            <div class="illust-panel">
+              <div class="illust-panel-header">
+                <span class="illust-panel-dot"></span>
+                选取中
+                <span class="illust-panel-badge">3</span>
+              </div>
+              <div class="illust-panel-body">
+                <div class="illust-error-row">
+                  <span class="illust-error-dot"></span>
+                  <div>
+                    <div class="illust-error-msg">TypeError: Cannot read properties of undefined</div>
+                    <div class="illust-error-stack">at HeroSection.vue:42:15</div>
+                  </div>
+                </div>
+                <div class="illust-error-row">
+                  <span class="illust-error-dot"></span>
+                  <div>
+                    <div class="illust-error-msg">Unhandled: NetworkError: Failed to fetch</div>
+                    <div class="illust-error-stack">at api.js:18:11</div>
+                  </div>
+                </div>
+                <div class="illust-error-row">
+                  <span class="illust-error-dot"></span>
+                  <div>
+                    <div class="illust-error-msg">Warning: Each child in a list should have a unique key</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-indicator">
+        <div class="step-num">6</div>
       </div>
       <div class="step-body">
         <div class="step-title">按 <span class="kbd">&#8984;C</span> 复制，粘贴给 AI</div>
         <p class="step-desc">
-          按 <span class="kbd">&#8984;C</span> 一键复制结构化提示词，包含 CSS 选择器、HTML 片段、框架信息。粘贴到任意 AI 助手即可使用。
+          按 <span class="kbd">&#8984;C</span> 或点击「复制提示词」按钮，一键复制所有已收集元素和捕获报错的结构化提示词，包含 CSS 选择器、源文件位置、框架组件信息、HTML 片段、修改说明和错误堆栈。<br>
+          每个元素的 HTML 片段最多保留 2000 字符，如需完整内容请缩小选取范围。
         </p>
         <div class="step-illust">
           <div class="illust-prompt">Page: /dashboard
 
-1. section.hero
+1. section.hero &lt;section&gt;
    selector: main > section:nth-child(1)
+   source: src/components/HeroSection.vue:42
+   component: HeroSection
    text: "Welcome back, Alex"
    html: &lt;section class="hero"&gt;...&lt;/section&gt;
-   component: HeroSection (React)
-   instruction: 把背景改成渐变色，文字居中</div>
+   instruction: 把背景改成渐变色，文字居中
+
+2. nav.sidebar &lt;nav&gt;
+   selector: header > nav:nth-child(1)
+   text: "Home · Analytics · Users"
+   html: &lt;nav class="sidebar"&gt;...&lt;/nav&gt;
+   instruction: 加一个折叠功能
+
+## Errors (2)
+1. TypeError: Cannot read properties of undefined
+   at HeroSection.vue:42:15
+2. NetworkError: Failed to fetch
+   at api.js:18:11</div>
           <div class="illust-ai">
             <div class="illust-ai-icon">AI</div>
             <div class="illust-ai-body">
               <div class="illust-ai-label">Claude Code / Cursor / Codex</div>
-              <div class="illust-ai-text">AI 收到完整的元素上下文，精确理解你要改什么、改哪里，直接输出对应的代码修改。</div>
+              <div class="illust-ai-text">AI 收到所有已收集元素的完整上下文和修改说明，精确理解每个元素要改什么，直接输出对应的代码修改。</div>
             </div>
           </div>
         </div>

@@ -9,6 +9,7 @@ dist/
 .idea/
 .history/
 .playwright-mcp/
+.superpowers/
 
 # OS
 .DS_Store

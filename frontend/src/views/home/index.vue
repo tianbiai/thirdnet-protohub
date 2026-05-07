@@ -7,18 +7,19 @@
         <div class="welcome-badge">
           <div class="badge-dot"></div>
           <span>管理控制台</span>
+          <button class="hero-tool-btn" @click="openProtoPick">
+            <svg class="protopick-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="14" height="14">
+              <rect x="2" y="2" width="28" height="28" rx="6" fill="currentColor" opacity="0.12"/>
+              <rect x="9" y="9" width="14" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/>
+              <path d="M7 7l4.5 4.5M25 25l-4.5-4.5M7 25l4.5-4.5M25 7l-4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            安装原型工具
+          </button>
         </div>
         <h1 class="welcome-title">
           你好，<span class="user-name">{{ userStore.nickname }}</span>
         </h1>
         <p class="welcome-desc">欢迎使用 ProtoHub 原型视界，在这里管理你的项目和系统配置。</p>
-        <div class="hero-actions">
-          <button class="hero-tool-btn" @click="openProtoPick">
-            <el-icon><Position /></el-icon>
-            原型调试工具
-            <span class="btn-hint">在新窗口打开</span>
-          </button>
-        </div>
       </div>
     </section>
 
@@ -75,7 +76,7 @@
 import { computed } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useMenuStore } from '@/stores/menu'
-import { Folder, User, UserFilled, Lock, Menu, Setting, ArrowRight, Promotion, Position } from '@element-plus/icons-vue'
+import { Folder, User, UserFilled, Lock, Menu, Setting, ArrowRight, Promotion } from '@element-plus/icons-vue'
 import type { Component } from 'vue'
 
 const userStore = useUserStore()
@@ -234,48 +235,32 @@ const openProtoPick = (): void => {
   line-height: 1.7;
 }
 
-.hero-actions {
-  margin-top: 24px;
-}
-
 .hero-tool-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-600));
-  color: #fff;
+  gap: 6px;
+  padding: 4px 12px;
+  background: var(--primary-light);
+  color: var(--primary-color);
   border: none;
-  border-radius: var(--radius-xl);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-  position: relative;
-  overflow: hidden;
+  transition: all 0.2s ease-out;
+  margin-left: 10px;
 
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
-    pointer-events: none;
+  .protopick-icon {
+    flex-shrink: 0;
   }
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 122, 255, 0.35);
+    background: var(--primary-color);
+    color: #fff;
   }
 
   &:active {
-    transform: translateY(0) scale(0.98);
-  }
-
-  .btn-hint {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-regular);
-    opacity: 0.8;
-    margin-left: 4px;
+    transform: scale(0.96);
   }
 }
 
@@ -532,7 +517,12 @@ html.is-dark {
   }
 
   .home-page .hero-tool-btn {
-    background: linear-gradient(135deg, var(--primary-400), var(--primary-500));
+    background: var(--primary-400);
+    color: #fff;
+
+    &:hover {
+      background: var(--primary-500);
+    }
   }
 
   .home-page .stat-card {
