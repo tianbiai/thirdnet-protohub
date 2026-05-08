@@ -360,14 +360,36 @@
       ov.corners[i].style.left = pos[i].left + "px";
     }
 
-    ov.label.style.top = (r.top - pad - 24) + "px";
+    const btnSize = 24;
+    const btnGap = 4;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    // Label: prefer above element, fallback to below
+    const labelAbove = r.top - pad - 24;
+    const labelBelow = r.bottom + pad + 4;
+    ov.label.style.top = (labelAbove >= 0 ? labelAbove : labelBelow) + "px";
     ov.label.style.left = (r.left - pad) + "px";
 
-    ov.annotateBtn.style.top = (r.top - pad - 26) + "px";
-    ov.annotateBtn.style.left = (r.right + pad + 4) + "px";
+    // Annotate + Add buttons: prefer right of element, fallback to left
+    const rightSpace = vw - (r.right + pad);
+    const btnsOnRight = rightSpace >= btnSize * 2 + btnGap;
+    const btnsOnLeft = r.left - pad >= btnSize * 2 + btnGap;
+    let btnX;
+    if (btnsOnRight) {
+      btnX = r.right + pad + btnGap;
+    } else if (btnsOnLeft) {
+      btnX = r.left - pad - btnSize * 2 - btnGap * 2;
+    } else {
+      btnX = Math.max(4, vw - btnSize * 2 - btnGap - 4);
+    }
 
-    ov.addBtn.style.top = (r.top - pad - 26) + "px";
-    ov.addBtn.style.left = (r.right + pad + 30) + "px";
+    const btnsY = labelAbove >= 0 ? (r.top - pad - 26) : labelBelow;
+    ov.annotateBtn.style.top = (btnsY >= 0 ? btnsY : (r.top + pad)) + "px";
+    ov.annotateBtn.style.left = btnX + "px";
+
+    ov.addBtn.style.top = ov.annotateBtn.style.top;
+    ov.addBtn.style.left = (btnX + btnSize + btnGap) + "px";
 
     if (annotations.has(aiId)) {
       ov.annotateBtn.classList.add(`${NS}-has-note`);
@@ -1177,27 +1199,59 @@
 
   function makeDraggable(panel, handle) {
     let sx, sy, sl, st;
+
+    function startDrag(clientX, clientY) {
+      const r = panel.getBoundingClientRect();
+      sx = clientX; sy = clientY; sl = r.left; st = r.top;
+    }
+
+    function moveDrag(clientX, clientY) {
+      let newLeft = sl + clientX - sx;
+      let newTop = st + clientY - sy;
+      const pw = panel.offsetWidth;
+      const ph = panel.offsetHeight;
+      newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - pw));
+      newTop = Math.max(0, Math.min(newTop, window.innerHeight - ph));
+      panel.style.left   = newLeft + "px";
+      panel.style.top    = newTop + "px";
+      panel.style.right  = "auto";
+      panel.style.bottom = "auto";
+      repositionToast();
+    }
+
+    function endDrag() {
+      document.removeEventListener("mousemove", mouseMove);
+      document.removeEventListener("mouseup", mouseUp);
+      document.removeEventListener("touchmove", touchMove);
+      document.removeEventListener("touchend", touchEnd);
+      panelDragListeners = null;
+    }
+
+    function mouseMove(e) { moveDrag(e.clientX, e.clientY); }
+    function mouseUp() { endDrag(); }
+    function touchMove(e) {
+      e.preventDefault();
+      const t = e.touches[0];
+      moveDrag(t.clientX, t.clientY);
+    }
+    function touchEnd() { endDrag(); }
+
     handle.addEventListener("mousedown", (e) => {
       if (e.target.closest(`.${NS}-panel-btn`)) return;
       e.preventDefault();
-      const r = panel.getBoundingClientRect();
-      sx = e.clientX; sy = e.clientY; sl = r.left; st = r.top;
-      const move = (e) => {
-        panel.style.left   = sl + e.clientX - sx + "px";
-        panel.style.top    = st + e.clientY - sy + "px";
-        panel.style.right  = "auto";
-        panel.style.bottom = "auto";
-        repositionToast();
-      };
-      const up = () => {
-        document.removeEventListener("mousemove", move);
-        document.removeEventListener("mouseup", up);
-        panelDragListeners = null;
-      };
-      document.addEventListener("mousemove", move);
-      document.addEventListener("mouseup", up);
-      panelDragListeners = { move, up };
+      startDrag(e.clientX, e.clientY);
+      document.addEventListener("mousemove", mouseMove);
+      document.addEventListener("mouseup", mouseUp);
+      panelDragListeners = { move: mouseMove, up: mouseUp };
     });
+
+    handle.addEventListener("touchstart", (e) => {
+      if (e.target.closest(`.${NS}-panel-btn`)) return;
+      const t = e.touches[0];
+      startDrag(t.clientX, t.clientY);
+      document.addEventListener("touchmove", touchMove, { passive: false });
+      document.addEventListener("touchend", touchEnd);
+    }, { passive: true });
   }
 
   // ── Element label ──────────────────────────────────────────

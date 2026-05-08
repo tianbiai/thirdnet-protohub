@@ -116,7 +116,8 @@
       "Bash(python -m http.server 8888)",
       "Bash(xxd \"frontend/public/protopick/index.html\")",
       "Bash(bash \"C:/Users/pig_l/.claude/plugins/cache/claude-plugins-official/superpowers/unknown/skills/brainstorming/scripts/start-server.sh\" --project-dir \"e:/SVN/AI/V1.0.0/Program/2_SourceCode/InterFace/protohub\")",
-      "Bash(node -c frontend/public/protopick/assets/editor.js)"
+      "Bash(node -c frontend/public/protopick/assets/editor.js)",
+      "mcp__zai-mcp-server__analyze_image"
     ]
   },
   "enabledPlugins": {}

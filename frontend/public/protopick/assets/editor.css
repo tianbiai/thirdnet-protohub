@@ -348,6 +348,7 @@
   right: 20px;
   z-index: 2147483644;
   width: 340px;
+  max-width: calc(100vw - 12px);
   background: #050507;
   border: 2.5px solid rgba(249, 115, 22, 0.7);
   border-radius: 12px;
@@ -357,6 +358,22 @@
     0 16px 32px -4px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   user-select: none;
+}
+
+@media (max-width: 420px) {
+  .ai-editor-chat {
+    bottom: 6px;
+    right: 6px;
+    left: 6px;
+    width: auto;
+    max-width: none;
+    border-radius: 10px;
+  }
+  .ai-editor-history-list-modal,
+  .ai-editor-history-modal {
+    max-width: calc(100vw - 16px);
+    max-height: 80vh;
+  }
 }
 
 /* ── Drag handle ─────────────────────────────────────────── */

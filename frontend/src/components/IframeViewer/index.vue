@@ -8,7 +8,7 @@
           ref="iframeRef"
           :src="cacheBustedSrc"
           class="mobile-iframe"
-          :style="{ width: `${viewport.width}px`, height: `${viewport.height + 100 - 88}px` }"
+          :style="{ width: `${resolvedViewport.width}px`, height: `${resolvedViewport.height + 100 - 88}px` }"
           frameborder="0"
           sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
           allowfullscreen
@@ -66,14 +66,17 @@ interface Viewport {
 }
 
 /** iframe 查看器组件属性 */
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   /** iframe 页面地址 */
   src: string
   /** 内容类型（web / mobile / miniprogram） */
   type?: string
   /** 移动端视口配置 */
   viewport?: Viewport
-}>()
+}>(), {
+  type: 'web',
+  viewport: () => ({ width: 380, height: 812 }),
+})
 
 const emit = defineEmits<{
   /** iframe 加载完成 */
@@ -90,6 +93,9 @@ const loading = ref(true)
 const error = ref<string | null>(null)
 /** 缓存破坏键 */
 const cacheKey = ref(Date.now())
+
+/** 解析后的视口配置（带默认值兜底） */
+const resolvedViewport = computed(() => props.viewport ?? { width: 380, height: 812 })
 
 /** 是否为移动端模式 */
 const isMobile = computed(() => props.type === 'mobile' || props.type === 'miniprogram')

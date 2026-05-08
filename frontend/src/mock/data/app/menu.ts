@@ -51,32 +51,32 @@ export const mockInternalItems: MenuItem[] = [
 export const mockMobileItems: MenuItem[] = [
   {
     id: 201,
-    name: '商城小程序',
+    name: 'GAS 小程序',
     type: MenuItemType.Miniprogram,
-    url: 'https://shop.protohub.example.com',
-    description: '移动端商城应用原型',
+    url: 'http://61.164.57.60:9876/gasminiprogram/#/',
+    description: 'GAS 移动端应用',
     order: 1,
-    viewport: { width: 375, height: 812 },
+    viewport: null,
     route: ''
   },
   {
     id: 202,
-    name: '办公助手',
+    name: '商城小程序',
     type: MenuItemType.Miniprogram,
-    url: 'https://office.protohub.example.com',
-    description: '移动办公应用原型',
+    url: 'https://shop.protohub.example.com',
+    description: '移动端商城应用原型',
     order: 2,
-    viewport: { width: 375, height: 667 },
+    viewport: { width: 375, height: 812 },
     route: ''
   },
   {
     id: 203,
-    name: '社交应用',
+    name: '办公助手',
     type: MenuItemType.Miniprogram,
-    url: 'https://social.protohub.example.com',
-    description: '社交平台应用原型',
+    url: 'https://office.protohub.example.com',
+    description: '移动办公应用原型',
     order: 3,
-    viewport: { width: 375, height: 812 },
+    viewport: { width: 375, height: 667 },
     route: ''
   }
 ]
