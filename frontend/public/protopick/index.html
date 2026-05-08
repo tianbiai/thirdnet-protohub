@@ -375,7 +375,54 @@
     font-size:11px;font-family:inherit;font-weight:500;
   }
   /* ── Footer ── */
-  .footer{
+  /* ── Help video ── */
+  .video-section{
+    margin-top:36px;
+    margin-bottom:36px;
+    border:1px solid rgba(249,115,22,0.35);
+    border-radius:14px;
+    background:rgba(255,255,255,0.01);
+    overflow:hidden;
+    animation:fade-up .5s cubic-bezier(.22,1,.36,1) .36s both;
+  }
+  .video-header{
+    display:flex;align-items:center;gap:8px;
+    padding:16px 20px;
+    cursor:pointer;
+    user-select:none;
+    transition:background 200ms;
+  }
+  .video-header:hover{background:rgba(255,255,255,0.02)}
+  .video-header-icon{
+    width:28px;height:28px;border-radius:7px;
+    background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.12);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .video-header-text{
+    flex:1;
+    font-size:15px;font-weight:600;color:#e4e4e7;
+    letter-spacing:-.01em;
+  }
+  .video-header-arrow{
+    color:#52525b;transition:transform 250ms ease;
+    flex-shrink:0;
+  }
+  .video-header-arrow.open{transform:rotate(180deg)}
+  .video-body{
+    max-height:0;overflow:hidden;
+    transition:max-height 400ms cubic-bezier(.4,0,.2,1);
+  }
+  .video-body.open{max-height:600px}
+  .video-wrap{
+    padding:0 20px 20px;
+  }
+  .video-wrap video{
+    width:100%;border-radius:10px;
+    background:#000;
+    outline:none;
+  }
+  .video-footer{
     margin-top:44px;padding-top:18px;
     border-top:1px solid rgba(255,255,255,0.04);
     font-size:11px;color:#52525b;text-align:center;
@@ -391,7 +438,7 @@
   .card:nth-child(1){animation:scale-in .45s cubic-bezier(.22,1,.36,1) .12s both,border-breathe-rec 4s ease-in-out 1s infinite}
   .card:nth-child(2){animation:scale-in .45s cubic-bezier(.22,1,.36,1) .22s both,border-breathe 4s ease-in-out 1.1s infinite}
   .steps-wrap{animation:fade-up .5s cubic-bezier(.22,1,.36,1) .28s both,border-breathe 4s ease-in-out 1.2s infinite}
-  .footer{animation:fade-up .4s cubic-bezier(.22,1,.36,1) .48s both}
+  .video-footer{animation:fade-up .4s cubic-bezier(.22,1,.36,1) .48s both}
   @media(prefers-reduced-motion:reduce){
     *,*::before,*::after{animation-duration:0s!important;transition-duration:0s!important}
   }
@@ -408,6 +455,17 @@
 document.addEventListener("DOMContentLoaded", function () {
   var base = location.href.replace(/[^/]*$/, "");
   var link = document.getElementById("bm-link");
+
+  // Help video toggle
+  var videoToggle = document.getElementById("video-toggle");
+  var videoBody = document.getElementById("video-body");
+  var videoArrow = document.getElementById("video-arrow");
+  if (videoToggle) {
+    videoToggle.addEventListener("click", function () {
+      videoBody.classList.toggle("open");
+      videoArrow.classList.toggle("open");
+    });
+  }
   var copyConsoleBtn = document.getElementById("copy-console-code");
   var bmCode = "";
 
@@ -495,6 +553,18 @@ document.addEventListener("DOMContentLoaded", function () {
       <p class="card-desc">在目标页面按 <span class="kbd">F12</span> 打开控制台，粘贴代码后按回车启动。</p>
       <button class="card-action" id="copy-console-code"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> 复制控制台代码</button>
       <p class="card-hint">适用于所有浏览器，每次需重新粘贴</p>
+    </div>
+  </div>
+  <div class="video-section">
+    <div class="video-header" id="video-toggle">
+      <div class="video-header-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+      <span class="video-header-text">操作视频</span>
+      <svg class="video-header-arrow" id="video-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="video-body" id="video-body">
+      <div class="video-wrap">
+        <video controls preload="metadata" src="help.mp4">您的浏览器不支持视频播放</video>
+      </div>
     </div>
   </div>
   <div class="steps-wrap">
@@ -775,7 +845,7 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
   </div>
   </div>
-  <div class="footer">
+  <div class="video-footer">
     ThirdNet ProtoPick
   </div>
 </div>
